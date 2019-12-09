@@ -12,7 +12,7 @@
 #define LEDS_CNT WIDTH * HEIGHT
 #define MAX_BRIGHTNESS 255
 #define MAX_HSV 255
-#define CURRENT_LIMIT         (2000U)                       // лимит по току в миллиамперах, автоматически управляет яркостью (пожалей свой блок питания!) 0 - выключить лимит
+#define CURRENT_LIMIT         (2000U) // лимит по току в миллиамперах, автоматически управляет яркостью (пожалей свой блок питания!) 0 - выключить лимит
 
 extern CRGB leds[LEDS_CNT];
 
@@ -30,14 +30,14 @@ static uint32_t getPixColor(int x, int y);
 
 // установить цвет пикселя по координатам.
 // Структура CRGB поддерживает автоматическую
-// конвертацию из CHSV и из int изначей.
-// Т.е. допустипо в качестве параметра color передавать помимо CRGB объекта,
+// конвертацию из CHSV и из int значений.
+// Т.е. допустимо в качестве параметра color передавать помимо CRGB объекта,
 // CHSV объекты и uint32_t значения
 static void setPixColor(int x, int y, CRGB color);
 
 // Получить ссылку на матрицу светодиодов
 // !!! Не рекомендуется записывать значения напрямую в этот массив
-// так как значения в нем могут распологаться в различном порядке
+// так как значения в нем могут располагаться в различном порядке
 // для различных типов матриц и возможных поворотах матриц на 
 // углы 90, 180, 270 градусов.
 static CRGB* getLeds(void);
@@ -45,37 +45,39 @@ static CRGB* getLeds(void);
 // Затемнить все светодиоды на матрице на указанный шаг
 static void fader(uint8_t step);
 
-// Затемнить светодиод с соответсвующими координатами на матрице на указанный шаг
+// Затемнить светодиод с соответствующими координатами на матрице на указанный шаг
 static void fadePix(uint8_t x, uint8_t y, uint8_t step);
 
-// Нарисовать линию на матрице по указанным координатам и соответсвующим цветом
+// Нарисовать линию на матрице по указанным координатам и соответствующим цветом
 // x1, y1 - координаты 1 точки
 // x2, y2 - координаты 2 точки
 // color - цвет, которым будет нарисована линия
 static void drawLine(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, CRGB color);
 
 /* инициализация библиотеки FastLed и
- * установка цветовой коррекции светодиодов 
+ * установка цветовой коррекции светодиодов
  */
 static void led_setup()
 {
-  FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, LEDS_CNT);
-  FastLED.setMaxPowerInVoltsAndMilliamps(5, CURRENT_LIMIT);
-  FastLED.clear();
+    FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, LEDS_CNT);
+    FastLED.setMaxPowerInVoltsAndMilliamps(5, CURRENT_LIMIT);
+    FastLED.clear();
 
-  pinMode(LED_BUILTIN, OUTPUT);
+    pinMode(LED_BUILTIN, OUTPUT);
 }
 
 static uint16_t getPixNum(int x, int y) {
-  if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) {
-    out("Value out of range in function getPix %d %d", x, y);
-    return 0;
-  }
+    if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) {
+        Serial.print("Value out of range in function getPixNum");
+        Serial.print(x);
+        Serial.println(y);
+        return 0;
+    }
 
-  //для тестов на эмуляторе необходим данный вариант:
-  //return WIDTH * HEIGHT - (y * WIDTH + x + 1);
+    //для тестов на эмуляторе необходим данный вариант:
+    //return WIDTH * HEIGHT - (y * WIDTH + x + 1);
 
-  return WIDTH * HEIGHT - (y & 0x1 ? (y * WIDTH + x + 1) : ((y + 1) * WIDTH - x));
+    return WIDTH * HEIGHT - (y & 0x1 ? (y * WIDTH + x + 1) : ((y + 1) * WIDTH - x));
   /* текущая матрица в рабочей железке
       x   0   1   2   3   4   5   6   7   8   9
     y
@@ -136,11 +138,11 @@ static CRGB* getLeds(void) {
 }
 
 static void fader(uint8_t step) {
-  for (uint8_t i = 0; i < WIDTH; i++) {
-    for (uint8_t j = 0; j < HEIGHT; j++) {
-      fadePix(i, j, step);
+    for (uint8_t i = 0; i < WIDTH; i++) {
+        for (uint8_t j = 0; j < HEIGHT; j++) {
+            fadePix(i, j, step);
+        }
     }
-  }
 }
 
 static void fadePix(uint8_t x, uint8_t y, uint8_t step) {
@@ -153,6 +155,7 @@ static void fadePix(uint8_t x, uint8_t y, uint8_t step) {
 
 static void drawLine(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, CRGB color)
 {
+    // Рисование линии по Алгоритму Брезенхэма
     uint8_t deltaX = abs((int16_t)x2 - x1);
     uint8_t deltaY = abs((int16_t)y2 - y1);
     int8_t signX = x1 < x2 ? 1 : -1;
