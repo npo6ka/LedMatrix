@@ -5,14 +5,14 @@
 #include "FastLED.h"
 #include "debug_lib.h"
 
-#define DATA_PIN (2U) // номер порта к которому подключены светодиоды
+#define DATA_PIN       (2U)    // номер порта к которому подключены светодиоды
 
-#define WIDTH 16
-#define HEIGHT 16
-#define LEDS_CNT WIDTH * HEIGHT
+#define WIDTH          16
+#define HEIGHT         16
+#define LEDS_CNT       WIDTH * HEIGHT
 #define MAX_BRIGHTNESS 255
-#define MAX_HSV 255
-#define CURRENT_LIMIT         (2000U) // лимит по току в миллиамперах, автоматически управляет яркостью (пожалей свой блок питания!) 0 - выключить лимит
+#define MAX_HSV        255
+#define CURRENT_LIMIT  (2000U) // лимит по току в миллиамперах, автоматически управляет яркостью (пожалей свой блок питания!) 0 - выключить лимит
 
 extern CRGB leds[LEDS_CNT];
 
@@ -146,11 +146,7 @@ static void fader(uint8_t step) {
 }
 
 static void fadePix(uint8_t x, uint8_t y, uint8_t step) {
-    CRGB pixelNum = getPix(x, y);
-    if (!pixelNum) return;
-
-    pixelNum.fadeToBlackBy(step);
-    setPixColor(x, y, pixelNum);
+    getPix(x, y).fadeToBlackBy(step);
 }
 
 static void drawLine(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, CRGB color)
