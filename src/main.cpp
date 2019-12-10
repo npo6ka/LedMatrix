@@ -16,16 +16,18 @@ void setup() {
     effects->setEffect(0);
 }
 
-unsigned long tick = 0;
-int tps = 0;
+// проверка реального тпс работы микроконтроллера
+/*unsigned long tick = 0;
+int tps = 0;/*/
 
 void loop() {
     effects->onTick();
     
-    tps++;
+    // проверка реального тпс работы микроконтроллера
+    /*tps++;
     if (millis() > tick * 1000 ) {
         out("tps: %d fps: %.1f\n", tps, effects->getCurFPS());
         tick++;
         tps = 0;
-    }
+    }*/
 }
