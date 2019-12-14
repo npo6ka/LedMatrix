@@ -4,20 +4,19 @@
 
 class AllRandom : public Effect
 {
-    uint8_t step = 2;
 
 public:
     AllRandom() {}
 
     void on_init() {
-
+        set_fps(30);
     }
 
-    void on_tick() {
+    void on_update() {
         int i;
 
         for (i = 0; i < LEDS_CNT; i++) {
-            getPix(i / 10, i % 10) = CRGB(random8(255), random8(255), random8(255));
+            getPix(i / WIDTH, i % WIDTH) = CRGB(random8(255), random8(255), random8(255));
         }
     }
 };
