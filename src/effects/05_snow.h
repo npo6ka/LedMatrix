@@ -1,63 +1,63 @@
 #pragma once
 
-#define data ((SnowData *)global_data)
+#include "effect.h"
 
-struct SnowData
+class Snow : public Effect
 {
     uint8_t step;
     uint8_t tick;
     int density;
     bool direction;
-};
+public:
+    Snow() {}
 
-void snow_prepare()
-{
-    data->step = 20;
-    data->density = 10;
-    data->tick = 0;
-    data->direction = false;
-    eff_set_ups(60);
-}
+    void on_init()
+    {
+        step = 20;
+        density = 10;
+        tick = 0;
+        direction = false;
+        set_fps(60);
+    }
 
-void snow_update()
-{
-    if (data->tick >= data->step) {
-        data->direction = !data->direction;
-        // сдвигаем вниз
-        for (int8_t y = HEIGHT - 1; y >= 0; y--) {
-            bool dir = data->direction;
+    void on_update()
+    {
+        if (tick >= step) {
+            direction = !direction;
+            // сдвигаем вниз
+            for (int8_t x = 0; x < HEIGHT; x++) {
+                bool dir = direction;
 
-            for (uint8_t x = 0; x < WIDTH; x++) {
-                if (getPixColor(x, y)) {
-                    if (y + 1 < HEIGHT) {
-                        if (dir) {
-                            setPixColor(x + 1, y + 1, getPixColor(x, y));
-                        } else {
-                            setPixColor(x - 1, y + 1, getPixColor(x, y));
+                for (uint8_t y = 0; y < WIDTH; y++) {
+                    if (getPixColor(x, y)) {
+                        if (x - 1 >= 0) {
+                            if (dir) {
+                                if (y + 1 < WIDTH) setPixColor(x - 1, y + 1, getPixColor(x, y));
+                            } else {
+                                if (y - 1 >= 0) setPixColor(x - 1, y - 1, getPixColor(x, y));
+                            }
+                            dir = !dir;
                         }
-                        dir = !dir;
-                    }
 
-                    setPixColor(x, y, 0);
+                        setPixColor(x, y, 0);
+                    }
                 }
             }
-        }
 
-        for (uint8_t x = 0; x < WIDTH - 1; x++) {
-            // заполняем случайно верхнюю строку
-            // а также не даём двум блокам по вертикали вместе быть
-            if (getPixColor(x, 1) == 0 && (random(0, data->density) == 0)) {
-                setPixColor(x, 0, 0xE0FFFF - 0x101010 * random(0, 4));
-                x++;
-            } else {
-                setPixColor(x, 0, 0x000000);
+            for (uint8_t x = 0; x < WIDTH - 1; x++) {
+                // заполняем случайно верхнюю строку
+                // а также не даём двум блокам по вертикали вместе быть
+                if (getPixColor(HEIGHT - 2, x) == 0 && (random(0, density) == 0)) {
+                    setPixColor(HEIGHT - 1, x, 0xE0FFFF - 0x101010 * random(0, 4));
+                    x++;
+                } else {
+                    setPixColor(HEIGHT - 1, x, 0x000000);
+                }
             }
+
+            tick = 0;
+        } else {
+            tick++;
         }
-
-        data->tick = 0;
-    } else {
-        data->tick++;
     }
-}
-
-#undef data
+};
