@@ -13,19 +13,22 @@ void setup() {
     led_setup();
     
     effects = new EffectsList();
-    effects->setEffect(0);
+    effects->setEffect(1);
 }
 
-unsigned long tick = 0;
-int tps = 0;
+// проверка реального тпс работы микроконтроллера
+/*unsigned long tick = 0;
+int tps = 0;/*/
 
 void loop() {
     effects->onTick();
+    FastLED.setBrightness(128);
     
-    tps++;
+    // проверка реального тпс работы микроконтроллера
+    /*tps++;
     if (millis() > tick * 1000 ) {
         out("tps: %d fps: %.1f\n", tps, effects->getCurFPS());
         tick++;
         tps = 0;
-    }
+    }*/
 }
