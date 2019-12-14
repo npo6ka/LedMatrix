@@ -59,7 +59,7 @@ static void drawLine(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, CRGB color)
  */
 static void led_setup()
 {
-    FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, LEDS_CNT);
+    FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, LEDS_CNT).setCorrection(TypicalLEDStrip);
     FastLED.setMaxPowerInVoltsAndMilliamps(5, CURRENT_LIMIT);
     FastLED.clear();
 

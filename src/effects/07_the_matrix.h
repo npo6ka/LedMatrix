@@ -9,10 +9,10 @@ public:
     TheMatrix() {}
 
     void on_init() {
-
+        set_fps(30);
     }
 
-    void on_tick() {
+    void on_update() {
         for (uint8_t x = 0; x < WIDTH; x++) {
         // заполняем случайно верхнюю строку
         uint32_t thisColor = getPixColor(x, HEIGHT - 1);

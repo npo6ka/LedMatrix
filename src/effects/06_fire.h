@@ -32,7 +32,7 @@ class Fire : public Effect
     unsigned char matrixValue[8][16];
     unsigned char line[WIDTH];
     int pcnt = 0;
-    uint8_t hue_add = 73;       // добавка цвета в огонь (от 0 до 230) - меняет весь цвет пламени
+    uint8_t hue_add = 0;       // добавка цвета в огонь (от 0 до 230) - меняет весь цвет пламени
     bool sparkless = true;        // вылетающие угольки вкл выкл
 
 public:
@@ -96,7 +96,6 @@ public:
                     newX = x - 15;
                 }
                 if (y < 8) {
-                    uint8_t val = valueMask[y][newX];
                     nextv = (((100.0 - pcnt) * matrixValue[y][newX]
                         + pcnt * matrixValue[y - 1][newX]) / 100.0)
                         - valueMask[y][newX];
