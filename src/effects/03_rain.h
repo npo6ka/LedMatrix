@@ -9,15 +9,18 @@ class Rain : public Effect
 public:
     Rain() {}
 
-    void on_tick() {
+    void on_init() {
+        set_fps(60);
+    }
+
+    void on_update() {
         int i, j;
 
-        for (i = 0; i < WIDTH; ++i) {
-            for (j = 0; j < HEIGHT; ++j) {
-                CRGB cl = getPix(i, j);
+        for (i = 0; i < HEIGHT; ++i) {
+            for (j = 0; j < WIDTH; ++j) {
+                CRGB &cl = getPix(i, j);
 
-                if (random8(100) == 0) {
-                    int asd = 0;
+                if (random8(255) == 0) {
                     cl = CRGB(0, 0, MAX_BRIGHTNESS);
                 } else if (cl.b > 0) {
                     if (cl.b > step) {
@@ -26,8 +29,6 @@ public:
                         cl = CRGB(0, 0, 0);
                     }
                 }
-
-                getPix(i, j) = cl;
             }
         }
     }

@@ -2,8 +2,6 @@
 
 #include "effect.h"
 
-#define WIDTH 10
-
 class Dribs : public Effect
 {
     uint8_t cur_drib[WIDTH];

@@ -3,8 +3,8 @@
 #include "00_slow_random.h"
 #include "01_simple_rainbow.h"
 #include "02_dribs.h"
-/*#include "03_rain.h"
-#include "04_all_random.h"
+#include "03_rain.h"
+/*#include "04_all_random.h"
 #include "05_show.h"
 #include "06_fire.h"
 #include "07_the_matrix.h"
@@ -54,9 +54,9 @@ Effect *EffectsList::getNewEffectInstance(int num) {
         return new SimpleRainbow();
     case 3:
         return new Dribs();
-    /*case 4:
+    case 4:
         return new Rain();
-    case 5:
+    /*case 5:
         return new AllRandom();
     case 6:
         return new Snow();
