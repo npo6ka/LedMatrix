@@ -5,7 +5,7 @@
 class Fire : public Effect
 {
     //these values are substracetd from the generated values to give a shape to the animation
-    const unsigned char valueMask[8][16] PROGMEM = {
+    const unsigned char valueMask[8][16] = {
       {32 , 0  , 0  , 0  , 0  , 0  , 0  , 32 , 32 , 0  , 0  , 0  , 0  , 0  , 0  , 32 },
       {64 , 0  , 0  , 0  , 0  , 0  , 0  , 64 , 64 , 0  , 0  , 0  , 0  , 0  , 0  , 64 },
       {96 , 32 , 0  , 0  , 0  , 0  , 32 , 96 , 96 , 32 , 0  , 0  , 0  , 0  , 32 , 96 },
@@ -18,7 +18,7 @@ class Fire : public Effect
 
     //these are the hues for the fire,
     //should be between 0 (red) to about 25 (yellow)
-    const unsigned char hueMask[8][16] PROGMEM = {
+    const unsigned char hueMask[8][16] = {
       {1 , 11, 19, 25, 25, 22, 11, 1 , 1 , 11, 19, 25, 25, 22, 11, 1 },
       {1 , 8 , 13, 19, 25, 19, 8 , 1 , 1 , 8 , 13, 19, 25, 19, 8 , 1 },
       {1 , 8 , 13, 16, 19, 16, 8 , 1 , 1 , 8 , 13, 16, 19, 16, 8 , 1 },
@@ -32,7 +32,7 @@ class Fire : public Effect
     unsigned char matrixValue[8][16];
     unsigned char line[WIDTH];
     int pcnt = 0;
-    uint8_t hue_add = 0;       // добавка цвета в огонь (от 0 до 230) - меняет весь цвет пламени
+    uint8_t hue_add = 75;       // добавка цвета в огонь (от 0 до 230) - меняет весь цвет пламени
     bool sparkless = true;        // вылетающие угольки вкл выкл
 
 public:
@@ -43,7 +43,7 @@ public:
         memset(matrixValue, 0, sizeof(matrixValue));
     }
 
-    void on_tick() {
+    void on_update() {
         if (pcnt >= 100) {
             shiftUp();
             generateLine();
@@ -96,13 +96,13 @@ public:
                     newX = x - 15;
                 }
                 if (y < 8) {
-                    uint8_t val = pgm_read_byte(&(valueMask[y][newX]));
+                    uint8_t val = valueMask[y][newX];
                     nextv = (((100.0 - pcnt) * matrixValue[y][newX]
                         + pcnt * matrixValue[y - 1][newX]) / 100.0)
-                        - pgm_read_byte(&(valueMask[y][newX]));
+                        - valueMask[y][newX];
 
                     CRGB color = CHSV(
-                       hue_add + pgm_read_byte(&(hueMask[y][newX])), // H
+                       hue_add + hueMask[y][newX], // H
                        255, // S
                        (uint8_t)max(0, nextv) // V
                     );
@@ -132,7 +132,7 @@ public:
                 newX = x - 15;
             }
             CRGB color = CHSV(
-                hue_add + pgm_read_byte(&(hueMask[0][newX])), // H
+                hue_add + hueMask[0][newX], // H
                 255,           // S
                 (uint8_t)(((100.0 - pcnt) * matrixValue[0][newX] + pcnt * line[newX]) / 100.0) // V
             );

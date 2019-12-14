@@ -6,8 +6,8 @@
 #include "03_rain.h"
 #include "04_all_random.h"
 #include "05_snow.h"
-/*#include "06_fire.h"
-#include "07_the_matrix.h"
+#include "06_fire.h"
+/*#include "07_the_matrix.h"
 #include "08_simple_balls.h"
 #include "09_confetti.h"
 #include "10_starfall.h"*/
@@ -60,9 +60,9 @@ Effect *EffectsList::getNewEffectInstance(int num) {
         return new AllRandom();
     case 6:
         return new Snow();
-    /*case 7:
+    case 7:
         return new Fire();
-    case 8:
+    /*case 8:
         return new TheMatrix();
     case 9:
         return new SimpleBalls();
