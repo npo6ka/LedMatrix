@@ -20,7 +20,7 @@ void setup() {
     led_setup();
     
     effects = new EffectsList();
-    effects->setEffect(0);
+    effects->setEffect(1);
 
     // КНОПКА
     touch.setStepTimeout(BUTTON_STEP_TIMEOUT);
@@ -68,10 +68,13 @@ void loop() {
     buttonTick();
     auto_mode_tick();
     
-    tps++;
+    FastLED.setBrightness(128);
+
+    // проверка реального тпс работы микроконтроллера
+    /*tps++;
     if (millis() > tick * 1000 ) {
         out("tps: %d fps: %.1f\n", tps, effects->getCurFPS());
         tick++;
         tps = 0;
-    }
+    }*/
 }

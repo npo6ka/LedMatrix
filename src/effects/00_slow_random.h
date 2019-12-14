@@ -62,11 +62,7 @@ public:
         }
 
         if (val == 0 && random8(100) == 0) {
-            if (color_val > 0) {
-                val = 2;
-            } else {
-                val = 1;
-            }
+            val = color_val == 0 ? 1 : 2;
         }
         if (val == 2) {
             if (color_val < step) {
