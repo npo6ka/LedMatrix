@@ -1,11 +1,17 @@
 #pragma once
 
 #include "erroreffect.h"
-#include "11_dynamic_square.h"
 
 class EffectsList
 {
 private:
+    // singlton property
+    // Конструкторы и оператор присваивания недоступны клиентам
+    EffectsList();
+    EffectsList( const EffectsList& );  
+    EffectsList& operator=( EffectsList& );
+    
+    int amnt;
     int curNum = 0;
     Effect *curEffect;
     unsigned long prev_micros;
@@ -15,10 +21,7 @@ private:
     void setEffect(Effect *eff);
 
 public:
-    
-    int amnt;
-
-    EffectsList();
+    static EffectsList& getInstance();
 
     void setErrorEffect();
     Effect *getCurEffect();

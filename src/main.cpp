@@ -1,29 +1,29 @@
-#include "button/GyverButton.h"
+#include "button/button_handler.h"
 #include "effects/effectslist.h"
 
 // все настройки матрицы находятся в lib_led.h
 // инициализация светодиодов
 CRGB leds[LEDS_CNT];
 
-EffectsList *effects;
-
 void setup() {
-    randomSeed(millis());
+    randomSeed(millis() + analogRead(A0));
     debug_setup();
     led_setup();
-    
-    effects = new EffectsList();
-    effects->setEffect(1);
+
+    // инициализация кнопок
+    setup_buttons();
 }
 
-// проверка реального тпс работы микроконтроллера
-/*unsigned long tick = 0;
-int tps = 0;/*/
+//unsigned long tick = 0;
+//int tps = 0;
 
 void loop() {
-    effects->onTick();
-    FastLED.setBrightness(128);
+    EffectsList::getInstance().onTick();
+
+    tick_buttons();
     
+    FastLED.setBrightness(64);
+
     // проверка реального тпс работы микроконтроллера
     /*tps++;
     if (millis() > tick * 1000 ) {
