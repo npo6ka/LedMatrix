@@ -1,8 +1,8 @@
 #include "effectslist.h"
 
 #include "00_slow_random.h"
-/*#include "01_simple_rainbow.h"
-#include "02_dribs.h"
+#include "01_simple_rainbow.h"
+/*#include "02_dribs.h"
 #include "03_rain.h"
 #include "04_all_random.h"
 #include "05_show.h"
@@ -50,9 +50,9 @@ Effect *EffectsList::getNewEffectInstance(int num) {
         return new DynamicSquare();
     case 1:
         return new SlowRandom();
-    /*case 2:
+    case 2:
         return new SimpleRainbow();
-    case 3:
+    /*case 3:
         return new Dribs();
     case 4:
         return new Rain();

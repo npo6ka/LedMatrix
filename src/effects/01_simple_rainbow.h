@@ -1,33 +1,33 @@
 #pragma once
 
-#define data ((SimpleRaibowData *)global_data)
+#include "effect.h"
 
-struct SimpleRaibowData
+class SimpleRainbow : public Effect
 {
     int tick;
     int phaseShift;
-};
+public:
+    SimpleRainbow() {}
 
-void simple_rainbow_prepare()
-{
-    data->tick = 0;
-    data->phaseShift = 10;
+    void on_init()
+    {
+        tick = 0;
+        phaseShift = 10;
 
-    eff_set_ups(20);
-}
-
-void simple_rainbow_update()
-{
-    uint8_t x, y;
-    data->tick = data->tick % (MAX_HSV + 1);
-
-    for (x = 0; x < 10; x++) {
-        for (y = 0; y < 10; y++) {
-            getPix(x, y) = CHSV((data->tick + x + y * data->phaseShift / 2) % (MAX_HSV + 1), 255, 255);
-        }
+        set_fps(30);
     }
 
-    data->tick += 1;
-}
+    void on_update()
+    {
+        uint8_t x, y;
+        tick = tick % (MAX_HSV + 1);
 
-#undef data
+        for (x = 0; x < HEIGHT; x++) {
+            for (y = 0; y < WIDTH; y++) {
+                getPix(x, y) = CHSV((tick + x + y * phaseShift / 2) % (MAX_HSV + 1), 255, 255);
+            }
+        }
+
+        tick += 1;
+    }
+};

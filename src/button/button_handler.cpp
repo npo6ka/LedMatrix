@@ -11,7 +11,7 @@
 
 GButton touch(BTN_PIN, LOW_PULL, NORM_OPEN);
 
-bool auto_mode = true;
+bool auto_mode = false;
 long int auto_mode_cnt = 0;
 
 void setup_buttons() {
