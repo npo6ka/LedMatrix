@@ -11,11 +11,16 @@
 #include "08_simple_balls.h"
 #include "09_confetti.h"
 #include "10_starfall.h"*/
-//#include "11_dynamic_square.h"
+#include "11_dynamic_square.h"
 /*
 #include "testmode.h"*/
 
 #define MAX_EFFECTS 50
+
+EffectsList& EffectsList::getInstance() {
+    static EffectsList instance;
+    return instance;
+}
 
 EffectsList::EffectsList() {
     init();
