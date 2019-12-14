@@ -27,8 +27,8 @@ public:
 
         uint8_t i, j;
 
-        for (i = 0; i < WIDTH; i++) {
-            for (j = 0; j < HEIGHT; j++) {
+        for (i = 0; i < HEIGHT; i++) {
+            for (j = 0; j < WIDTH; j++) {
                 CRGB cur_cl = getPixColor(i, j);
 
                 inc_val[i][j] = gen_led(cur_cl.r) << 4;
@@ -43,8 +43,8 @@ public:
     void on_update() {
         uint8_t i, j, buf;
 
-        for (i = 0; i < WIDTH; i++) {
-            for (j = 0; j < HEIGHT; j++) {
+        for (i = 0; i < HEIGHT; i++) {
+            for (j = 0; j < WIDTH; j++) {
                 CRGB cur_cl = getPixColor(i, j);
                 buf =  proc_val(cur_cl.r, (inc_val[i][j] >> 4) & 0x3) << 4;
                 buf |= proc_val(cur_cl.g, (inc_val[i][j] >> 2) & 0x3) << 2;

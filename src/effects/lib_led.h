@@ -100,6 +100,7 @@ static CRGB &getPix(int x, int y) {
     if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) {
         Serial.print("Value out of range in function getPix ");
         Serial.print(x);
+        Serial.print(" ");
         Serial.println(y);
         return leds[0];
     }
@@ -115,6 +116,7 @@ static uint32_t getPixColor(int x, int y) {
     if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) {
         Serial.print("Value out of range in function getPixColor ");
         Serial.print(x);
+        Serial.print(" ");
         Serial.println(y);
         return 0;
     }
@@ -126,6 +128,7 @@ static void setPixColor(int x, int y, CRGB color) {
     if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) {
         Serial.print("Value out of range in function setPixColor ");
         Serial.print(x);
+        Serial.print(" ");
         Serial.println(y);
         return;
     }
