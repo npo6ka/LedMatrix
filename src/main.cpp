@@ -13,7 +13,7 @@ void setup() {
     led_setup();
     
     effects = new EffectsList();
-    effects->setEffect(0);
+    effects->setEffect(1);
 }
 
 // проверка реального тпс работы микроконтроллера
@@ -22,6 +22,7 @@ int tps = 0;/*/
 
 void loop() {
     effects->onTick();
+    FastLED.setBrightness(128);
     
     // проверка реального тпс работы микроконтроллера
     /*tps++;
