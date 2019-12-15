@@ -1,91 +1,92 @@
 #pragma once
 
-#define data ((RainbowPointData *)global_data)
-
 #define ACCURACY 100
 #define MAX_VEC_SIZE 10
 #define RAINBOW_TICK_SIZE 4 //кол-во тиков до инкремента тика радуги
 
-struct RainbowPointData
+#include "effect.h"
+
+class RainbowPoint : public Effect
 {
     int32_t x;
     int32_t y;
     int32_t vec_x;
     int32_t vec_y;
     int tick;
-};
 
-//arg2: horizontal barrier = true or vertical = false
-void rainbow_point_gen_vector(bool horVer) {
-    int16_t dir = horVer ? 1 : -1;
+    //arg2: horizontal barrier = true or vertical = false
+    void rainbow_point_gen_vector(bool horVer) {
+        int16_t dir = horVer ? 1 : -1;
 
-    data->vec_x = (data->vec_x > 0 ? -dir : dir) * random(0, MAX_VEC_SIZE);
-    data->vec_y = (data->vec_y > 0 ? dir : -dir) * random(0, MAX_VEC_SIZE);
+        vec_x = (vec_x > 0 ? -dir : dir) * random(0, MAX_VEC_SIZE);
+        vec_y = (vec_y > 0 ? dir : -dir) * random(0, MAX_VEC_SIZE);
 
-    if (data->vec_y == 0 && data->vec_x == 0) {
-        rainbow_point_gen_vector(horVer);
-    }
-}
-
-void rainbow_point_move_point() {
-    data->x += data->vec_x;
-    data->y += data->vec_y;
-
-    if (data->x < 0) {
-        data->x = 0;
-        rainbow_point_gen_vector(true);
-    } else if (data->x >= ACCURACY * WIDTH) {
-        data->x = ACCURACY * WIDTH - 1;
-        rainbow_point_gen_vector(true);
-    }
-
-    if (data->y < 0) {
-        data->y = 0;
-        rainbow_point_gen_vector(false);
-    } else if (data->y >= ACCURACY * HEIGHT) {
-        data->y = ACCURACY * HEIGHT - 1;
-        rainbow_point_gen_vector(false);
-    }
-}
-
-void rainbow_point_render_point() {
-    int i, j;
-    for (i = 0; i < WIDTH; ++i) {
-        for(j = 0; j < HEIGHT; ++j) {
-            int loc_x = i * ACCURACY + ACCURACY / 2;
-            int loc_y = j * ACCURACY + ACCURACY / 2;
-
-            int distance = sqrt((loc_x - data->x) * (loc_x - data->x) + (loc_y - data->y) * (loc_y - data->y));
-
-            float chsv = (distance / 8 + data->tick / RAINBOW_TICK_SIZE) % MAX_HSV;
-
-            setPixColor(i, j, CHSV(chsv, 255, 255));
+        if (vec_y == 0 && vec_x == 0) {
+            rainbow_point_gen_vector(horVer);
         }
     }
-}
 
-void rainbow_point_prepare()
-{
-    data->tick = 0;
-    data->x = random16(0, (WIDTH - 1) * ACCURACY);
-    data->y = random16(0, (HEIGHT - 1) * ACCURACY);
+    void rainbow_point_move_point() {
+        x += vec_x;
+        y += vec_y;
 
-    data->vec_x = (int32_t)random(0, MAX_VEC_SIZE * 2) - MAX_VEC_SIZE;
-    data->vec_y = (int32_t)random(0, MAX_VEC_SIZE * 2) - MAX_VEC_SIZE;
+        if (x < 0) {
+            x = 0;
+            rainbow_point_gen_vector(true);
+        } else if (x >= ACCURACY * WIDTH) {
+            x = ACCURACY * WIDTH - 1;
+            rainbow_point_gen_vector(true);
+        }
 
-    eff_set_ups(60);
-}
+        if (y < 0) {
+            y = 0;
+            rainbow_point_gen_vector(false);
+        } else if (y >= ACCURACY * HEIGHT) {
+            y = ACCURACY * HEIGHT - 1;
+            rainbow_point_gen_vector(false);
+        }
+    }
 
-void rainbow_point_update()
-{
-    FastLED.clear();
+    void rainbow_point_render_point() {
+        int i, j;
+        for (i = 0; i < WIDTH; ++i) {
+            for(j = 0; j < HEIGHT; ++j) {
+                int loc_x = i * ACCURACY + ACCURACY / 2;
+                int loc_y = j * ACCURACY + ACCURACY / 2;
 
-    int i;
+                int distance = sqrt((loc_x - x) * (loc_x - x) + (loc_y - y) * (loc_y - y));
 
-    data->tick = (data->tick + 1) % ((MAX_HSV + 1) * RAINBOW_TICK_SIZE);
+                float chsv = (distance / 8 + tick / RAINBOW_TICK_SIZE) % MAX_HSV;
 
-    rainbow_point_move_point();
-    rainbow_point_render_point();
-}
+                setPixColor(i, j, CHSV(chsv, 255, 255));
+            }
+        }
+    }
 
-#undef data
+public:
+    RainbowPoint() {}
+
+    void on_init()
+    {
+        tick = 0;
+        x = random16(0, (WIDTH - 1) * ACCURACY);
+        y = random16(0, (HEIGHT - 1) * ACCURACY);
+
+        vec_x = (int32_t)random(0, MAX_VEC_SIZE * 2) - MAX_VEC_SIZE;
+        vec_y = (int32_t)random(0, MAX_VEC_SIZE * 2) - MAX_VEC_SIZE;
+
+        set_fps(60);
+    }
+
+    void on_update()
+    {
+        FastLED.clear();
+
+        int i;
+
+        tick = (tick + 1) % ((MAX_HSV + 1) * RAINBOW_TICK_SIZE);
+
+        rainbow_point_move_point();
+        rainbow_point_render_point();
+    }
+};

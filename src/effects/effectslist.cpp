@@ -15,6 +15,7 @@
 #include "12_random_rain.h"
 #include "13_rainbow_rain.h"
 #include "14_points.h"
+#include "15_rainbow_point.h"
 /*
 #include "testmode.h"*/
 
@@ -79,6 +80,8 @@ Effect *EffectsList::getNewEffectInstance(int num) {
         return new RainbowRain();
     case 14:
         return new Points();
+    case 15:
+        return new RainbowPoint();
     //синусоида с рандомными параметрами
     default:
         return NULL;
