@@ -13,7 +13,7 @@ public:
 
     }
 
-    void on_tick() {
+    void on_update() {
         for (uint8_t i = 0; i < density; i++) {
             uint8_t x = random(WIDTH);
             uint8_t y = random(HEIGHT);

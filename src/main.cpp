@@ -12,6 +12,8 @@ void setup() {
 
     // инициализация кнопок
     setup_buttons();
+
+    FastLED.setBrightness(64);
 }
 
 //unsigned long tick = 0;
@@ -21,8 +23,6 @@ void loop() {
     EffectsList::getInstance().onTick();
 
     tick_buttons();
-    
-    FastLED.setBrightness(64);
 
     // проверка реального тпс работы микроконтроллера
     /*tps++;

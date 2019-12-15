@@ -31,7 +31,7 @@ public:
         }
     }
 
-    void on_tick() {
+    void on_update() {
         if (!ball_track)    // если режим БЕЗ следов шариков
             FastLED.clear();  // очистить
         else {              // режим со следами
