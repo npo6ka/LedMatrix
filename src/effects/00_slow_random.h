@@ -5,7 +5,7 @@
 class SlowRandom : public Effect
 {
     uint8_t inc_val[WIDTH][HEIGHT];
-    int step = 2;
+    int step;
 
 public:
     SlowRandom() {}
@@ -22,7 +22,7 @@ public:
     }
 
     void on_init() {
-        memset8(inc_val, 0, LEDS_CNT);
+        step = 2;
         set_fps(120);
 
         uint8_t i, j;

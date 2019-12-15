@@ -12,6 +12,8 @@
 #include "09_confetti.h"
 #include "10_starfall.h"
 #include "11_dynamic_square.h"
+#include "12_random_rain.h"
+#include "13_rainbow_rain.h"
 /*
 #include "testmode.h"*/
 
@@ -70,11 +72,11 @@ Effect *EffectsList::getNewEffectInstance(int num) {
         return new Starfall();
     case 11:
         return new DynamicSquare();
-    /*case 12:
-        return new TestMode();
+    case 12:
+        return new RandomRain();
     case 13:
-        return new Rain();
-    case 14:
+        return new RainbowRain();
+    /*case 14:
         return new Rain();*/
     //синусоида с рандомными параметрами
     default:

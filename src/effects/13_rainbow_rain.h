@@ -1,42 +1,42 @@
 #pragma once
 
-#define data ((RainbowRainData *)global_data)
+#include "effect.h"
 
-#define RAINBOW_TICK_SIZE 4 //кол-во тиков до инкремента тика радуги
-
-struct RainbowRainData
+class RainbowRain : public Effect
 {
-    uint8_t step;
+    uint8_t fade_step;
+    uint8_t rainbow_step;
     int tick;
-};
 
-void rainbow_rain_prepare()
-{
-    data->step = 2;
-    data->tick = 0;
-    eff_set_ups(40);
-}
+public:
+    RainbowRain() {}
 
-void rainbow_rain_update()
-{
-    int i, j;
-
-    for (i = 0; i < WIDTH; ++i) {
-      for (j = 0; j < HEIGHT; ++j) {
-        fadePix(i, j, data->step);
-
-        CRGB cl = getPix(i, j);
-
-        if (random8(200) == 0) {
-            int asd = 0;
-            cl = CHSV(data->tick / RAINBOW_TICK_SIZE, 255, 255);
-        }
-
-        setPixColor(i, j, cl);
-      }
+    void on_init()
+    {
+        fade_step = 3;
+        rainbow_step = 4;
+        tick = 0;
+        set_fps(40);
     }
 
-    data->tick = (data->tick + 1) % ((MAX_HSV + 1) * RAINBOW_TICK_SIZE);
-}
+    void on_update()
+    {
+        int i, j;
 
-#undef data
+        for (i = 0; i < WIDTH; ++i) {
+            for (j = 0; j < HEIGHT; ++j) {
+                fadePix(i, j, fade_step);
+
+                CRGB cl = getPix(i, j);
+
+                if (random16(300) == 0) {
+                    cl = CHSV(tick / rainbow_step, 255, 255);
+                }
+
+                setPixColor(i, j, cl);
+            }
+        }
+
+        tick = (tick + 1) % ((MAX_HSV + 1) * rainbow_step);
+    }
+};
