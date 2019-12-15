@@ -14,6 +14,7 @@
 #include "11_dynamic_square.h"
 #include "12_random_rain.h"
 #include "13_rainbow_rain.h"
+#include "14_points.h"
 /*
 #include "testmode.h"*/
 
@@ -76,8 +77,8 @@ Effect *EffectsList::getNewEffectInstance(int num) {
         return new RandomRain();
     case 13:
         return new RainbowRain();
-    /*case 14:
-        return new Rain();*/
+    case 14:
+        return new Points();
     //синусоида с рандомными параметрами
     default:
         return NULL;
