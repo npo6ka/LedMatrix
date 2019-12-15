@@ -82,8 +82,6 @@ public:
     {
         FastLED.clear();
 
-        int i;
-
         tick = (tick + 1) % ((MAX_HSV + 1) * RAINBOW_TICK_SIZE);
 
         rainbow_point_move_point();
