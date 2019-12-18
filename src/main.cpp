@@ -13,7 +13,7 @@ void setup() {
     // инициализация кнопок
     setup_buttons();
 
-    FastLED.setBrightness(64);
+    FastLED.setBrightness(150);
 }
 
 //unsigned long tick = 0;

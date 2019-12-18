@@ -17,7 +17,7 @@
 extern CRGB leds[LEDS_CNT];
 
 // Получить номер пикселя по координатам
-static uint16_t getPixNum(int x, int y);
+static uint16_t getPixNum(const uint8_t x, const uint8_t y);
 
 // получить объект пикселя по координатам 
 static CRGB &getPix(int x, int y);
@@ -66,6 +66,122 @@ static void led_setup()
     pinMode(LED_BUILTIN, OUTPUT);
 }
 
+
+#define MATRIX_TYPE           (0U)                          // тип матрицы: 0 - зигзаг, 1 - параллельная
+#define CONNECTION_ANGLE      (1U)                          // угол подключения: 0 - левый нижний, 1 - левый верхний, 2 - правый верхний, 3 - правый нижний
+#define STRIP_DIRECTION       (0U)                          // направление ленты из угла: 0 - вправо, 1 - вверх, 2 - влево, 3 - вниз
+                                                            // при неправильной настройке матрицы вы получите предупреждение "Wrong matrix parameters! Set to default"
+                                                            // шпаргалка по настройке матрицы здесь! https://alexgyver.ru/matrix_guide/
+
+
+// ************* НАСТРОЙКА МАТРИЦЫ *****
+#if (CONNECTION_ANGLE == 0 && STRIP_DIRECTION == 0)
+#define _WIDTH WIDTH
+#define THIS_X x
+#define THIS_Y y
+
+#elif (CONNECTION_ANGLE == 0 && STRIP_DIRECTION == 1)
+#define _WIDTH HEIGHT
+#define THIS_X y
+#define THIS_Y x
+
+#elif (CONNECTION_ANGLE == 1 && STRIP_DIRECTION == 0)
+#define _WIDTH WIDTH
+#define THIS_X x
+#define THIS_Y (HEIGHT - y - 1)
+
+#elif (CONNECTION_ANGLE == 1 && STRIP_DIRECTION == 3)
+#define _WIDTH HEIGHT
+#define THIS_X (HEIGHT - y - 1)
+#define THIS_Y x
+
+#elif (CONNECTION_ANGLE == 2 && STRIP_DIRECTION == 2)
+#define _WIDTH WIDTH
+#define THIS_X (WIDTH - x - 1)
+#define THIS_Y (HEIGHT - y - 1)
+
+#elif (CONNECTION_ANGLE == 2 && STRIP_DIRECTION == 3)
+#define _WIDTH HEIGHT
+#define THIS_X (HEIGHT - y - 1)
+#define THIS_Y (WIDTH - x - 1)
+
+#elif (CONNECTION_ANGLE == 3 && STRIP_DIRECTION == 2)
+#define _WIDTH WIDTH
+#define THIS_X (WIDTH - x - 1)
+#define THIS_Y y
+
+#elif (CONNECTION_ANGLE == 3 && STRIP_DIRECTION == 1)
+#define _WIDTH HEIGHT
+#define THIS_X y
+#define THIS_Y (WIDTH - x - 1)
+
+#else
+#define _WIDTH WIDTH
+#define THIS_X x
+#define THIS_Y y
+#pragma message "Wrong matrix parameters! Set to default"
+
+#endif
+
+// получить номер пикселя в ленте по координатам
+static uint16_t getPixNum(const uint8_t x, const uint8_t y)
+{
+    //if (x % 2 == 0) return x * WIDTH + WIDTH - y - 1;
+    //else return x * WIDTH + y;
+  if ((THIS_Y % 2 == 0) || MATRIX_TYPE)                     // если чётная строка
+  {
+    return (THIS_Y * _WIDTH + THIS_X);
+  }
+  else                                                      // если нечётная строка
+  {
+    return (THIS_Y * _WIDTH + _WIDTH - THIS_X - 1);
+  }
+}
+/*
+#define THIS_X (WIDTH - x - 1)
+#define THIS_Y (HEIGHT - y - 1)
+
+
+0, 0
+(HEIGHT - x - 1) * WIDTH + y                   (0,2,4...) H(x)
+(HEIGHT - x - 1) * WIDTH + WIDTH - y - 1       (1,3,5...) H(x)
+
+0, 1
+y * HEIGHT + (HEIGHT - x - 1) (0,2,4...) W(y)
+y * HEIGHT + x                (1,3,5...) W(y)
+
+1, 0
+x * WIDTH + y                   (0,2,4...) H(x)
+x * WIDTH + WIDTH - y - 1       (1,3,5...) H(x)
+
+
+1, 3
+y * HEIGHT + x                (0,2,4...) W(y)
+y * HEIGHT + (HEIGHT - x - 1) (1,3,5...) W(y)
+
+2, 2
+x * WIDTH + WIDTH - y - 1       (0,2,4...) H(x)
+x * WIDTH + y                   (1,3,5...) H(x)
+
+2, 3
+(WIDTH - y - 1) * HEIGHT + (HEIGHT - x - 1) (0,2,4...) W(y)
+(WIDTH - y - 1) * HEIGHT + x                (1,3,5...) W(y)
+
+3, 1
+(WIDTH - y - 1) * HEIGHT + x                (0,2,4...) W(y)
+(WIDTH - y - 1) * HEIGHT + (HEIGHT - x - 1) (1,3,5...) W(y)
+
+3, 2
+(HEIGHT - x - 1) * WIDTH + WIDTH - y - 1    (0,2,4...) H(x)
+(HEIGHT - x - 1) * WIDTH + y                (1,3,5...) H(x)
+
+
+
+
+
+
+*/
+/*
 static uint16_t getPixNum(int x, int y) {
     if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) {
         Serial.print("Value out of range in function getPixNum");
@@ -93,8 +209,8 @@ static uint16_t getPixNum(int x, int y) {
   ->9     0   1   2   3   4   5   6   7   8   9 
   ^
 входной провод
-  */
-}
+  
+}*/
 
 static CRGB &getPix(int x, int y) {
     if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) {
