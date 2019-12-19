@@ -21,10 +21,10 @@ public:
             int sign;
 
             // забиваем случайными данными
-            coord[j][0] = WIDTH / 2 * 10;
+            coord[j][0] = HEIGHT / 2 * 10;
             random(2) ? sign = 1 : sign = -1;
             vector[j][0] = random(4, 15) * sign;
-            coord[j][1] = HEIGHT / 2 * 10;
+            coord[j][1] = WIDTH / 2 * 10;
             random(2) ? sign = 1 : sign = -1;
             vector[j][1] = random(4, 15) * sign;
             ballColors[j] = CHSV(random(0, 9) * 28, 255, 255);
@@ -71,12 +71,12 @@ public:
                 }
             }
 
-            if (coord[j][0] > (WIDTH - 1) * 10) {
-                coord[j][0] = (WIDTH - 1) * 10;
+            if (coord[j][0] > (HEIGHT - 1) * 10) {
+                coord[j][0] = (HEIGHT - 1) * 10;
                 vector[j][0] = -vector[j][0];
             }
-            if (coord[j][1] > (HEIGHT - 1) * 10) {
-                coord[j][1] = (HEIGHT - 1) * 10;
+            if (coord[j][1] > (WIDTH - 1) * 10) {
+                coord[j][1] = (WIDTH - 1) * 10;
                 vector[j][1] = -vector[j][1];
             }
             setPixColor(coord[j][0] / 10, coord[j][1] / 10, ballColors[j]);

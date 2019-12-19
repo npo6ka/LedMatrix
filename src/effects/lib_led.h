@@ -193,8 +193,8 @@ static CRGB* getLeds(void) {
 }
 
 static void fader(uint8_t step) {
-    for (uint8_t i = 0; i < WIDTH; i++) {
-        for (uint8_t j = 0; j < HEIGHT; j++) {
+    for (uint8_t i = 0; i < HEIGHT; i++) {
+        for (uint8_t j = 0; j < WIDTH; j++) {
             fadePix(i, j, step);
         }
     }
