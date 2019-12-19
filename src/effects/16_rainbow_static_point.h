@@ -11,11 +11,11 @@ class RainbowStaticPoint : public Effect
 
     void rainbow_static_point_render_point() {
         int i, j;
-        int x = WIDTH / 2 * ACCURACY;
-        int y = HEIGHT / 2 * ACCURACY;
+        int x = HEIGHT / 2 * ACCURACY;
+        int y = WIDTH / 2 * ACCURACY;
 
-        for (i = 0; i < WIDTH; ++i) {
-            for(j = 0; j < HEIGHT; ++j) {
+        for (i = 0; i < HEIGHT; ++i) {
+            for(j = 0; j < WIDTH; ++j) {
                 int loc_x = i * ACCURACY + ACCURACY / 2;
                 int loc_y = j * ACCURACY + ACCURACY / 2;
 
