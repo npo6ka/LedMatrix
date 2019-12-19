@@ -1,5 +1,6 @@
 #include "button/button_handler.h"
 #include "effects/effectslist.h"
+#include "wifi/WiFiRouter.h"
 
 // все настройки матрицы находятся в lib_led.h
 // инициализация светодиодов
@@ -13,7 +14,9 @@ void setup() {
     // инициализация кнопок
     setup_buttons();
 
-    FastLED.setBrightness(150);
+    FastLED.setBrightness(250);
+
+    WiFiRouter::getInstance();
 }
 
 //unsigned long tick = 0;
@@ -21,6 +24,8 @@ void setup() {
 
 void loop() {
     EffectsList::getInstance().onTick();
+    
+    WiFiRouter::getInstance().onTick();
 
     tick_buttons();
 
