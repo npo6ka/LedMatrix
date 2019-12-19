@@ -14,7 +14,7 @@ void setup() {
     setup_buttons();
 
     FastLED.setBrightness(150);
-    EffectsList::getInstance().setEffect(2);
+    EffectsList::getInstance().setEffect(5);
 }
 
 //unsigned long tick = 0;
