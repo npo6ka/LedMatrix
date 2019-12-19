@@ -19,7 +19,7 @@
                                                             // -----------
                                                             // -----------
                                                             // 0---------3
-#define STRIP_DIRECTION       (2U)                          // направление ленты из угла (0-1): 0 - горизонтальное (из углов влево или вправо)
+#define STRIP_DIRECTION       (0U)                          // направление ленты из угла (0-1): 0 - горизонтальное (из углов влево или вправо)
                                                             // 1>>>------2  1------<<<2  1---------2  1---------2
                                                             // -----------  -----------  -----------  -----------
                                                             // -----------  -----------  -----------  -----------
@@ -37,60 +37,47 @@
 // ************* НАСТРОЙКА МАТРИЦЫ *****
 //hooks for old vertion
 #if (STRIP_DIRECTION == 2)
-#define STRIP_DIRECTION 0
+#   define STRIP_DIRECTION 0
+#elif (STRIP_DIRECTION == 3)
+#   define STRIP_DIRECTION 1
 #endif
-#if (STRIP_DIRECTION == 3)
-#define STRIP_DIRECTION 1
+
+#if (STRIP_DIRECTION == 0)
+#   define _WIDTH WIDTH
+#elif (STRIP_DIRECTION == 1)
+#   define _WIDTH HEIGHT
 #endif
 
 #if (CONNECTION_ANGLE == 0 && STRIP_DIRECTION == 0)
-#define _WIDTH WIDTH
-#define THIS_X (HEIGHT - x - 1)
-#define THIS_Y y
-
+#   define THIS_X (HEIGHT - x - 1)
+#   define THIS_Y y
 #elif (CONNECTION_ANGLE == 0 && STRIP_DIRECTION == 1)
-#define _WIDTH HEIGHT
-#define THIS_X y
-#define THIS_Y (HEIGHT - x - 1)
-
+#   define THIS_X y
+#   define THIS_Y (HEIGHT - x - 1)
 #elif (CONNECTION_ANGLE == 1 && STRIP_DIRECTION == 0)
-#define _WIDTH WIDTH
-#define THIS_X x
-#define THIS_Y y
-
+#   define THIS_X x
+#   define THIS_Y y
 #elif (CONNECTION_ANGLE == 1 && STRIP_DIRECTION == 1)
-#define _WIDTH HEIGHT
-#define THIS_X y
-#define THIS_Y x
-
+#   define THIS_X y
+#   define THIS_Y x
 #elif (CONNECTION_ANGLE == 2 && STRIP_DIRECTION == 0)
-#define _WIDTH WIDTH
-#define THIS_X y
-#define THIS_Y (WIDTH - y - 1)
-
+#   define THIS_X x
+#   define THIS_Y (WIDTH - y - 1)
 #elif (CONNECTION_ANGLE == 2 && STRIP_DIRECTION == 1)
-#define _WIDTH HEIGHT
-#define THIS_X (WIDTH - y - 1)
-#define THIS_Y (HEIGHT - x - 1)
-
+#   define THIS_X (WIDTH - y - 1)
+#   define THIS_Y (HEIGHT - x - 1)
 #elif (CONNECTION_ANGLE == 3 && STRIP_DIRECTION == 0)
-#define _WIDTH WIDTH
-#define THIS_X (HEIGHT - x - 1) 
-#define THIS_Y (WIDTH - y - 1)
-
+#   define THIS_X (HEIGHT - x - 1) 
+#   define THIS_Y (WIDTH - y - 1)
 #elif (CONNECTION_ANGLE == 3 && STRIP_DIRECTION == 1)
-#define _WIDTH HEIGHT
-#define THIS_X (WIDTH - y - 1) 
-#define THIS_Y x
-
+#   define THIS_X (WIDTH - y - 1) 
+#   define THIS_Y x
 #else
-#define _WIDTH WIDTH
-#define THIS_X x
-#define THIS_Y y
-#pragma message "Wrong matrix parameters! Set to default"
-
+#   define _WIDTH WIDTH
+#   define THIS_X x
+#   define THIS_Y y
+#   pragma message "Wrong matrix parameters! Set to default"
 #endif
-
 
 extern CRGB leds[LEDS_CNT];
 
@@ -163,9 +150,9 @@ static uint16_t getPixNum(const uint8_t x, const uint8_t y)
 #endif
     || MATRIX_TYPE)                             // если чётная строка
     {
-        return (THIS_Y * _WIDTH + THIS_X);
+        return (THIS_X * _WIDTH + THIS_Y);
     } else {                                    // если нечётная строка
-        return (THIS_Y * _WIDTH + _WIDTH - THIS_X - 1);
+        return (THIS_X * _WIDTH + _WIDTH - THIS_Y - 1);
     }
 }
 

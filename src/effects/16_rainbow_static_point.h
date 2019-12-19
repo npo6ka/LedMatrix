@@ -41,11 +41,5 @@ public:
     {
         tick = (tick + 1) % (256 * RAINBOW_TICK_SIZE);
         rainbow_static_point_render_point();
-        //getPix(0, 0) = 0xffffff;
-        //getPix(0, 15) = 0xff00ff;
-
-        //leds[0] = 0xffffff;
-
-
     }
 };
