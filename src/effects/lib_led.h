@@ -215,9 +215,9 @@ static void drawLine(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, CRGB color)
     int16_t error = deltaX - deltaY;
     int32_t error2;
 
-    setPixColor(x2, y2, color);
+    getPix(x2, y2) = color;
     while (x1 != x2 || y1 != y2) {
-        setPixColor(x1, y1, color);
+        getPix(x1, y1) = color;
         error2 = error * 2;
 
         if (error2 > -deltaY) {
