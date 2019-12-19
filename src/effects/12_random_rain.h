@@ -26,13 +26,13 @@ public:
                 CRGB cl = getPix(i, j);
 
                 if (random16(500) == 0) {
-                    cl.r = MAX_BRIGHTNESS;
+                    cl.r = 255;
                 }
                 if (random16(500) == 0) {
-                    cl.g = MAX_BRIGHTNESS;
+                    cl.g = 255;
                 }
                 if (random16(500) == 0) {
-                    cl.b = MAX_BRIGHTNESS;
+                    cl.b = 255;
                 }
 
                 setPixColor(i, j, cl);

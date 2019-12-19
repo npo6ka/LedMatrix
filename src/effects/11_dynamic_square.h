@@ -5,7 +5,7 @@
 class DynamicSquare : public Effect
 {
     uint8_t lenght = 2;
-    uint8_t step = MAX_BRIGHTNESS / lenght;
+    uint8_t step = 255 / lenght;
     uint8_t radius = WIDTH > HEIGHT ? (HEIGHT / 2): (WIDTH / 2);
     //uint32_t color = 0x0000ff;
     uint8_t hsv = 0;

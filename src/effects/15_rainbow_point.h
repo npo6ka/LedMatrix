@@ -56,7 +56,7 @@ class RainbowPoint : public Effect
 
                 int distance = sqrt((loc_x - x) * (loc_x - x) + (loc_y - y) * (loc_y - y));
 
-                float chsv = (distance / 8 + tick / RAINBOW_TICK_SIZE) % MAX_HSV;
+                float chsv = (distance / 8 + tick / RAINBOW_TICK_SIZE) % 255;
 
                 setPixColor(i, j, CHSV(chsv, 255, 255));
             }
@@ -82,7 +82,7 @@ public:
     {
         FastLED.clear();
 
-        tick = (tick + 1) % ((MAX_HSV + 1) * RAINBOW_TICK_SIZE);
+        tick = (tick + 1) % (256 * RAINBOW_TICK_SIZE);
 
         rainbow_point_move_point();
         rainbow_point_render_point();

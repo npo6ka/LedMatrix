@@ -26,11 +26,11 @@ public:
             }
         }
 
-        int step = MAX_BRIGHTNESS / lenght;
+        int step = 255 / lenght;
         for (int j = 0; j < WIDTH;  ++j) {
             for (int i = 0; i < HEIGHT;  ++i) {
                 if (cur_drib[j] != 0 && i < cur_drib[j]) {
-                    getPix(HEIGHT - i - 1, j) = CRGB(0, 0, max(MAX_BRIGHTNESS - (cur_drib[j] - i - 1) * step, 0));
+                    getPix(HEIGHT - i - 1, j) = CRGB(0, 0, max(255 - (cur_drib[j] - i - 1) * step, 0));
                 } else {
                     getPix(HEIGHT - i - 1, j) = 0x0;
                 }

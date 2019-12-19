@@ -37,6 +37,6 @@ public:
             }
         }
 
-        tick = (tick + 1) % ((MAX_HSV + 1) * rainbow_step);
+        tick = (tick + 1) % (256 * rainbow_step);
     }
 };

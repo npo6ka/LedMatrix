@@ -15,7 +15,7 @@ public:
         uint8_t val = random8(2);
 
         if (val > 0) {
-            color_val = random8(MAX_BRIGHTNESS);
+            color_val = random8(255);
         }
 
         return val;
@@ -57,7 +57,7 @@ public:
     }
 
     uint8_t proc_val(uint8_t &color_val, uint8_t val) {
-        if (color_val == 0 || color_val == MAX_BRIGHTNESS) {
+        if (color_val == 0 || color_val == 255) {
             val = 0;
         }
 
@@ -68,13 +68,13 @@ public:
             if (color_val < step) {
                 color_val = 0;
             } else {
-                color_val = (color_val - step) % (MAX_BRIGHTNESS + 1);
+                color_val = (color_val - step) % 256;
             }
         } else if (val == 1) {
-            if (color_val + step > MAX_BRIGHTNESS) {
-                color_val = MAX_BRIGHTNESS;
+            if (color_val + step > 255) {
+                color_val = 255;
             } else {
-                color_val = (color_val + step) % (MAX_BRIGHTNESS + 1);
+                color_val = (color_val + step) % 256;
             }
         }
 

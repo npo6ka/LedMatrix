@@ -21,7 +21,7 @@ class RainbowStaticPoint : public Effect
 
                 int distance = sqrt((loc_x - x) * (loc_x - x) + (loc_y - y) * (loc_y - y));
 
-                float chsv = (distance + tick / RAINBOW_TICK_SIZE) % MAX_HSV;
+                float chsv = (distance + tick / RAINBOW_TICK_SIZE) % 255;
 
                 setPixColor(i, j, CHSV(chsv, 255, 255));
             }
@@ -38,11 +38,11 @@ public:
     }
 
     void on_update()
-    {/*
-        tick = (tick + 1) % ((MAX_HSV + 1) * RAINBOW_TICK_SIZE);
-        rainbow_static_point_render_point();*/
-        getPix(0, 0) = 0xffffff;
-        getPix(0, 15) = 0xff00ff;
+    {
+        tick = (tick + 1) % (256 * RAINBOW_TICK_SIZE);
+        rainbow_static_point_render_point();
+        //getPix(0, 0) = 0xffffff;
+        //getPix(0, 15) = 0xff00ff;
 
         //leds[0] = 0xffffff;
 

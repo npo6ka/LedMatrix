@@ -20,11 +20,11 @@ public:
     void on_update()
     {
         uint8_t x, y;
-        tick = tick % (MAX_HSV + 1);
+        tick = tick % (256);
 
         for (x = 0; x < HEIGHT; x++) {
             for (y = 0; y < WIDTH; y++) {
-                getPix(x, y) = CHSV((tick + x + y * phaseShift / 2) % (MAX_HSV + 1), 255, 255);
+                getPix(x, y) = CHSV((tick + x + y * phaseShift / 2) % (256), 255, 255);
             }
         }
 

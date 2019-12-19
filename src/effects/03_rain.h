@@ -21,7 +21,7 @@ public:
                 CRGB &cl = getPix(i, j);
 
                 if (random8(255) == 0) {
-                    cl = CRGB(0, 0, MAX_BRIGHTNESS);
+                    cl = CRGB(0, 0, 255);
                 } else if (cl.b > 0) {
                     if (cl.b > step) {
                         cl = CRGB(0, 0, cl.b - step);
