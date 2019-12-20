@@ -8,7 +8,7 @@
 #define DATA_PIN       (2U)    // номер порта к которому подключены светодиоды
 
 #define WIDTH          16
-#define HEIGHT         16
+#define HEIGHT         8
 #define LEDS_CNT       WIDTH * HEIGHT
 #define CURRENT_LIMIT  (2000U) // лимит по току в миллиамперах, автоматически управляет яркостью (пожалей свой блок питания!) 0 - выключить лимит
 
@@ -193,8 +193,8 @@ static CRGB* getLeds(void) {
 }
 
 static void fader(uint8_t step) {
-    for (uint8_t i = 0; i < WIDTH; i++) {
-        for (uint8_t j = 0; j < HEIGHT; j++) {
+    for (uint8_t i = 0; i < HEIGHT; i++) {
+        for (uint8_t j = 0; j < WIDTH; j++) {
             fadePix(i, j, step);
         }
     }
@@ -215,9 +215,9 @@ static void drawLine(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, CRGB color)
     int16_t error = deltaX - deltaY;
     int32_t error2;
 
-    setPixColor(x2, y2, color);
+    getPix(x2, y2) = color;
     while (x1 != x2 || y1 != y2) {
-        setPixColor(x1, y1, color);
+        getPix(x1, y1) = color;
         error2 = error * 2;
 
         if (error2 > -deltaY) {

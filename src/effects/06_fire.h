@@ -44,14 +44,14 @@ public:
     }
 
     void on_update() {
-        if (pcnt >= 100) {
+        /*if (pcnt >= 100) {
             shiftUp();
             generateLine();
             pcnt = 0;
         }
 
         drawFrame(pcnt);
-        pcnt += 30;
+        pcnt += 30;*/
     }
 
     // Randomly generate the next line (matrix row)

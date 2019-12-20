@@ -15,24 +15,24 @@ public:
 
     void on_update()
     {
-        for (int i = 0; i < WIDTH;  ++i) {
-            if (cur_drib[i] == 0 && random8(40) == 0) {
-                cur_drib[i] = 1;
-            } else if (cur_drib[i] != 0) {
-                cur_drib[i] += 1;
-                if (cur_drib[i] >= lenght + WIDTH) {
-                    cur_drib[i] = 0;
+        for (int j = 0; j < WIDTH;  ++j) {
+            if (cur_drib[j] == 0 && random8(40) == 0) {
+                cur_drib[j] = 1;
+            } else if (cur_drib[j] != 0) {
+                cur_drib[j] += 1;
+                if (cur_drib[j] >= lenght + WIDTH) {
+                    cur_drib[j] = 0;
                 }
             }
         }
 
         int step = 255 / lenght;
-        for (int j = 0; j < WIDTH;  ++j) {
-            for (int i = 0; i < HEIGHT;  ++i) {
+        for (int i = 0; i < HEIGHT;  ++i) {
+            for (int j = 0; j < WIDTH;  ++j) {
                 if (cur_drib[j] != 0 && i < cur_drib[j]) {
-                    getPix(HEIGHT - i - 1, j) = CRGB(0, 0, max(255 - (cur_drib[j] - i - 1) * step, 0));
+                    getPix(i, j) = CRGB(0, 0, max(255 - (cur_drib[j] - i - 1) * step, 0));
                 } else {
-                    getPix(HEIGHT - i - 1, j) = 0x0;
+                    getPix(i, j) = 0x0;
                 }
             }
         }

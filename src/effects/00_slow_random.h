@@ -4,7 +4,7 @@
 
 class SlowRandom : public Effect
 {
-    uint8_t inc_val[WIDTH][HEIGHT];
+    uint8_t inc_val[LEDS_CNT];
     int step;
 
 public:
@@ -25,34 +25,27 @@ public:
         step = 2;
         set_fps(120);
 
-        uint8_t i, j;
+        uint8_t i;
 
-        for (i = 0; i < HEIGHT; i++) {
-            for (j = 0; j < WIDTH; j++) {
-                CRGB cur_cl = getPixColor(i, j);
+        for (i = 0; i < LEDS_CNT; i++) {
+            CRGB &cur_cl = getLeds()[i];
 
-                inc_val[i][j] = gen_led(cur_cl.r) << 4;
-                inc_val[i][j] |= gen_led(cur_cl.g) << 2;
-                inc_val[i][j] |= gen_led(cur_cl.b);
-
-                setPixColor(i, j, getPixColor(cur_cl));
-            }
+            inc_val[i] = gen_led(cur_cl.r) << 4;
+            inc_val[i] |= gen_led(cur_cl.g) << 2;
+            inc_val[i] |= gen_led(cur_cl.b);
         }
     }
 
     void on_update() {
-        uint8_t i, j, buf;
+        uint8_t i, buf;
 
-        for (i = 0; i < HEIGHT; i++) {
-            for (j = 0; j < WIDTH; j++) {
-                CRGB cur_cl = getPixColor(i, j);
-                buf =  proc_val(cur_cl.r, (inc_val[i][j] >> 4) & 0x3) << 4;
-                buf |= proc_val(cur_cl.g, (inc_val[i][j] >> 2) & 0x3) << 2;
-                buf |= proc_val(cur_cl.b, inc_val[i][j] & 0x3);
-                inc_val[i][j] = buf;
+        for (i = 0; i < LEDS_CNT; i++) {
+            CRGB &cur_cl = getLeds()[i];
 
-                setPixColor(i, j, getPixColor(cur_cl));
-            }
+            buf =  proc_val(cur_cl.r, (inc_val[i] >> 4) & 0x3) << 4;
+            buf |= proc_val(cur_cl.g, (inc_val[i] >> 2) & 0x3) << 2;
+            buf |= proc_val(cur_cl.b, inc_val[i] & 0x3);
+            inc_val[i] = buf;
         }
     }
 
