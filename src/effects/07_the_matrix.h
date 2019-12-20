@@ -4,7 +4,7 @@
 
 class TheMatrix : public Effect
 {
-    uint8_t fade = 0x20;
+    uint8_t fade = 0x30;
 
 public:
     TheMatrix() {}

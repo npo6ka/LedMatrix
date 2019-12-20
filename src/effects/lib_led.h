@@ -8,7 +8,7 @@
 #define DATA_PIN       (2U)    // номер порта к которому подключены светодиоды
 
 #define WIDTH          16
-#define HEIGHT         8
+#define HEIGHT         16
 #define LEDS_CNT       WIDTH * HEIGHT
 #define CURRENT_LIMIT  (2000U) // лимит по току в миллиамперах, автоматически управляет яркостью (пожалей свой блок питания!) 0 - выключить лимит
 
