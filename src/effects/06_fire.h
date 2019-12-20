@@ -64,8 +64,8 @@ public:
     //shift all values in the matrix up one row
 
     void shiftUp() {
-        for (uint8_t y = WIDTH - 1; y > 0; y--) {
-            for (uint8_t x = 0; x < HEIGHT; x++) {
+        for (uint8_t y = HEIGHT - 1; y > 0; y--) {
+            for (uint8_t x = 0; x < WIDTH; x++) {
                 uint8_t newX = x;
                 if (x > 15) newX = x - 15;
                 if (y > 7) continue;
@@ -73,7 +73,7 @@ public:
             }
         }
 
-        for (uint8_t x = 0; x < HEIGHT; x++) {
+        for (uint8_t x = 0; x < WIDTH; x++) {
             uint8_t newX = x;
             if (x > 15) {
                 newX = x - 15;
@@ -89,8 +89,8 @@ public:
         int nextv;
 
         //each row interpolates with the one before it
-        for (uint8_t y = WIDTH - 1; y > 0; y--) {
-            for (uint8_t x = 0; x < HEIGHT; x++) {
+        for (uint8_t y = HEIGHT - 1; y > 0; y--) {
+            for (uint8_t x = 0; x < WIDTH - 1; x++) {
                 uint8_t newX = x;
                 if (x > 15) {
                     newX = x - 15;
@@ -106,31 +106,31 @@ public:
                        (uint8_t)max(0, nextv) // V
                     );
 
-                    setPixColor(x, y, color);
+                    getPix(HEIGHT - 1 - y, x) = color;
                 } else if (y == 8 && sparkless) {
-                    if (random8(20) == 0 && getPixColor(x, y - 1) != 0) {
-                        setPixColor(x, y, getPixColor(x, y - 1));
+                    if (random8(20) == 0 && getPixColor(HEIGHT - y, x) != 0) {
+                        getPix(HEIGHT - 1 - y, x) = getPixColor(HEIGHT - y, x);
                     } else {
-                        setPixColor(x, y, 0);
+                        getPix(HEIGHT - 1 - y, x) = 0;
                     }
                 } else if (sparkless) {
                     // старая версия для яркости
-                    if (getPixColor(x, y - 1) > 0) {
-                        setPixColor(x, y, getPixColor(x, y - 1));
+                    if (getPixColor(HEIGHT - y, x) > 0) {
+                        getPix(HEIGHT - 1 - y, x) = getPixColor(HEIGHT - y, x);
                     } else {
-                        setPixColor(x, y, 0);
+                        getPix(HEIGHT - 1 - y, x) = 0;
                     }
                 }
             }
         }
 
         //first row interpolates with the "next" line
-        for (unsigned char x = 0; x < HEIGHT; x++) {
+        for (unsigned char x = 0; x < WIDTH; x++) {
             uint8_t newX = x;
             if (x > 15) {
                 newX = x - 15;
             }
-            getPix(newX, 0) = CHSV(
+            getPix(HEIGHT - 1, newX) = CHSV(
                 hue_add + hueMask[0][newX], // H
                 255,           // S
                 (uint8_t)(((100.0 - pcnt) * matrixValue[0][newX] + pcnt * line[newX]) / 100.0) // V
