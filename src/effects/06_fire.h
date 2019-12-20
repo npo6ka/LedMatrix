@@ -44,14 +44,14 @@ public:
     }
 
     void on_update() {
-        /*if (pcnt >= 100) {
+        if (pcnt >= 100) {
             shiftUp();
             generateLine();
             pcnt = 0;
         }
 
         drawFrame(pcnt);
-        pcnt += 30;*/
+        pcnt += 30;
     }
 
     // Randomly generate the next line (matrix row)
@@ -64,8 +64,8 @@ public:
     //shift all values in the matrix up one row
 
     void shiftUp() {
-        for (uint8_t y = HEIGHT - 1; y > 0; y--) {
-            for (uint8_t x = 0; x < WIDTH; x++) {
+        for (uint8_t y = WIDTH - 1; y > 0; y--) {
+            for (uint8_t x = 0; x < HEIGHT; x++) {
                 uint8_t newX = x;
                 if (x > 15) newX = x - 15;
                 if (y > 7) continue;
@@ -73,7 +73,7 @@ public:
             }
         }
 
-        for (uint8_t x = 0; x < WIDTH; x++) {
+        for (uint8_t x = 0; x < HEIGHT; x++) {
             uint8_t newX = x;
             if (x > 15) {
                 newX = x - 15;
@@ -89,8 +89,8 @@ public:
         int nextv;
 
         //each row interpolates with the one before it
-        for (uint8_t y = HEIGHT - 1; y > 0; y--) {
-            for (uint8_t x = 0; x < WIDTH; x++) {
+        for (uint8_t y = WIDTH - 1; y > 0; y--) {
+            for (uint8_t x = 0; x < HEIGHT; x++) {
                 uint8_t newX = x;
                 if (x > 15) {
                     newX = x - 15;
@@ -125,18 +125,16 @@ public:
         }
 
         //first row interpolates with the "next" line
-        for (unsigned char x = 0; x < WIDTH; x++) {
+        for (unsigned char x = 0; x < HEIGHT; x++) {
             uint8_t newX = x;
             if (x > 15) {
                 newX = x - 15;
             }
-            CRGB color = CHSV(
+            getPix(newX, 0) = CHSV(
                 hue_add + hueMask[0][newX], // H
                 255,           // S
                 (uint8_t)(((100.0 - pcnt) * matrixValue[0][newX] + pcnt * line[newX]) / 100.0) // V
             );
-
-            setPixColor(newX, 0, color);
         }
     }
 };
