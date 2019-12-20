@@ -23,7 +23,7 @@ class RainbowStaticPoint : public Effect
 
                 float chsv = (distance + tick / RAINBOW_TICK_SIZE) % 255;
 
-                setPixColor(i, j, CHSV(chsv, 255, 255));
+                getPix(i, j) = CHSV(chsv, 255, 255);
             }
         }
     }
