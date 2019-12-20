@@ -65,13 +65,13 @@
 #   define THIS_Y (WIDTH - y - 1)
 #elif (CONNECTION_ANGLE == 2 && STRIP_DIRECTION == 1)
 #   define THIS_X (WIDTH - y - 1)
-#   define THIS_Y (HEIGHT - x - 1)
+#   define THIS_Y x
 #elif (CONNECTION_ANGLE == 3 && STRIP_DIRECTION == 0)
 #   define THIS_X (HEIGHT - x - 1) 
 #   define THIS_Y (WIDTH - y - 1)
 #elif (CONNECTION_ANGLE == 3 && STRIP_DIRECTION == 1)
-#   define THIS_X (WIDTH - y - 1) 
-#   define THIS_Y x
+#   define THIS_X (WIDTH - y - 1)
+#   define THIS_Y (HEIGHT - x - 1)
 #else
 #   define _WIDTH WIDTH
 #   define THIS_X x
@@ -142,14 +142,7 @@ static uint16_t getPixNum(const uint8_t x, const uint8_t y)
         return 0;
     }
 
-    if (
-#if (STRIP_DIRECTION == 0)
-    x % 2 == 0
-#else
-    y % 2 == 0
-#endif
-    || MATRIX_TYPE)                             // если чётная строка
-    {
+    if (THIS_X % 2 == 0 || MATRIX_TYPE) {       // если чётная строка
         return (THIS_X * _WIDTH + THIS_Y);
     } else {                                    // если нечётная строка
         return (THIS_X * _WIDTH + _WIDTH - THIS_Y - 1);
