@@ -90,7 +90,7 @@ public:
 
         //each row interpolates with the one before it
         for (uint8_t y = HEIGHT - 1; y > 0; y--) {
-            for (uint8_t x = 0; x < WIDTH - 1; x++) {
+            for (uint8_t x = 0; x < WIDTH; x++) {
                 uint8_t newX = x;
                 if (x > 15) {
                     newX = x - 15;
