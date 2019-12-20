@@ -15,11 +15,18 @@ WiFiRouter::WiFiRouter() {
 void WiFiRouter::init() {
     Serial.println("WiFiRouter::init()");
 
+    WiFi.mode(WIFI_STA);
     WiFi.softAPConfig(IPAddress(IP_AP[0], IP_AP[1], IP_AP[2], IP_AP[3]),
                       IPAddress(192, 168, 4, 1),
                       IPAddress(255, 255, 255, 0));
 
     WiFi.softAP(AP_SSID, AP_PASS);
+
+    //while (WiFi.status() != WL_CONNECTED) {
+    //    delay(500);
+    //    Serial.print(".");
+    //}
+
     IPAddress myIP = WiFi.softAPIP();
     Serial.print("Access point Mode");
     Serial.print("AP IP address: ");

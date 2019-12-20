@@ -40,6 +40,9 @@ public:
     void on_update()
     {
         tick = (tick + 1) % (256 * RAINBOW_TICK_SIZE);
-        rainbow_static_point_render_point();
+        //rainbow_static_point_render_point();
+
+        getPix(0, 0)= 0xffffff;
+        getPix(0, WIDTH - 1)= 0xff00ff;
     }
 };
