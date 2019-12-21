@@ -1,13 +1,13 @@
 #pragma once
 
 #define ACCURACY 10
-#define RAINBOW_TICK_SIZE 4 //кол-во тиков до инкремента тика радуги
 
 #include "effect.h"
 
 class RainbowStaticPoint : public Effect
 {
     int tick;
+    uint8_t tick_size = 4; //кол-во тиков до инкремента тика радуги
 
     void rainbow_static_point_render_point() {
         int i, j;
@@ -21,7 +21,7 @@ class RainbowStaticPoint : public Effect
 
                 int distance = sqrt((loc_x - x) * (loc_x - x) + (loc_y - y) * (loc_y - y));
 
-                float chsv = (distance + tick / RAINBOW_TICK_SIZE) % 255;
+                float chsv = (distance + tick / tick_size) % 255;
 
                 getPix(i, j) = CHSV(chsv, 255, 255);
             }
@@ -39,7 +39,9 @@ public:
 
     void on_update()
     {
-        tick = (tick + 1) % (256 * RAINBOW_TICK_SIZE);
+        tick = (tick + 1) % (256 * tick_size);
         rainbow_static_point_render_point();
     }
 };
+
+#undef ACCURACY

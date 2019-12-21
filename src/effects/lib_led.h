@@ -1,40 +1,10 @@
 #pragma once
 
-#define DEBUG true
-
 #include "FastLED.h"
+#include "constants.h"
 #include "debug_lib.h"
 
-#define DATA_PIN       (2U)    // номер порта к которому подключены светодиоды
-
-#define WIDTH          16
-#define HEIGHT         16
-#define LEDS_CNT       WIDTH * HEIGHT
-#define CURRENT_LIMIT  (2000U) // лимит по току в миллиамперах, автоматически управляет яркостью (пожалей свой блок питания!) 0 - выключить лимит
-
-#define MATRIX_TYPE           (0U)                          // тип матрицы: 0 - зигзаг, 1 - параллельная
-#define CONNECTION_ANGLE      (2U)                          // угол подключения матрицы (0-3): 0 - левый нижний, 1 - левый верхний, 2 - правый верхний, 3 - правый нижний
-                                                            // 1---------2
-                                                            // -----------
-                                                            // -----------
-                                                            // -----------
-                                                            // 0---------3
-#define STRIP_DIRECTION       (0U)                          // направление ленты из угла (0-1): 0 - горизонтальное (из углов влево или вправо)
-                                                            // 1>>>------2  1------<<<2  1---------2  1---------2
-                                                            // -----------  -----------  -----------  -----------
-                                                            // -----------  -----------  -----------  -----------
-                                                            // -----------  -----------  -----------  -----------
-                                                            // 0---------3  0---------3  0>>>------3  0------<<<3
-
-                                                            // 1 - Вертикальное (из углов вверх или вниз)
-                                                            // 1---------2  1---------2  1---------2  1---------2
-                                                            // v----------  ----------v  -----------  -----------
-                                                            // v----------  ----------v  ^----------  ----------^
-                                                            // -----------  -----------  ^----------  ----------^
-                                                            // 0---------3  0---------3  0---------3  0---------3
-
-
-// ************* НАСТРОЙКА МАТРИЦЫ *****
+// ************* НАСТРОЙКА МАТРИЦЫ **************
 //hooks for old vertion
 #if (STRIP_DIRECTION == 2)
 #   define STRIP_DIRECTION 0
@@ -93,6 +63,7 @@ static uint32_t getPixColor(CRGB val);
 // получить 24-битный код цвета по координатам
 static uint32_t getPixColor(int x, int y);
 
+// УСТАРЕВШАЯ ФУНКЦИЯ. Лучше использовать getPix(x, y) = color
 // установить цвет пикселя по координатам.
 // Структура CRGB поддерживает автоматическую
 // конвертацию из CHSV и из int значений.
@@ -124,7 +95,7 @@ static void drawLine(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, CRGB color)
  */
 static void led_setup()
 {
-    FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, LEDS_CNT).setCorrection(TypicalLEDStrip);
+    FastLED.addLeds<WS2812B, DATA_PIN, COLOR_ORDER>(leds, LEDS_CNT).setCorrection(TypicalLEDStrip);
     FastLED.setMaxPowerInVoltsAndMilliamps(5, CURRENT_LIMIT);
     FastLED.clear();
 
