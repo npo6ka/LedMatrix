@@ -19,7 +19,6 @@ void setup() {
     setup_buttons();
 
     FastLED.setBrightness(150);
-    //EffectsList::getInstance().setEffect(11);
 
     WiFiRouter::getInstance();
 }

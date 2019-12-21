@@ -43,16 +43,16 @@ class Points : public Effect
         if (pnt.x < 0) {
             pnt.x = 0;
             gen_vector(pnt, true);
-        } else if (pnt.x >= ACCURACY * WIDTH) {
-            pnt.x = ACCURACY * WIDTH - 1;
+        } else if (pnt.x >= ACCURACY * HEIGHT) {
+            pnt.x = ACCURACY * HEIGHT - 1;
             gen_vector(pnt, true);
         }
 
         if (pnt.y < 0) {
             pnt.y = 0;
             gen_vector(pnt, false);
-        } else if (pnt.y >= ACCURACY * HEIGHT) {
-            pnt.y = ACCURACY * HEIGHT - 1;
+        } else if (pnt.y >= ACCURACY * WIDTH) {
+            pnt.y = ACCURACY * WIDTH - 1;
             gen_vector(pnt, false);
         }
     }
@@ -73,19 +73,18 @@ class Points : public Effect
     void render_point(Point pnt)
     {
         int i, j;
-        for (i = 0; i < WIDTH; ++i) {
-            for(j = 0; j < HEIGHT; ++j) {
+        for (i = 0; i < HEIGHT; ++i) {
+            for(j = 0; j < WIDTH; ++j) {
                 int loc_x = i * ACCURACY + ACCURACY / 2;
                 int loc_y = j * ACCURACY + ACCURACY / 2;
 
                 int distance = sqrt((loc_x - pnt.x) * (loc_x - pnt.x) + (loc_y - pnt.y) * (loc_y - pnt.y));
 
                 float bright = get_func_brithtness(distance);
-                CRGB clr = getPix(i, j);
+                CRGB &clr = getPix(i, j);
                 clr.r = qadd8(clr.r, (float)pnt.color.r * bright);
                 clr.g = qadd8(clr.g, (float)pnt.color.g * bright);
                 clr.b = qadd8(clr.b, (float)pnt.color.b * bright);
-                setPixColor(i, j, clr);
             }
         }
     }
@@ -101,8 +100,8 @@ public:
         bright_radius = 400;
 
         for (i = 0; i < POINTS_AMNT; ++i) {
-            points[i].x = random16(0, (WIDTH - 1) * ACCURACY);
-            points[i].y = random16(0, (HEIGHT - 1) * ACCURACY);
+            points[i].x = random16(0, (HEIGHT - 1) * ACCURACY);
+            points[i].y = random16(0, (WIDTH - 1) * ACCURACY);
 
             points[i].vec_x = (int32_t)random(0, MAX_VEC_SIZE * 2) - MAX_VEC_SIZE;
             points[i].vec_y = (int32_t)random(0, MAX_VEC_SIZE * 2) - MAX_VEC_SIZE;
@@ -110,8 +109,8 @@ public:
         }
 
         if (POINTS_AMNT >= 3) {
-            points[0].color = 0xff;
-            points[1].color = 0xff00;
+            points[0].color = 0x0000ff;
+            points[1].color = 0x00ff00;
             points[2].color = 0xff0000;
         }
 

@@ -15,7 +15,7 @@ public:
         uint8_t val = random8(2);
 
         if (val > 0) {
-            color_val = random8(255);
+            color_val = random8();
         }
 
         return val;
@@ -25,7 +25,7 @@ public:
         step = 2;
         set_fps(120);
 
-        uint8_t i;
+        uint16_t i;
 
         for (i = 0; i < LEDS_CNT; i++) {
             CRGB &cur_cl = getLeds()[i];
@@ -37,7 +37,8 @@ public:
     }
 
     void on_update() {
-        uint8_t i, buf;
+        uint16_t i;
+        uint8_t buf;
 
         for (i = 0; i < LEDS_CNT; i++) {
             CRGB &cur_cl = getLeds()[i];

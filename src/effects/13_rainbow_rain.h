@@ -21,19 +21,14 @@ public:
 
     void on_update()
     {
-        int i, j;
+        int i;
 
-        for (i = 0; i < WIDTH; ++i) {
-            for (j = 0; j < HEIGHT; ++j) {
-                fadePix(i, j, fade_step);
+        for (i = 0; i < LEDS_CNT; ++i) {
+            CRGB &cl = getLeds()[i];
+            cl.fadeToBlackBy(fade_step);
 
-                CRGB cl = getPix(i, j);
-
-                if (random16(300) == 0) {
-                    cl = CHSV(tick / rainbow_step, 255, 255);
-                }
-
-                setPixColor(i, j, cl);
+            if (random16(300) == 0) {
+                cl = CHSV(tick / rainbow_step, 255, 255);
             }
         }
 

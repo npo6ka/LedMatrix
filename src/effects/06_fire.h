@@ -44,14 +44,14 @@ public:
     }
 
     void on_update() {
-        /*if (pcnt >= 100) {
+        if (pcnt >= 100) {
             shiftUp();
             generateLine();
             pcnt = 0;
         }
 
         drawFrame(pcnt);
-        pcnt += 30;*/
+        pcnt += 30;
     }
 
     // Randomly generate the next line (matrix row)
@@ -106,19 +106,19 @@ public:
                        (uint8_t)max(0, nextv) // V
                     );
 
-                    setPixColor(x, y, color);
+                    getPix(HEIGHT - 1 - y, x) = color;
                 } else if (y == 8 && sparkless) {
-                    if (random8(20) == 0 && getPixColor(x, y - 1) != 0) {
-                        setPixColor(x, y, getPixColor(x, y - 1));
+                    if (random8(20) == 0 && getPixColor(HEIGHT - y, x) != 0) {
+                        getPix(HEIGHT - 1 - y, x) = getPixColor(HEIGHT - y, x);
                     } else {
-                        setPixColor(x, y, 0);
+                        getPix(HEIGHT - 1 - y, x) = 0;
                     }
                 } else if (sparkless) {
                     // старая версия для яркости
-                    if (getPixColor(x, y - 1) > 0) {
-                        setPixColor(x, y, getPixColor(x, y - 1));
+                    if (getPixColor(HEIGHT - y, x) > 0) {
+                        getPix(HEIGHT - 1 - y, x) = getPixColor(HEIGHT - y, x);
                     } else {
-                        setPixColor(x, y, 0);
+                        getPix(HEIGHT - 1 - y, x) = 0;
                     }
                 }
             }
@@ -130,13 +130,11 @@ public:
             if (x > 15) {
                 newX = x - 15;
             }
-            CRGB color = CHSV(
+            getPix(HEIGHT - 1, newX) = CHSV(
                 hue_add + hueMask[0][newX], // H
                 255,           // S
                 (uint8_t)(((100.0 - pcnt) * matrixValue[0][newX] + pcnt * line[newX]) / 100.0) // V
             );
-
-            setPixColor(newX, 0, color);
         }
     }
 };
