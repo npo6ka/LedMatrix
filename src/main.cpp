@@ -1,14 +1,10 @@
 #include "button/button_handler.h"
 #include "effects/effectslist.h"
-#include "wifi/WiFiRouter.h"
-
-#include "ESP8266WebServer.h"
+#include "wifi/WiFi_This.h"
 
 // все настройки матрицы находятся в lib_led.h
 // инициализация светодиодов
 CRGB leds[LEDS_CNT];
-
-ESP8266WebServer server(80);
 
 void setup() {
     randomSeed(millis() + analogRead(A0));
@@ -18,9 +14,10 @@ void setup() {
     // инициализация кнопок
     setup_buttons();
 
-    FastLED.setBrightness(240);
+    FastLED.setBrightness(150);
+    //EffectsList::getInstance().setEffect(11);
 
-    //WiFiRouter::getInstance();
+    setupWiFi();
 }
 
 //unsigned long tick = 0;
@@ -31,7 +28,7 @@ void loop() {
 
     tick_buttons();
 
-    //WiFiRouter::getInstance().onTick();
+    onTickWiFi();
 
     // проверка реального тпс работы микроконтроллера
     /*tps++;
