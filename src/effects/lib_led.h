@@ -1,40 +1,10 @@
 #pragma once
 
-#define DEBUG true
-
 #include "FastLED.h"
+#include "constants.h"
 #include "debug_lib.h"
 
-#define DATA_PIN       (2U)    // номер порта к которому подключены светодиоды
-
-#define WIDTH          6
-#define HEIGHT         10
-#define LEDS_CNT       WIDTH * HEIGHT
-#define CURRENT_LIMIT  (2000U) // лимит по току в миллиамперах, автоматически управляет яркостью (пожалей свой блок питания!) 0 - выключить лимит
-
-#define MATRIX_TYPE           (0U)                          // тип матрицы: 0 - зигзаг, 1 - параллельная
-#define CONNECTION_ANGLE      (3U)                          // угол подключения матрицы (0-3): 0 - левый нижний, 1 - левый верхний, 2 - правый верхний, 3 - правый нижний
-                                                            // 1---------2
-                                                            // -----------
-                                                            // -----------
-                                                            // -----------
-                                                            // 0---------3
-#define STRIP_DIRECTION       (1U)                          // направление ленты из угла (0-1): 0 - горизонтальное (из углов влево или вправо)
-                                                            // 1>>>------2  1------<<<2  1---------2  1---------2
-                                                            // -----------  -----------  -----------  -----------
-                                                            // -----------  -----------  -----------  -----------
-                                                            // -----------  -----------  -----------  -----------
-                                                            // 0---------3  0---------3  0>>>------3  0------<<<3
-
-                                                            // 1 - Вертикальное (из углов вверх или вниз)
-                                                            // 1---------2  1---------2  1---------2  1---------2
-                                                            // v----------  ----------v  -----------  -----------
-                                                            // v----------  ----------v  ^----------  ----------^
-                                                            // -----------  -----------  ^----------  ----------^
-                                                            // 0---------3  0---------3  0---------3  0---------3
-
-
-// ************* НАСТРОЙКА МАТРИЦЫ *****
+// ************* НАСТРОЙКА МАТРИЦЫ **************
 //hooks for old vertion
 #if (STRIP_DIRECTION == 2)
 #   define STRIP_DIRECTION 0
@@ -65,13 +35,13 @@
 #   define THIS_Y (WIDTH - y - 1)
 #elif (CONNECTION_ANGLE == 2 && STRIP_DIRECTION == 1)
 #   define THIS_X (WIDTH - y - 1)
-#   define THIS_Y (HEIGHT - x - 1)
+#   define THIS_Y x
 #elif (CONNECTION_ANGLE == 3 && STRIP_DIRECTION == 0)
 #   define THIS_X (HEIGHT - x - 1) 
 #   define THIS_Y (WIDTH - y - 1)
 #elif (CONNECTION_ANGLE == 3 && STRIP_DIRECTION == 1)
-#   define THIS_X (WIDTH - y - 1) 
-#   define THIS_Y x
+#   define THIS_X (WIDTH - y - 1)
+#   define THIS_Y (HEIGHT - x - 1)
 #else
 #   define _WIDTH WIDTH
 #   define THIS_X x
@@ -93,6 +63,7 @@ static uint32_t getPixColor(CRGB val);
 // получить 24-битный код цвета по координатам
 static uint32_t getPixColor(int x, int y);
 
+// УСТАРЕВШАЯ ФУНКЦИЯ. Лучше использовать getPix(x, y) = color
 // установить цвет пикселя по координатам.
 // Структура CRGB поддерживает автоматическую
 // конвертацию из CHSV и из int значений.
@@ -124,7 +95,7 @@ static void drawLine(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, CRGB color)
  */
 static void led_setup()
 {
-    FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, LEDS_CNT).setCorrection(TypicalLEDStrip);
+    FastLED.addLeds<WS2812B, DATA_PIN, COLOR_ORDER>(leds, LEDS_CNT).setCorrection(TypicalLEDStrip);
     FastLED.setMaxPowerInVoltsAndMilliamps(5, CURRENT_LIMIT);
     FastLED.clear();
 
@@ -142,14 +113,7 @@ static uint16_t getPixNum(const uint8_t x, const uint8_t y)
         return 0;
     }
 
-    if (
-#if (STRIP_DIRECTION == 0)
-    x % 2 == 0
-#else
-    y % 2 == 0
-#endif
-    || MATRIX_TYPE)                             // если чётная строка
-    {
+    if (THIS_X % 2 == 0 || MATRIX_TYPE) {       // если чётная строка
         return (THIS_X * _WIDTH + THIS_Y);
     } else {                                    // если нечётная строка
         return (THIS_X * _WIDTH + _WIDTH - THIS_Y - 1);
