@@ -60,30 +60,28 @@ Effect *EffectsList::getNewEffectInstance(int num) {
     case 3:
         return new Rain();
     case 4:
-        return new AllRandom();
-    case 5:
         return new Snow();
-    case 6:
+    case 5:
         return new Fire();
-    case 7:
+    case 6:
         return new TheMatrix();
-    case 8:
+    case 7:
         return new SimpleBalls();
-    case 9:
+    case 8:
         return new Confetti();
-    case 10:
+    case 9:
         return new Starfall();
-    case 11:
+    case 10:
         return new DynamicSquare();
-    case 12:
+    case 11:
         return new RandomRain();
-    case 13:
+    case 12:
         return new RainbowRain();
-    case 14:
+    case 13:
         return new Points();
-    case 15:
+    case 14:
         return new RainbowPoint();
-    case 16:
+    case 15:
         return new RainbowStaticPoint();
     //синусоида с рандомными параметрами
     default:

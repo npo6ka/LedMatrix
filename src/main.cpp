@@ -18,9 +18,9 @@ void setup() {
     // инициализация кнопок
     setup_buttons();
 
-    FastLED.setBrightness(150);
+    FastLED.setBrightness(240);
 
-    WiFiRouter::getInstance();
+    //WiFiRouter::getInstance();
 }
 
 //unsigned long tick = 0;
