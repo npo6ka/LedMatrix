@@ -6,7 +6,7 @@
 class TextMode : public Effect
 {
     uint8_t *printed_text;
-    uint32_t speed = 1;
+    uint32_t speed = 5;
     uint32_t tick;
     const uint8_t font[SYM_AMNT][SYM_SIZE] = DEFAULT_FONTS;
 
@@ -128,7 +128,6 @@ class TextMode : public Effect
             sym_pos = WIDTH + pos * (LET_WIDTH + SPACE) - tick / speed;
             
             if (sym_pos > -LET_WIDTH && sym_pos < WIDTH) {
-                out("%d %d\n", pos, sym_pos);
                 draw_symbol(printed_text[pos], (HEIGHT - LET_HEIGHT) / 2, sym_pos);
             }
 
@@ -159,8 +158,8 @@ public:
 
     void on_init()
     {
-        set_text("ебучий текст bleat'");
-        set_fps(20);
+        set_text("Снега нет, но вы дежитесь...");
+        set_fps(60);
     }
 
     void on_update()
