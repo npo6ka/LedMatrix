@@ -6,9 +6,9 @@
 
 #define DATA_PIN                (2U)                        // номер порта к которому подключены светодиоды
 
-#define WIDTH                   (16)
-#define HEIGHT                  (16)
-#define LEDS_CNT                WIDTH * HEIGHT
+#define WIDTH                   (16)                        // ширина матрицы
+#define HEIGHT                  (16)                        // высота матрицы
+#define LEDS_CNT                (WIDTH * HEIGHT)            // общее число светодиодов в матрице
 #define CURRENT_LIMIT           (2000U)                     // лимит по току в миллиамперах, автоматически управляет яркостью (пожалей свой блок питания!) 0 - выключить лимит
 #define COLOR_ORDER             (GRB)                       // порядок цветов на ленте. Если цвет отображается некорректно - меняйте. Начать можно с RGB
 
