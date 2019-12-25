@@ -3,6 +3,8 @@
 #include "ESP8266WiFi.h"
 #include "ESP8266WebServer.h"
 
+#define IsTryToConnectRouter false    // Попытаться подключиться к внешнему роутеру
+
 #define SSID "Android_IA"    // для внешней точки доступа
 #define PASS "qwerty123"     // для внешней точки доступа
 
@@ -31,25 +33,24 @@ void handleNotFound(){
     server.send(404, "text/plain", message);
 }
 
-void handleRoot(){
-    Serial.print("handleRoot()");
-
-    server.send(200, "text/plain", "Hello from esp8266!");
-}
-
-void handleRestart(){
-    Serial.print("handleRestart()");
-
-    String restart = server.arg("device");
-    if (restart == "ok") ESP.restart();
+// Метод срабатывает, когда получен запрос http:192.168.4.1/command
+// Нету проверки на пустые значения!!!!
+void handleCommand(){
+    Serial.println("handleCommand()");
     server.send(200, "text/plain", "OK");
+    
+    String com = server.arg("c");
+    String param = server.arg("p");
+    
+    Serial.print("Command = ");
+    Serial.println(com);
+    Serial.print("Parametr = ");
+    Serial.println(param);
 }
 
 void server_init(){
     server.onNotFound(handleNotFound);
-    server.on("/", handleRoot);
-    server.on("/restart", handleRestart);
-
+    server.on("/command", handleCommand);
     server.begin();
 }
 
@@ -60,17 +61,16 @@ void startOwnWiFi() {
     WiFi.mode(WIFI_AP);
     WiFi.softAPConfig(apIP, apIP,  IPAddress(255, 255, 255, 0));
     WiFi.softAP(AP_SSID, AP_PASS);
-
-    IPAddress myIP = WiFi.softAPIP();
-    Serial.print("Access point Mode");
-    Serial.print("AP IP address: ");
-    Serial.println(myIP);
 }
 
 // Попытаться подключиться к роутеру
 bool tryConnectToRouter(){
-    WiFi.mode(WIFI_STA);
+    if (!IsTryToConnectRouter)
+        return false;
+
     byte tries = 6; // попыток подключения
+
+    WiFi.mode(WIFI_STA);
     WiFi.begin(SSID, PASS);
 
     while (--tries && WiFi.status() != WL_CONNECTED){
@@ -80,13 +80,13 @@ bool tryConnectToRouter(){
     return WiFi.status() == WL_CONNECTED;
 }
 
+// Вызвать этот метод в main setup()
 void setupWiFi() { 
     if (!tryConnectToRouter()){
         Serial.print(" WiFi not found: ");
         Serial.print(SSID);
         Serial.println(". Starting your wifi...");
         startOwnWiFi();
-        server_init();
     }else{
         Serial.println(" WiFi is successfully connected");
         IPAddress myIP = WiFi.localIP();
@@ -94,8 +94,11 @@ void setupWiFi() {
         Serial.print("AP IP address: ");
         Serial.println(myIP);
     }
+    
+    server_init();
 }
 
+// Вызвать этот метод в main loop()
 void onTickWiFi(){
 
     if (millis() - prev_micros_wifi_tick > tick_size){
