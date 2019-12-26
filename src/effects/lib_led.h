@@ -105,9 +105,12 @@ static void led_setup()
 // получить номер пикселя в ленте по координатам
 static uint16_t getPixNum(const uint8_t x, const uint8_t y)
 {
-    // x - номер строки
-    // y - номер столбца
+    // x - номер строки (в циклах ассоциируется с HEIGHT)
+    // y - номер столбца (в циклах ассоциируется с WIDTH)
     // матрица нумеруется сверху вниз по x, слева направо по y (как все массивы в си)
+    // 00 01 02
+    // 10 11 12
+    // 20 21 22
     if (x < 0 || x >= HEIGHT || y < 0 || y >= WIDTH) {
         out("Value out of range in function getPixNum %d %d\n", x, y);
         return 0;
