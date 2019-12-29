@@ -18,6 +18,7 @@
 #include "15_rainbow_point.h"
 #include "16_rainbow_static_point.h"
 #include "17_text.h"
+#include "_18_Snake.h"
 /*
 #include "testmode.h"*/
 
@@ -86,6 +87,8 @@ Effect *EffectsList::getNewEffectInstance(int num) {
         return new RainbowStaticPoint();
     case 17:
         return new TextMode();
+    case 18:
+        return new Snake();
     //синусоида с рандомными параметрами
     default:
         return NULL;

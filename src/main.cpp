@@ -15,7 +15,7 @@ void setup() {
     setup_buttons();
 
     FastLED.setBrightness(150);
-    EffectsList::getInstance().setEffect(17);
+    EffectsList::getInstance().setEffect(18);
 
     setupWiFi();
 }
