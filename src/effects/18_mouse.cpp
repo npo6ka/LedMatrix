@@ -6,6 +6,7 @@ Mouse::Mouse()
 
 void Mouse::on_init()
 {
+    set_fps(10);
     x = 0;
 }
 
@@ -45,7 +46,9 @@ static void drawSprite(int x, int y, uint32_t *spr)
         for (int j = 0 ; j < H ; ++j)
         {
             int v = pgm_read_dword(spr + i + j * W);
-            setPixColor(x + i, y + j, CRGB(v));
+            if (y + j >= 0 && y + j < HEIGHT && x + i >= 0 && x + i < WIDTH) {
+                setPixColor(y + j, x + i, CRGB(v));
+            }
         }
     }
 }

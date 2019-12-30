@@ -143,14 +143,15 @@ public:
     TextMode() {}
     ~TextMode() {
         if (printed_text) {
-            free(printed_text);
+            delete printed_text;
         }
     }
 
     void set_text(const char *text)
     {
         if (printed_text) {
-            free(printed_text);
+            delete printed_text;
+            printed_text = nullptr;
         }
 
         printed_text = convert_utf8_to_cp1251(text);
@@ -158,6 +159,7 @@ public:
 
     void on_init()
     {
+        printed_text = nullptr;
         set_text("Снега нет, но вы держитесь...");
         set_fps(60);
     }

@@ -2,11 +2,12 @@
 #define SHADEREFFECT_H
 
 #include "Effects/effect.h"
-#include "Effects/23_vecmath.h"
-
+#include "Effects/lib_glsl.h"
 
 #define IN
 #define OUT
+
+using namespace glsl;
 
 class ShaderEffect : public Effect {
 public:
@@ -21,7 +22,7 @@ public:
 
     virtual void on_render()
     {
-        time += 1.0 / 60.0;
+        /*time += 1.0 / 60.0;
         for (uint8_t x = 0; x < HEIGHT; x++) {
             for (uint8_t y = 0; y < WIDTH; y++) {
                 fragCoord.x = x;
@@ -29,7 +30,7 @@ public:
                 on_fragment();
                 getPix(y, x) = clamp(fragColor, 0.f, 1.f);
             }
-        }
+        }*/
     }
 
     virtual void on_fragment() = 0;
