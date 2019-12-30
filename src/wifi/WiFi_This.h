@@ -2,6 +2,7 @@
 
 #include "ESP8266WiFi.h"
 #include "ESP8266WebServer.h"
+#include "effects/_19_Empty.h"
 
 #define IsTryToConnectRouter false    // Попытаться подключиться к внешнему роутеру
 
@@ -15,7 +16,7 @@ ESP8266WebServer server(80);
 
 IPAddress apIP(192, 168, 4, 1);         //статический IP точки доступа
 
-unsigned long tick_size = 1000;         // Частота срабатывания метода onTick(); в мс
+unsigned long tick_size = 100;         // Частота срабатывания метода onTick(); в мс
 unsigned long prev_micros_wifi_tick = 0;// последнее время срабатывания метода onTickWiFi()
 
 void handleNotFound(){
@@ -63,14 +64,18 @@ void handleswitchLed(){
     
     int w = atoi(server.arg("w").c_str());
     int h = atoi(server.arg("h").c_str());
-    int color = atoi(server.arg("c").c_str());
+    int c = atoi(server.arg("c").c_str());
     
     Serial.print("w = ");
     Serial.println(w);
     Serial.print("h = ");
     Serial.println(h);
+    Serial.print("c = ");
+    Serial.println(c);
 
-    EffectsList::getInstance().nextEffect();
+    Effect *e = EffectsList::getInstance().getCurEffect();
+    //((Empty)e)
+    
 }
 
 void server_init(){

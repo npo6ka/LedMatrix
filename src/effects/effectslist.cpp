@@ -19,6 +19,7 @@
 #include "16_rainbow_static_point.h"
 #include "17_text.h"
 #include "_18_Snake.h"
+#include "_19_Empty.h"
 #include "18_mouse.h"
 #include "19_pacman.h"
 #include "20_circular_point.h"
@@ -109,6 +110,8 @@ Effect *EffectsList::getNewEffectInstance(int num) {
         return new TestShader();
     case 24:
         return new NY2020();
+    case 25:
+        return new Empty();
     default:
         return NULL;
     }
