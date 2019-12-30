@@ -18,6 +18,8 @@
 #include "15_rainbow_point.h"
 #include "16_rainbow_static_point.h"
 #include "17_text.h"
+#include "18_mouse.h"
+#include "19_pacman.h"
 /*
 #include "testmode.h"*/
 
@@ -35,6 +37,7 @@ EffectsList::EffectsList() {
 void EffectsList::init() {
     amnt = MAX_EFFECTS;
     Effect *eff = NULL;
+    curEffect = nullptr;
 
     while(eff == NULL && amnt >= 0) {
         amnt--;
@@ -88,6 +91,10 @@ Effect *EffectsList::getNewEffectInstance(int num) {
         return new RainbowStaticPoint();
     case 17:
         return new TextMode();
+    case 18:
+        return new Mouse();
+    case 19:
+        return new Pacman();
     //синусоида с рандомными параметрами
     default:
         return NULL;
@@ -109,7 +116,8 @@ int EffectsList::getCurEffectNum() {
 
 void EffectsList::clearCurEffect() {
     if (getCurEffect()) {
-        free(curEffect);
+        delete curEffect;
+        curEffect = nullptr;
     }
 }
 
