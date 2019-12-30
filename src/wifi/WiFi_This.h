@@ -16,7 +16,7 @@ ESP8266WebServer server(80);
 
 IPAddress apIP(192, 168, 4, 1);         //статический IP точки доступа
 
-unsigned long tick_size = 100;         // Частота срабатывания метода onTick(); в мс
+unsigned long tick_size = 10;         // Частота срабатывания метода onTick(); в мс
 unsigned long prev_micros_wifi_tick = 0;// последнее время срабатывания метода onTickWiFi()
 
 void handleNotFound(){
@@ -57,6 +57,14 @@ void handleNext(){
     EffectsList::getInstance().nextEffect();
 }
 
+// Метод срабатывает, когда получен запрос http:192.168.4.1/prev
+void handlePrev(){
+    Serial.println("handlePrev()");
+    server.send(200, "text/plain", "OK");
+    
+    EffectsList::getInstance().prevEffect();
+}
+
 // Метод срабатывает, когда получен запрос http:192.168.4.1/switchled
 void handleswitchLed(){
     Serial.println("handleNext()");
@@ -73,16 +81,18 @@ void handleswitchLed(){
     Serial.print("c = ");
     Serial.println(c);
 
-    Effect *e = EffectsList::getInstance().getCurEffect();
+    getPix(w, h) = c;
+    //EffectsList::getInstance().prevEffect()
+    //Effect *e = EffectsList::getInstance().getCurEffect();
     //((Empty)e)
-    
 }
 
 void server_init(){
     server.onNotFound(handleNotFound);
     server.on("/command", handleCommand);
     server.on("/next", handleNext);
-    server.on("/switchled", handleNext);
+    server.on("/switchled", handleswitchLed);
+    server.on("/prev", handlePrev);
     server.begin();
 }
 
@@ -135,7 +145,7 @@ void onTickWiFi(){
 
     if (millis() - prev_micros_wifi_tick > tick_size){
         prev_micros_wifi_tick = millis();
-        Serial.println("WiFiRouter::onTick()");
+        //Serial.println("WiFiRouter::onTick()");
 
         server.handleClient();
         delay(1);
