@@ -17,10 +17,10 @@ public:
         float freq = 16.;
         float offset = 0.1;
 
-        vec3 colour = vec3 (0.23, 0.1, 0.3) *
-             ((1.0f / fabs((position.y + (amp * fsin((position.x + time * offset) *freq)))) * den)
-            + (1.0f / fabs((position.y + (amp * fsin((position.x + time * offset) *freq+.7f)))) * den)
-            + (1.0f / fabs((position.y + (amp * fsin((position.x + time * offset) *freq-.7f)))) * den));
+        vec3 colour = vec3 (0.33, 0.2, 0.4) *
+             ((1.0f / gl_abs((position.y + (amp * sin((position.x + time * offset) *freq)))) * den)
+            + (1.0f / gl_abs((position.y + (amp * sin((position.x + time * offset) *freq+.7f)))) * den)
+            + (1.0f / gl_abs((position.y + (amp * sin((position.x + time * offset) *freq-.7f)))) * den));
 
         fragColor = colour;
     }

@@ -2,11 +2,12 @@
 #define SHADEREFFECT_H
 
 #include "Effects/effect.h"
-#include "Effects/23_vecmath.h"
-
+#include "Effects/lib_glsl.h"
 
 #define IN
 #define OUT
+
+using namespace glsl;
 
 class ShaderEffect : public Effect {
 public:
