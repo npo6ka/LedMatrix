@@ -20,6 +20,11 @@
 #include "17_text.h"
 #include "18_mouse.h"
 #include "19_pacman.h"
+#include "20_circular_point.h"
+#include "21_zigzag.h"
+#include "22_horizontal_rainbow_point.h"
+#include "23_test_shader.h"
+#include "24_ny2020.h"
 /*
 #include "testmode.h"*/
 
@@ -95,7 +100,16 @@ Effect *EffectsList::getNewEffectInstance(int num) {
         return new Mouse();
     case 19:
         return new Pacman();
-    //синусоида с рандомными параметрами
+    case 20:
+        return new CircularPoint();
+    case 21:
+        return new ZigZag();
+    case 22:
+        return new HorizontalRainbowPoint();
+    case 23:
+        return new TestShader();
+    case 24:
+        return new NY2020();
     default:
         return NULL;
     }
