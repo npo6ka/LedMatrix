@@ -326,7 +326,9 @@ private:
             for (int j = 0 ; j < NY_SPRITE_H ; ++j)
             {
                 int v = pgm_read_dword(spr + i + j * NY_SPRITE_W);
-                setPixColor(y + j, x + i, CRGB(v));
+                if (y + j >= 0 && y + j < HEIGHT && x + i >= 0 && x + i < WIDTH) {
+                    setPixColor(y + j, x + i, CRGB(v));
+                }
             }
         }
     }
