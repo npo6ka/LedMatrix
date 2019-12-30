@@ -48,9 +48,36 @@ void handleCommand(){
     Serial.println(param);
 }
 
+// Метод срабатывает, когда получен запрос http:192.168.4.1/next
+void handleNext(){
+    Serial.println("handleNext()");
+    server.send(200, "text/plain", "OK");
+    
+    EffectsList::getInstance().nextEffect();
+}
+
+// Метод срабатывает, когда получен запрос http:192.168.4.1/switchled
+void handleswitchLed(){
+    Serial.println("handleNext()");
+    server.send(200, "text/plain", "OK");
+    
+    int w = atoi(server.arg("w").c_str());
+    int h = atoi(server.arg("h").c_str());
+    int color = atoi(server.arg("c").c_str());
+    
+    Serial.print("w = ");
+    Serial.println(w);
+    Serial.print("h = ");
+    Serial.println(h);
+
+    EffectsList::getInstance().nextEffect();
+}
+
 void server_init(){
     server.onNotFound(handleNotFound);
     server.on("/command", handleCommand);
+    server.on("/next", handleNext);
+    server.on("/switchled", handleNext);
     server.begin();
 }
 

@@ -20,8 +20,8 @@ void setup() {
     setupWiFi();
 }
 
-//unsigned long tick = 0;
-//int tps = 0;
+unsigned long tick = 0;
+int tps = 0;
 
 void loop() {
     EffectsList::getInstance().onTick();
@@ -33,7 +33,7 @@ void loop() {
     // проверка реального тпс работы микроконтроллера
     /*tps++;
     if (millis() > tick * 1000 ) {
-        out("tps: %d fps: %.1f\n", tps, effects->getCurFPS());
+        out("tps: %d fps: %.1f\n", tps, EffectsList::getInstance().getCurFPS());
         tick++;
         tps = 0;
     }*/

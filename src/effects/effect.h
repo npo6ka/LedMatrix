@@ -7,11 +7,12 @@ class Effect
     uint8_t fps = 60;
     
 public:
-    Effect() { }
+    Effect() = default;
+    virtual ~Effect() = default;
+
     /* Инициализация режима, установка начальный значений.
     *  Выполняется единожды, при выборе нового режима.
     * */
-    
     virtual void on_init() {}
 
     /* on_update обязательно нужно описать в наследукмом классе.

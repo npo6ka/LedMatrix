@@ -19,6 +19,13 @@
 #include "16_rainbow_static_point.h"
 #include "17_text.h"
 #include "_18_Snake.h"
+#include "18_mouse.h"
+#include "19_pacman.h"
+#include "20_circular_point.h"
+#include "21_zigzag.h"
+#include "22_horizontal_rainbow_point.h"
+#include "23_test_shader.h"
+#include "24_ny2020.h"
 /*
 #include "testmode.h"*/
 
@@ -36,6 +43,7 @@ EffectsList::EffectsList() {
 void EffectsList::init() {
     amnt = MAX_EFFECTS;
     Effect *eff = NULL;
+    curEffect = nullptr;
 
     while(eff == NULL && amnt >= 0) {
         amnt--;
@@ -88,8 +96,19 @@ Effect *EffectsList::getNewEffectInstance(int num) {
     case 17:
         return new TextMode();
     case 18:
-        return new Snake();
-    //синусоида с рандомными параметрами
+        return new Mouse();
+    case 19:
+        return new Pacman();
+    case 20:
+        return new CircularPoint();
+    case 21:
+        return new ZigZag();
+    case 22:
+        return new HorizontalRainbowPoint();
+    case 23:
+        return new TestShader();
+    case 24:
+        return new NY2020();
     default:
         return NULL;
     }
@@ -110,7 +129,8 @@ int EffectsList::getCurEffectNum() {
 
 void EffectsList::clearCurEffect() {
     if (getCurEffect()) {
-        free(curEffect);
+        delete curEffect;
+        curEffect = nullptr;
     }
 }
 
