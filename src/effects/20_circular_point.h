@@ -83,3 +83,5 @@ public:
         tick = tick + 3;
     }
 };
+
+#undef ACCURACY

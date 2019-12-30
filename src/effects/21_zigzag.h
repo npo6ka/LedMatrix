@@ -2,11 +2,6 @@
 
 #include "Effects/effect.h"
 
-#define ACCURACY 100
-#define MIN_VEC_SIZE 5
-#define MAX_VEC_SIZE 10
-#define RAINBOW_TICK_SIZE 4 //кол-во тиков до инкремента тика радуги
-
 class ZigZag : public Effect
 {
     uint8_t x;
