@@ -1,7 +1,6 @@
 #pragma once
 
 #include "lib_led.h"
-#include "properties/Property.h"
 
 class Effect
 {
