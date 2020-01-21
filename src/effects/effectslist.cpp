@@ -112,6 +112,8 @@ Effect *EffectsList::getNewEffectInstance(int num) {
         return new NY2020();
     case 25:
         return new Empty();
+    case 26:
+        return new Snake();
     default:
         return NULL;
     }
