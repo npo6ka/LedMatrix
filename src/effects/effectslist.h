@@ -4,7 +4,8 @@
 
 class EffectsList
 {
-private:
+    
+protected:
     // singlton property
     // Конструкторы и оператор присваивания недоступны клиентам
     EffectsList();
@@ -34,4 +35,6 @@ public:
     void reloadCurEff();
     void onTick();
     float getCurFPS();
+    void setNadysText();
+    void setEmptyMode();
 };

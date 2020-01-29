@@ -63,56 +63,30 @@ void EffectsList::init() {
 Effect *EffectsList::getNewEffectInstance(int num) {
     switch (num) {
     case 0:
-        return new SlowRandom();
-    case 1:
-        return new SimpleRainbow();
-    case 2:
         return new Dribs();
-    case 3:
-        return new Rain();
-    case 4:
-        return new Snow();
-    case 5:
-        return new Fire();
-    case 6:
-        return new TheMatrix();
-    case 7:
+    case 1:
         return new SimpleBalls();
-    case 8:
+    case 2:
         return new Confetti();
-    case 9:
+    case 3:
         return new Starfall();
-    case 10:
+    case 4:
         return new DynamicSquare();
-    case 11:
+    case 5:
         return new RandomRain();
-    case 12:
-        return new RainbowRain();
-    case 13:
-        return new Points();
-    case 14:
-        return new RainbowPoint();
-    case 15:
-        return new RainbowStaticPoint();
-    case 17:
-        return new TextMode();
-    case 18:
+    case 6:
+    //     return new RainbowRain();
+    // case 7:
+    //     return new TextMode();
+    case 7:
         return new Mouse();
-    case 19:
+    case 8:
         return new Pacman();
-    case 20:
-        return new CircularPoint();
-    case 21:
+    case 9:
         return new ZigZag();
-    case 22:
-        return new HorizontalRainbowPoint();
-    case 23:
-        return new TestShader();
-    case 24:
+    case 10:
         return new NY2020();
-    case 25:
-        return new Empty();
-    case 26:
+    case 11:
         return new Snake();
     default:
         return NULL;
@@ -207,4 +181,12 @@ void EffectsList::onTick() {
 
 float EffectsList::getCurFPS() {
     return (float)fps / 10;
+}
+
+void EffectsList::setNadysText() {
+    setEffect(new TextMode());
+}
+
+void EffectsList::setEmptyMode() {
+    setEffect(new Empty());
 }

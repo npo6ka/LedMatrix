@@ -199,7 +199,7 @@ public:
             //FastLED.show();
             //FastLED.setBrightness(BRIGHTNESS);
             //displayScore(snakeLength - START_LENGTH);
-            delay(100);
+            //delay(100);
             FastLED.clear();
             FastLED.show();
             newGameSnake();      // миша, всё ху.я, давай по новой

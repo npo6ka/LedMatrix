@@ -160,7 +160,7 @@ public:
     void on_init()
     {
         printed_text = nullptr;
-        set_text("Снега нет, но вы держитесь...");
+        set_text("Надюша, Я тебя люблю!");
         set_fps(60);
     }
 

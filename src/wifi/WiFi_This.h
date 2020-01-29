@@ -65,6 +65,28 @@ void handlePrev(){
     EffectsList::getInstance().prevEffect();
 }
 
+// Метод срабатывает, когда получен запрос http:192.168.4.1/prev
+void handleSetMode(){
+    Serial.println("handleSetMode()");
+    server.send(200, "text/plain", "OK");
+
+    bool isAutomod = server.arg("isAutoMod");
+    int num = atoi(server.arg("num").c_str());
+
+
+    Serial.print("isAutomod");
+    Serial.println(isAutomod);
+
+    if (num == 100){
+        EffectsList::getInstance().setNadysText();
+    }else{
+        if (num == 200){
+            EffectsList::getInstance().setEmptyMode();
+        }
+    }
+
+}
+
 // Метод срабатывает, когда получен запрос http:192.168.4.1/switchled
 void handleswitchLed(){
     Serial.println("handleNext()");
@@ -93,6 +115,7 @@ void server_init(){
     server.on("/next", handleNext);
     server.on("/switchled", handleswitchLed);
     server.on("/prev", handlePrev);
+    server.on("/setMode", handleSetMode);
     server.begin();
 }
 
