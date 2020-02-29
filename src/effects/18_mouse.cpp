@@ -6,7 +6,7 @@ Mouse::Mouse()
 
 void Mouse::on_init()
 {
-    set_fps(30);
+    set_fps(15);
     x = 0;
 }
 

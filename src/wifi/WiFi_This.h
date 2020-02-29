@@ -96,14 +96,14 @@ void handleswitchLed(){
     int h = atoi(server.arg("h").c_str());
     int c = atoi(server.arg("c").c_str());
     
-    Serial.print("w = ");
-    Serial.println(w);
-    Serial.print("h = ");
-    Serial.println(h);
-    Serial.print("c = ");
-    Serial.println(c);
+    // Serial.print("w = ");
+    // Serial.println(w);
+    // Serial.print("h = ");
+    // Serial.println(h);
+    // Serial.print("c = ");
+    // Serial.println(c);
 
-    getPix(w, h) = c;
+    getPix(h, w) = c;
     //EffectsList::getInstance().prevEffect()
     //Effect *e = EffectsList::getInstance().getCurEffect();
     //((Empty)e)

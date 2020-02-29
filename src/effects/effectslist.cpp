@@ -20,6 +20,7 @@
 #include "17_text.h"
 #include "_18_Snake.h"
 #include "_19_Empty.h"
+#include "_20_TestEffect.h"
 #include "18_mouse.h"
 #include "19_pacman.h"
 #include "20_circular_point.h"
@@ -75,19 +76,21 @@ Effect *EffectsList::getNewEffectInstance(int num) {
     case 5:
         return new RandomRain();
     case 6:
-    //     return new RainbowRain();
-    // case 7:
-    //     return new TextMode();
+        return new RainbowRain();
     case 7:
-        return new Mouse();
+         return new Points();
     case 8:
-        return new Pacman();
+        return new Mouse();
     case 9:
-        return new ZigZag();
+        return new Pacman();
     case 10:
-        return new NY2020();
+        return new ZigZag();
     case 11:
+        return new NY2020();
+    case 12:
         return new Snake();
+    case 13:
+        return new SimpleRainbow();
     default:
         return NULL;
     }
