@@ -19,45 +19,45 @@ extern CRGB leds[LEDS_CNT];
 // Получить номер пикселя по координатам
 static uint16_t getPixNum(int x, int y);
 
-// получить объект пикселя по координатам 
-static CRGB &getPix(int x, int y);
+// получить объект пикселя по координатам
+static CRGB &getPix(const int x, const int y);
 
 // получить 24-битный код цвета из объекта пикселя
-static uint32_t getPixColor(CRGB val);
+static uint32_t getPixColor(const CRGB val);
 
 // получить 24-битный код цвета по координатам
-static uint32_t getPixColor(int x, int y);
+static uint32_t getPixColor(const int x, const int y);
 
 // установить цвет пикселя по координатам.
 // Структура CRGB поддерживает автоматическую
 // конвертацию из CHSV и из int значений.
 // Т.е. допустимо в качестве параметра color передавать помимо CRGB объекта,
 // CHSV объекты и uint32_t значения
-static void setPixColor(int x, int y, CRGB color);
+//static void setPixColor(int x, int y, CRGB color);
 
 // Получить ссылку на матрицу светодиодов
 // !!! Не рекомендуется записывать значения напрямую в этот массив
 // так как значения в нем могут располагаться в различном порядке
 // для различных типов матриц и возможных поворотах матриц на 
 // углы 90, 180, 270 градусов.
-static CRGB* getLeds(void);
+//static CRGB* getLeds(void);
 
 // Затемнить все светодиоды на матрице на указанный шаг
-static void fader(uint8_t step);
+static void fader(const uint8_t step);
 
 // Затемнить светодиод с соответствующими координатами на матрице на указанный шаг
-static void fadePix(uint8_t x, uint8_t y, uint8_t step);
+static void fadePix(const uint8_t x, const uint8_t y, const uint8_t step);;
 
 // Нарисовать линию на матрице по указанным координатам и соответствующим цветом
 // x1, y1 - координаты 1 точки
 // x2, y2 - координаты 2 точки
 // color - цвет, которым будет нарисована линия
-static void drawLine(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, CRGB color);
+static void drawLine(const uint8_t x1, const uint8_t y1, const uint8_t x2, const uint8_t y2, const CRGB color);
 
 /* инициализация библиотеки FastLed и
  * установка цветовой коррекции светодиодов
  */
-static void led_setup()
+static void led_setup(void)
 {
     FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, LEDS_CNT);
     FastLED.setMaxPowerInVoltsAndMilliamps(5, CURRENT_LIMIT);
@@ -66,7 +66,7 @@ static void led_setup()
     pinMode(LED_BUILTIN, OUTPUT);
 }
 
-static uint16_t getPixNum(int x, int y) {
+static uint16_t getPixNum(const int x, const int y) {
     if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) {
         Serial.print("Value out of range in function getPixNum");
         Serial.print(x);
@@ -96,7 +96,7 @@ static uint16_t getPixNum(int x, int y) {
   */
 }
 
-static CRGB &getPix(int x, int y) {
+static CRGB &getPix(const int x, const int y) {
     if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) {
         Serial.print("Value out of range in function getPix ");
         Serial.print(x);
@@ -107,11 +107,11 @@ static CRGB &getPix(int x, int y) {
     return leds[getPixNum(x, y)];
 }
 
-static uint32_t getPixColor(CRGB val) {
+static uint32_t getPixColor(const CRGB val) {
     return (((uint32_t)val.r << 16) | ((uint16_t)val.g << 8 ) | val.b);
 }
 
-static uint32_t getPixColor(int x, int y) {
+static uint32_t getPixColor(const int x, const int y) {
     if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) {
         Serial.print("Value out of range in function getPixColor ");
         Serial.print(x);
@@ -122,7 +122,7 @@ static uint32_t getPixColor(int x, int y) {
     return getPixColor(getPix(x, y));
 }
 
-static void setPixColor(int x, int y, CRGB color) {
+/*static void setPixColor(const int x, const int y, const CRGB color) {
     if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) {
         Serial.print("Value out of range in function setPixColor ");
         Serial.print(x);
@@ -131,13 +131,13 @@ static void setPixColor(int x, int y, CRGB color) {
     }
 
     getPix(x, y) = color;
-}
+}*/
 
-static CRGB* getLeds(void) {
+/*static CRGB* getLeds(void) {
     return leds;
-}
+}*/
 
-static void fader(uint8_t step) {
+static void fader(const uint8_t step) {
     for (uint8_t i = 0; i < WIDTH; i++) {
         for (uint8_t j = 0; j < HEIGHT; j++) {
             fadePix(i, j, step);
@@ -145,11 +145,11 @@ static void fader(uint8_t step) {
     }
 }
 
-static void fadePix(uint8_t x, uint8_t y, uint8_t step) {
+static void fadePix(const uint8_t x, const uint8_t y, const uint8_t step) {
     getPix(x, y).fadeToBlackBy(step);
 }
 
-static void drawLine(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, CRGB color)
+static void drawLine(const uint8_t x1, const uint8_t y1, const uint8_t x2, const uint8_t y2, const CRGB color)
 {
     // Рисование линии по Алгоритму Брезенхэма
     uint8_t deltaX = abs((int16_t)x2 - x1);
@@ -160,9 +160,9 @@ static void drawLine(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, CRGB color)
     int16_t error = deltaX - deltaY;
     int32_t error2;
 
-    setPixColor(x2, y2, color);
+    getPix(x2, y2) = color;
     while (x1 != x2 || y1 != y2) {
-        setPixColor(x1, y1, color);
+        getPix(x1, y1) = color;
         error2 = error * 2;
 
         if (error2 > -deltaY) {
