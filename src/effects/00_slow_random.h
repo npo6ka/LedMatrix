@@ -35,7 +35,7 @@ public:
                 inc_val[i][j] |= gen_led(cur_cl.g) << 2;
                 inc_val[i][j] |= gen_led(cur_cl.b);
 
-                setPixColor(i, j, getPixColor(cur_cl));
+                getPix(i, j) = getPixColor(cur_cl);
             }
         }
     }
@@ -51,7 +51,7 @@ public:
                 buf |= proc_val(cur_cl.b, inc_val[i][j] & 0x3);
                 inc_val[i][j] = buf;
 
-                setPixColor(i, j, getPixColor(cur_cl));
+                getPix(i, j) = getPixColor(cur_cl);
             }
         }
     }

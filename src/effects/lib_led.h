@@ -149,7 +149,7 @@ static void fadePix(const uint8_t x, const uint8_t y, const uint8_t step) {
     getPix(x, y).fadeToBlackBy(step);
 }
 
-static void drawLine(const uint8_t x1, const uint8_t y1, const uint8_t x2, const uint8_t y2, const CRGB color)
+static void drawLine(uint8_t x1, uint8_t y1, const uint8_t x2, const uint8_t y2, const CRGB color)
 {
     // Рисование линии по Алгоритму Брезенхэма
     uint8_t deltaX = abs((int16_t)x2 - x1);
