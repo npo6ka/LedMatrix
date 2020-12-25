@@ -10,7 +10,7 @@ public:
     Confetti() {}
 
     void on_init() {
-        set_fps(30);
+        set_fps(20);
     }
 
     void on_update() {

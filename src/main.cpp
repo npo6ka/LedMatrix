@@ -14,10 +14,10 @@ void setup() {
     // инициализация кнопок
     setup_buttons();
 
-    FastLED.setBrightness(200);
+    FastLED.setBrightness(250);
     EffectsList::getInstance().setEffect(0);
 
-    setupWiFi();
+    // setupWiFi();
 }
 
 unsigned long tick = 0;
@@ -28,7 +28,7 @@ void loop() {
 
     tick_buttons();
 
-    onTickWiFi();
+    // onTickWiFi();
 
     // проверка реального тпс работы микроконтроллера
     /*tps++;

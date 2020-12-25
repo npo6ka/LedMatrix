@@ -28,6 +28,7 @@
 #include "22_horizontal_rainbow_point.h"
 #include "23_test_shader.h"
 #include "24_ny2020.h"
+#include "_20_TestEffect.h"
 /*
 #include "testmode.h"*/
 
@@ -64,33 +65,19 @@ void EffectsList::init() {
 Effect *EffectsList::getNewEffectInstance(int num) {
     switch (num) {
     case 0:
-        return new Dribs();
+        return new RandomRain();
     case 1:
-        return new SimpleBalls();
+        return new Rain();
     case 2:
         return new Confetti();
     case 3:
-        return new Starfall();
+        return new SimpleBalls();
     case 4:
-        return new DynamicSquare();
+        return new Snow();
     case 5:
-        return new RandomRain();
+        return new Dribs();
     case 6:
-        return new RainbowRain();
-    case 7:
-         return new Points();
-    case 8:
-        return new Mouse();
-    case 9:
-        return new Pacman();
-    case 10:
         return new ZigZag();
-    case 11:
-        return new NY2020();
-    case 12:
-        return new Snake();
-    case 13:
-        return new SimpleRainbow();
     default:
         return NULL;
     }
