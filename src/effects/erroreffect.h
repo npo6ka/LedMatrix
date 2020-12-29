@@ -8,6 +8,6 @@ public:
     ErrorEffect() {}
 
     void on_update() {
-        FastLED.showColor(CRGB::Red);
+        FastLED.showColor(0x008800);
     }
 };

@@ -4,8 +4,8 @@
 
 class SimpleRainbow : public Effect
 {
+    Property<int> phaseShift;
     int tick;
-    int phaseShift;
 public:
     SimpleRainbow() {}
 

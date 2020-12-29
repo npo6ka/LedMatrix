@@ -1,69 +1,88 @@
 #pragma once
 
-enum {
-    PR_UINT8 = 0,
-    PR_UINT16,
-    PR_UINT32,
-    PR_UINT64,
-    PR_FLOAT,
-    PR_DOUBLE,
-    PR_CHAR,
-    UNSUPPORT
+#include "debug_lib.h"
+#include "property_storage.h"
+
+class ISaveable {
+public:
+    virtual ~ISaveable() = default;
+    virtual void save() const = 0;
+    virtual void load() = 0;
 };
 
-template<typename T>
-class Property
-{
-    T val;
-
-    uint8_t get_type_for_val(uint8_t val) {
-        return PR_UINT8;
-    }
-
-    uint8_t get_type_for_val(uint16_t val) {
-        return PR_UINT16;
-    }
-
-    uint8_t get_type_for_val(uint32_t val) {
-        return PR_UINT32;
-    }
-
-    uint8_t get_type_for_val(uint64_t val) {
-        return PR_UINT64;
-    }
-
-    uint8_t get_type_for_val(float val) {
-        return PR_FLOAT;
-    }
-
-    uint8_t get_type_for_val(double val) {
-        return PR_DOUBLE;
-    }
-
-    uint8_t get_type_for_val(char *val) {
-        return PR_CHAR;
-    }
-
-    uint8_t get_type_for_val(T val) {
-        return UNSUPPORT;
-    }
+class IProperty : ISaveable {
 public:
-    Property() = default;
-    ~Property() = default;
+    virtual ~IProperty() = default;
+    virtual void save() const = 0;
+    virtual void load() = 0;
+    virtual uint16_t size() const = 0;
+};
+ 
+template<class T>
+class Property : IProperty {
+    T m_value;
+    T min_val;
+    T max_val;
 
-    T get() {
-        return val;
+public:
+    Property(T value, T min, T max) : m_value(value), min_val(min), max_val(max)
+    {
+        PropertyStorage::instance().add(this);
+    }
+    Property(T min, T max) : Property({}, min, max) { }
+    Property(T val) : Property(val, {}, {}) { }
+    Property() : Property({}, {}, {}) { }
+
+    ~Property()
+    {
+        PropertyStorage::instance().clear(this);
     }
 
-    void set(T new_val) {
-        val = new_val;
+    Property(const Property&) = delete;
+    Property(Property&&) = delete;
+
+    Property& operator=(const Property&) = delete;
+    Property& operator=(Property&&) = delete;
+
+    Property& operator=(T value)
+    {
+        m_value = value;
+        return *this;
     }
 
-    size_t get_size() {
-        return sizeof(val);
+    operator T() const
+    { return m_value; }
+
+    T& operator*()
+    { return m_value; }
+
+    const T& operator*() const
+    { return m_value; }
+
+    T& operator->()
+    { return m_value; }
+
+    const T& operator->() const
+    { return m_value; }
+ 
+    void save() const override
+    {}
+ 
+    void load() override
+    {}
+
+    uint16_t size() const override
+    {
+        return sizeof(T);
     }
 
-    uint8_t get_type() {
-        return get_type_for_val(val);
+    T get_min()
+    {
+        return min_val;
+    }
+
+    T get_max()
+    {
+        return max_val;
     }
 };

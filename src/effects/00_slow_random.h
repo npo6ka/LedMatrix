@@ -5,10 +5,11 @@
 class SlowRandom : public Effect
 {
     uint8_t inc_val[LEDS_CNT];
-    int step;
-
+    Property<int> step = {0, 0};
 public:
-    SlowRandom() {}
+    SlowRandom() {
+        //*step = &Property<int>(0, 0);
+    }
 
     uint8_t gen_led(uint8_t &color_val)
     {
@@ -24,6 +25,7 @@ public:
     void on_init() {
         step = 2;
         set_fps(120);
+        Property<int> step(0, 0);
 
         uint16_t i;
 

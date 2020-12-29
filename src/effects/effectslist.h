@@ -2,6 +2,8 @@
 
 #include "erroreffect.h"
 
+#define MAX_EFFECTS 25
+
 class EffectsList
 {
 private:
@@ -16,6 +18,7 @@ private:
     Effect *curEffect;
     unsigned long prev_micros;
     unsigned long fps;
+    uint8_t mods_size[MAX_EFFECTS];
 
     void init();
     void setEffect(Effect *eff);

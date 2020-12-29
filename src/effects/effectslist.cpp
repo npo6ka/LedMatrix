@@ -2,7 +2,7 @@
 
 #include "00_slow_random.h"
 #include "01_simple_rainbow.h"
-#include "02_dribs.h"
+/*#include "02_dribs.h"
 #include "03_rain.h"
 #include "04_all_random.h"
 #include "05_snow.h"
@@ -24,11 +24,9 @@
 #include "21_zigzag.h"
 #include "22_horizontal_rainbow_point.h"
 #include "23_test_shader.h"
-#include "24_ny2020.h"
+#include "24_ny2020.h"*/
 /*
 #include "testmode.h"*/
-
-#define MAX_EFFECTS 50
 
 EffectsList& EffectsList::getInstance() {
     static EffectsList instance;
@@ -40,21 +38,25 @@ EffectsList::EffectsList() {
 }
 
 void EffectsList::init() {
-    amnt = MAX_EFFECTS;
+    amnt = 0;
     Effect *eff = NULL;
-    curEffect = nullptr;
+    curEffect = NULL;
 
-    while(eff == NULL && amnt >= 0) {
-        amnt--;
+    do {
+        if (eff) { delete eff; }
+
         eff = getNewEffectInstance(amnt);
-    }
 
-    if (eff == NULL) {
+        if (eff) {
+            mods_size[amnt] = PropertyStorage::instance().get_mod_size();
+            amnt++;
+        }
+    } while (eff != NULL && amnt <= MAX_EFFECTS);
+
+    if (amnt == 0) {
         setErrorEffect();
     } else {
-        curNum = amnt;
-        setEffect(eff);
-        amnt += 1;
+        setEffect(STARTING_MOD);
     }
 }
 
@@ -64,7 +66,7 @@ Effect *EffectsList::getNewEffectInstance(int num) {
         return new SlowRandom();
     case 1:
         return new SimpleRainbow();
-    case 2:
+    /*case 2:
         return new Dribs();
     case 3:
         return new Rain();
@@ -109,7 +111,7 @@ Effect *EffectsList::getNewEffectInstance(int num) {
     case 23:
         return new TestShader();
     case 24:
-        return new NY2020();
+        return new NY2020();*/
     default:
         return NULL;
     }

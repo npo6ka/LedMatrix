@@ -13,8 +13,8 @@ void setup() {
     // инициализация кнопок
     setup_buttons();
 
-    FastLED.setBrightness(150);
-    EffectsList::getInstance().setEffect(18);
+    FastLED.setBrightness(50);
+    EffectsList::getInstance().setEffect(0);
 }
 
 unsigned long tick = 0;
