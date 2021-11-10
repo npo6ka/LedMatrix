@@ -190,7 +190,7 @@ void EffectsList::onTick() {
 
         // корректировка таймера
         // если фпс меньше чем указано в режиме
-        if (abs(micros() - prev_micros) > tick_size * 2) {
+        if (micros() - prev_micros > tick_size * 2) {
             // считаем реальный фпс
             fps = (fps + 1000000 * 10 / (micros() - prev_micros - tick_size)) / 2;
             // следующей итерацией обязательно вызываем on_update + корректируем время
@@ -201,7 +201,7 @@ void EffectsList::onTick() {
             prev_micros += tick_size;
             // считаем реальный фпс
             fps = (fps + curEffect->get_fps() * 10) / 2;
-        }       
+        }
     }
 }
 

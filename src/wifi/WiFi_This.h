@@ -70,12 +70,12 @@ void handleSetMode(){
     Serial.println("handleSetMode()");
     server.send(200, "text/plain", "OK");
 
-    bool isAutomod = server.arg("isAutoMod");
+    // bool isAutomod = server.arg("isAutoMod");
     int num = atoi(server.arg("num").c_str());
 
 
     Serial.print("isAutomod");
-    Serial.println(isAutomod);
+    // Serial.println(isAutomod);
 
     if (num == 100){
         EffectsList::getInstance().setNadysText();
