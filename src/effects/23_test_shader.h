@@ -18,9 +18,9 @@ public:
         float offset = 0.1;
 
         vec3 colour = vec3 (0.33, 0.2, 0.4) *
-             ((1.0f / gl_abs((position.y + (amp * sin((position.x + time * offset) *freq)))) * den)
-            + (1.0f / gl_abs((position.y + (amp * sin((position.x + time * offset) *freq+.7f)))) * den)
-            + (1.0f / gl_abs((position.y + (amp * sin((position.x + time * offset) *freq-.7f)))) * den));
+             ((1.0f / gl_abs((position.y + (amp * glsl::sin((position.x + time * offset) *freq)))) * den)
+            + (1.0f / gl_abs((position.y + (amp * glsl::sin((position.x + time * offset) *freq+.7f)))) * den)
+            + (1.0f / gl_abs((position.y + (amp * glsl::sin((position.x + time * offset) *freq-.7f)))) * den));
 
         fragColor = colour;
     }

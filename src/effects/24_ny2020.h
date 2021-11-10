@@ -282,7 +282,7 @@ static const uint32_t sprite19[NY_SPRITE_W*NY_SPRITE_H] PROGMEM = {
 
 #define NY_COUNT (WIDTH / NY_SPRITE_W + 2)
 
-static const uint32_t * const sprites[] = 
+static const uint32_t * const sprites[] =
 {
     sprite1, sprite2, sprite3, sprite4, sprite5, sprite6, sprite7,
     sprite8, sprite9, sprite10, sprite11, sprite12, sprite13,
@@ -299,22 +299,25 @@ public:
     void on_init()
     {
         phase = 0;
-        for (int i = 0 ; i < NY_COUNT ; ++i)
+        for (int i = 0 ; i < NY_COUNT ; ++i) {
             items[i] = random8(NY_TYPES);
+        }
 
-            set_fps(10);
+        set_fps(10);
     }
 
     void on_update()
     {
         FastLED.clear();
-        for (int i = 0 ; i < NY_COUNT ; ++i)
+        for (int i = 0 ; i < NY_COUNT ; ++i) {
             drawSprite(i * (NY_SPRITE_W + 1) - phase, 0, sprites[items[i]]);
+        }
         phase = (phase + 1) % (NY_SPRITE_W + 1);
         if (phase == 0)
         {
-            for (int i = 1 ; i < NY_COUNT ; ++i)
+            for (int i = 1 ; i < NY_COUNT ; ++i) {
                 items[i - 1] = items[i];
+            }
             items[NY_COUNT - 1] = random8(NY_TYPES);
         }
     }
