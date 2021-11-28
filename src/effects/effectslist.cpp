@@ -64,41 +64,58 @@ void EffectsList::init() {
 
 Effect *EffectsList::getNewEffectInstance(int num) {
     switch (num) {
-
     case 0:
-        return new Rain();
+        return new TestEffect();
     case 1:
-        return new Dribs();
+        return new Rain();
     case 2:
-        return new Snow();
+        return new Dribs(); 
     case 3:
-        return new Fire();
-    case 4:
         return new TheMatrix();
-    case 5:
+    case 4:
         return new SimpleBalls();
-    case 6:
+    case 5:
         return new Confetti();
-    case 7:
-        return new Starfall();
-    case 8:
-        return new DynamicSquare();
-    case 9:
+    case 6:
         return new Points();
-    case 10:
-        return new RainbowPoint();
-    case 11:
-        return new TextMode();
-    case 12:
-        return new Pacman();
-    case 13:
-        return new CircularPoint();
-    case 14:
-        return new ZigZag();
-    case 15:
-        return new NY2020();
-    case 16:
-        return new Snake();
+
+
+    // case 0:
+    //      return new TestEffect();
+    // case 1:
+    //      return new Rain();
+    // case 1:
+    //     return new Dribs(); 
+    // case 2:
+    //     return new Snow(); 
+    // case 3:
+    //     return new Fire();
+    // case 4:
+    //     return new TheMatrix();
+    // case 5:
+    //     return new SimpleBalls();
+    // case 6:
+    //     return new Confetti(); 
+    // case 7:
+    //     return new Starfall();
+    // case 8:
+    //     return new DynamicSquare();
+    // case 9:
+    //     return new Points(); 
+    // case 10:
+    //     return new RainbowPoint();
+    // case 11:
+    //     return new TextMode();
+    // case 12:
+    //     return new Pacman();
+    // case 13:
+    //     return new CircularPoint();
+    // case 14:
+    //     return new ZigZag();
+    // case 15:
+    //     return new NY2020();
+    // case 16:
+    //     return new Snake();
 
     // case 0:
     //     return new RandomRain();

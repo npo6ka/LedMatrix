@@ -19,7 +19,7 @@ public:
         for (i = 0; i < LEDS_CNT; ++i) {
             CRGB &cl = getLeds()[i];
 
-            if (random8(255) == 0) {
+            if (random16(1024) == 0) {
                 cl = CRGB(0, 0, 255);
             } else if (cl.b > 0) {
                 if (cl.b > step) {
