@@ -8,11 +8,10 @@ private:
     // singlton property
     // Конструкторы и оператор присваивания недоступны клиентам
     EffectsList();
-    EffectsList( const EffectsList& );  
+    EffectsList( const EffectsList& );
     EffectsList& operator=( EffectsList& );
-    
-    int amnt;
-    int curNum = 0;
+
+    uint8_t curNum = 0;
     Effect *curEffect;
     unsigned long prev_micros;
     unsigned long fps;
@@ -25,7 +24,7 @@ public:
 
     void setErrorEffect();
     Effect *getCurEffect();
-    Effect *getNewEffectInstance(int num);
+    Effect *getNewEffectInstance(uint8_t num);
     void clearCurEffect();
     void setEffect(int num);
     int getCurEffectNum();
