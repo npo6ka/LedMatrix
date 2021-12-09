@@ -35,6 +35,5 @@ public:
 
         cur_ring = (cur_ring + 1) % (radius);
         hsv = (hsv + 1) % 256;
-        //delay(25);
     }
 };

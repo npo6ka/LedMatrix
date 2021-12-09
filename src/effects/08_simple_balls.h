@@ -29,6 +29,7 @@ public:
             vector[j][1] = random(4, 15) * sign;
             ballColors[j] = CHSV(random(0, 9) * 28, 255, 255);
         }
+        set_fps(30);
     }
 
     void on_update() {
