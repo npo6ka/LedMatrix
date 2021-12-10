@@ -70,6 +70,7 @@ void handleSetMode(){
     Serial.println("handleSetMode()");
     server.send(200, "text/plain", "OK");
 
+    // Тест коммит
     // bool isAutomod = server.arg("isAutoMod");
     int num = atoi(server.arg("num").c_str());
 
