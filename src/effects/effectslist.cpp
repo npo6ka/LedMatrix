@@ -34,105 +34,56 @@
 
 #define MAX_EFFECTS 50
 
+template <class T>
+Effect *effectFactory1() {
+    return new T();
+}
+
+template <class T>
+constexpr const auto effectFactory() {
+    return effectFactory1<T>;
+}
+
+constexpr auto effectsFactories = {
+    effectFactory<SlowRandom>(),
+    effectFactory<SimpleRainbow>(),
+    effectFactory<Dribs>(),
+    effectFactory<Rain>(),
+    effectFactory<AllRandom>(),
+    effectFactory<Snow>(),
+    effectFactory<Fire>(),
+    effectFactory<TheMatrix>(),
+    effectFactory<SimpleBalls>(),
+    effectFactory<Confetti>(),
+    effectFactory<Starfall>(),
+    effectFactory<DynamicSquare>(),
+    effectFactory<RandomRain>(),
+    effectFactory<RainbowRain>(),
+    effectFactory<Points>(),
+    effectFactory<RainbowPoint>(),
+    effectFactory<RainbowStaticPoint>(),
+    effectFactory<TextMode>(),
+    effectFactory<Mouse>(),
+    effectFactory<Pacman>(),
+    effectFactory<CircularPoint>(),
+    effectFactory<ZigZag>(),
+    effectFactory<HorizontalRainbowPoint>(),
+    // effectFactory<TestShader>(),
+    effectFactory<NY2020>(),
+};
+
 EffectsList& EffectsList::getInstance() {
     static EffectsList instance;
     return instance;
 }
 
-EffectsList::EffectsList() {
-    init();
-}
+EffectsList::EffectsList() {}
 
-void EffectsList::init() {
-    amnt = MAX_EFFECTS;
-    Effect *eff = NULL;
-    curEffect = nullptr;
-
-    while(eff == NULL && amnt >= 0) {
-        amnt--;
-        eff = getNewEffectInstance(amnt);
-    }
-
-    if (eff == NULL) {
-        setErrorEffect();
-    } else {
-        curNum = amnt;
-        setEffect(eff);
-        amnt += 1;
-    }
-}
-
-Effect *EffectsList::getNewEffectInstance(int num) {
-    switch (num) {
-    case 0:
-        return new TestEffect();
-    case 1:
-        return new Rain();
-    case 2:
-        return new Dribs(); 
-    case 3:
-        return new TheMatrix();
-    case 4:
-        return new SimpleBalls();
-    case 5:
-        return new Confetti();
-    case 6:
-        return new Points();
-
-
-    // case 0:
-    //      return new TestEffect();
-    // case 1:
-    //      return new Rain();
-    // case 1:
-    //     return new Dribs(); 
-    // case 2:
-    //     return new Snow(); 
-    // case 3:
-    //     return new Fire();
-    // case 4:
-    //     return new TheMatrix();
-    // case 5:
-    //     return new SimpleBalls();
-    // case 6:
-    //     return new Confetti(); 
-    // case 7:
-    //     return new Starfall();
-    // case 8:
-    //     return new DynamicSquare();
-    // case 9:
-    //     return new Points(); 
-    // case 10:
-    //     return new RainbowPoint();
-    // case 11:
-    //     return new TextMode();
-    // case 12:
-    //     return new Pacman();
-    // case 13:
-    //     return new CircularPoint();
-    // case 14:
-    //     return new ZigZag();
-    // case 15:
-    //     return new NY2020();
-    // case 16:
-    //     return new Snake();
-
-    // case 0:
-    //     return new RandomRain();
-    // case 1:
-    //     return new Rain();
-    // case 2:
-    //     return new Confetti();
-    // case 3:
-    //     return new SimpleBalls();
-    // case 4:
-    //     return new Snow();
-    // case 5:
-    //     return new Dribs();
-    // case 6:
-    //     return new ZigZag();
-    default:
+Effect *EffectsList::getNewEffectInstance(uint8_t num) {
+    if (num >= effectsFactories.size()) {
         return NULL;
+    } else {
+        return effectsFactories.begin()[num]();
     }
 }
 
@@ -176,7 +127,7 @@ void EffectsList::setEffect(Effect *eff) {
 }
 
 void EffectsList::nextEffect() {
-    if (curNum + 1 >= amnt) {
+    if (curNum + 1 >= effectsFactories.size()) {
         setEffect(0);
     } else {
         setEffect(curNum + 1);
@@ -185,7 +136,7 @@ void EffectsList::nextEffect() {
 
 void EffectsList::prevEffect() {
     if (curNum - 1 < 0) {
-        setEffect(amnt - 1);
+        setEffect(effectsFactories.size() - 1);
     } else {
         setEffect(curNum - 1);
     }
@@ -203,7 +154,6 @@ void EffectsList::onTick() {
     if (micros() - prev_micros > tick_size) {
         curEffect->on_update();
         curEffect->on_render();
-        FastLED.show();
 
         // корректировка таймера
         // если фпс меньше чем указано в режиме
@@ -219,6 +169,7 @@ void EffectsList::onTick() {
             // считаем реальный фпс
             fps = (fps + curEffect->get_fps() * 10) / 2;
         }
+        FastLED.show();
     }
 }
 
