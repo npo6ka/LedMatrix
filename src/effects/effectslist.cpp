@@ -40,32 +40,32 @@ constexpr const auto effectFactory() {
     return effectFactory1<T>;
 }
 
-constexpr auto effectsFactories = {
-    effectFactory<SlowRandom>(),
-    effectFactory<SimpleRainbow>(),
-    effectFactory<Dribs>(),
-    effectFactory<Rain>(),
-    effectFactory<AllRandom>(),
-    effectFactory<Snow>(),
-    effectFactory<Fire>(),
-    effectFactory<TheMatrix>(),
-    effectFactory<SimpleBalls>(),
-    effectFactory<Confetti>(),
-    effectFactory<Starfall>(),
-    effectFactory<DynamicSquare>(),
-    effectFactory<RandomRain>(),
-    effectFactory<RainbowRain>(),
-    effectFactory<Points>(),
-    effectFactory<RainbowPoint>(),
-    effectFactory<RainbowStaticPoint>(),
-    effectFactory<TextMode>(),
-    effectFactory<Mouse>(),
-    effectFactory<Pacman>(),
-    effectFactory<CircularPoint>(),
-    effectFactory<ZigZag>(),
-    effectFactory<HorizontalRainbowPoint>(),
+auto effectsFactories = {
+    effectFactory<SlowRandom>(),            // 0
+    effectFactory<SimpleRainbow>(),         // 1
+    effectFactory<Dribs>(),                 // 2
+    effectFactory<Rain>(),                  // 3
+    effectFactory<AllRandom>(),             // 4
+    effectFactory<Snow>(),                  // 5
+    effectFactory<Fire>(),                  // 6
+    effectFactory<TheMatrix>(),             // 7
+    effectFactory<SimpleBalls>(),           // 8
+    effectFactory<Confetti>(),              // 9
+    effectFactory<Starfall>(),              // 10
+    effectFactory<DynamicSquare>(),         // 11
+    effectFactory<RandomRain>(),            // 12
+    effectFactory<RainbowRain>(),           // 13
+    effectFactory<Points>(),                // 14
+    effectFactory<RainbowPoint>(),          // 15
+    effectFactory<RainbowStaticPoint>(),    // 16
+    effectFactory<TextMode>(),              // 17
+    effectFactory<Mouse>(),                 // 18
+    effectFactory<Pacman>(),                // 19
+    effectFactory<CircularPoint>(),         // 20
+    effectFactory<ZigZag>(),                // 21
+    effectFactory<HorizontalRainbowPoint>(),// 22
     // effectFactory<TestShader>(),
-    effectFactory<NY2020>(),
+    effectFactory<NY2020>(),                // 23
 };
 
 EffectsList& EffectsList::getInstance() {
