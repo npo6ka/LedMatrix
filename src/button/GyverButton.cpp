@@ -5,7 +5,7 @@ GButton::GButton(uint8_t pin) {
     _PIN = pin;
     GButton::init();
 }
-GButton::GButton(uint8_t pin, boolean type, boolean dir) {
+GButton::GButton(uint8_t pin, bool type, bool dir) {
     _PIN = pin;
     GButton::init();
     GButton::setType(type);
@@ -36,77 +36,77 @@ void GButton::setClickTimeout(uint16_t timeout) {
 void GButton::setStepTimeout(uint16_t step_timeout) {
     _step_timeout = step_timeout;
 }
-void GButton::setType(boolean type) {
+void GButton::setType(bool type) {
     flags.type = type;
     if (type) pinMode(_PIN, INPUT);
     else pinMode(_PIN, INPUT_PULLUP);
 }
-void GButton::setDirection(boolean dir) {
+void GButton::setDirection(bool dir) {
     flags.inv_state = dir;
 }
-void GButton::setTickMode(boolean tickMode) {
+void GButton::setTickMode(bool tickMode) {
     flags.tickMode = tickMode;
 }
 
-boolean GButton::isPress() {
+bool GButton::isPress() {
     if (flags.tickMode) GButton::tick();
     if (flags.isPress_f) {
         flags.isPress_f = false;
         return true;
     } else return false;
 }
-boolean GButton::isRelease() {
+bool GButton::isRelease() {
     if (flags.tickMode) GButton::tick();
     if (flags.isRelease_f) {
         flags.isRelease_f = false;
         return true;
     } else return false;
 }
-boolean GButton::isClick() {
+bool GButton::isClick() {
     if (flags.tickMode) GButton::tick();
     if (flags.isOne_f) {
         flags.isOne_f = false;
         return true;
     } else return false;
 }
-boolean GButton::isHolded() {
+bool GButton::isHolded() {
     if (flags.tickMode) GButton::tick();
     if (flags.isHolded_f) {
         flags.isHolded_f = false;
         return true;
     } else return false;
 }
-boolean GButton::isHold() {
+bool GButton::isHold() {
     if (flags.tickMode) GButton::tick();
     if (flags.step_flag) return true;
     else return false;
 }
-boolean GButton::state() {
+bool GButton::state() {
     if (flags.tickMode) GButton::tick();
     return flags.btn_state;
 }
-boolean GButton::isSingle() {
+bool GButton::isSingle() {
     if (flags.tickMode) GButton::tick();
     if (flags.counter_flag && last_counter == 1) {
         flags.counter_flag = false;
         return true;
     } else return false;
 }
-boolean GButton::isDouble() {
+bool GButton::isDouble() {
     if (flags.tickMode) GButton::tick();
     if (flags.counter_flag && last_counter == 2) {
         flags.counter_flag = false;
         return true;
     } else return false;
 }
-boolean GButton::isTriple() {
+bool GButton::isTriple() {
     if (flags.tickMode) GButton::tick();
     if (flags.counter_flag && last_counter == 3) {
         flags.counter_flag = false;
         return true;
     } else return false;
 }
-boolean GButton::hasClicks() {
+bool GButton::hasClicks() {
     if (flags.tickMode) GButton::tick();
     if (flags.counter_flag) {
         flags.counter_flag = false;
@@ -116,7 +116,7 @@ boolean GButton::hasClicks() {
 uint8_t GButton::getClicks() {
     return last_counter;
 }
-boolean GButton::isStep() {
+bool GButton::isStep() {
     if (flags.tickMode) GButton::tick();
     if (flags.step_flag && (millis() - btn_timer >= _step_timeout)) {
         btn_timer = millis();
@@ -128,7 +128,7 @@ uint8_t GButton::getHoldClicks() {
     if (flags.tickMode) GButton::tick();
     return flags.hold_flag ? last_hold_counter : 0;
 }
-void GButton::tick(boolean state) {
+void GButton::tick(bool state) {
     flags.mode = true;
     flags.btn_state = state ^ flags.inv_state;
     GButton::tick();
@@ -149,11 +149,11 @@ void GButton::tick() {
             flags.isPress_f = true;
             flags.oneClick_f = true;
         }
-    }    
+    }
   } else {
       flags.btn_deb = false;
   }
-  
+
   // отпускание
   if (!flags.btn_state && flags.btn_flag) {
     flags.btn_flag = false;
@@ -167,7 +167,7 @@ void GButton::tick() {
         flags.isOne_f = true;
     }
   }
-  
+
   // кнопка удерживается
   if (flags.btn_flag && flags.btn_state && (millis() - btn_timer >= _timeout) && !flags.hold_flag) {
     flags.hold_flag = true;
@@ -179,9 +179,9 @@ void GButton::tick() {
     flags.oneClick_f = false;
     btn_timer = millis();
   }
-  
+
   // обработка накликивания
-  if ((millis() - btn_timer >= _click_timeout) && (btn_counter != 0)) {    
+  if ((millis() - btn_timer >= _click_timeout) && (btn_counter != 0)) {
     last_counter = btn_counter;
     btn_counter = 0;
     flags.counter_flag = true;

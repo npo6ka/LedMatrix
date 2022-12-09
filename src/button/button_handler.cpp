@@ -42,7 +42,6 @@ void tick_buttons() {
             out("auto mode on");
         }
         break;
-    
     default:
         break;
     }

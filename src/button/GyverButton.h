@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Arduino.h>
+#include <stdint.h>
 
 /*
     GyverButton - библиотека для многофункциональной отработки нажатия кнопки. Возможности:
@@ -46,7 +46,7 @@ class GButton
   public:
     GButton(uint8_t pin);                               // класс кнопки, принимает пин
 
-    GButton(uint8_t pin, boolean type, boolean dir);    // класс кнопки, принимает PIN пин, тип type (HIGH_PULL / LOW_PULL) и направление dir (NORM_OPEN / NORM_CLOSE)
+    GButton(uint8_t pin, bool type, bool dir);          // класс кнопки, принимает PIN пин, тип type (HIGH_PULL / LOW_PULL) и направление dir (NORM_OPEN / NORM_CLOSE)
                                                         // HIGH_PULL - кнопка подключена к GND, пин подтянут к VCC, pinMode - INPUT_PULLUP (по умолчанию)
                                                         // LOW_PULL - кнопка подключена к VCC, пин подтянут к GND, pinMode - INPUT
                                                         // NORM_OPEN - кнопка по умолчанию разомкнута (по умолчанию)
@@ -56,32 +56,32 @@ class GButton
     void setTimeout(uint16_t timeout);                  // установка таймаута удержания (по умолчанию 300 мс)
     void setClickTimeout(uint16_t timeout);             // установка таймаута между кликами (по умолчанию 500 мс)
     void setStepTimeout(uint16_t step_timeout);         // установка таймаута между инкрементами (по умолчанию 400 мс)
-    void setType(boolean type);                         // установка типа кнопки (HIGH_PULL - подтянута к питанию, LOW_PULL - к gnd)
-    void setDirection(boolean dir);                     // установка направления (разомкнута/замкнута по умолчанию - NORM_OPEN, NORM_CLOSE)
-    
-    void setTickMode(boolean tickMode);                 // (MANUAL / AUTO) ручной или автоматический опрос кнопки функцией tick()
+    void setType(bool type);                            // установка типа кнопки (HIGH_PULL - подтянута к питанию, LOW_PULL - к gnd)
+    void setDirection(bool dir);                        // установка направления (разомкнута/замкнута по умолчанию - NORM_OPEN, NORM_CLOSE)
+
+    void setTickMode(bool tickMode);                    // (MANUAL / AUTO) ручной или автоматический опрос кнопки функцией tick()
                                                         // MANUAL - нужно вызывать функцию tick() вручную
                                                         // AUTO - tick() входит во все остальные функции и опрашивается сама
 
     void tick();                                        // опрос кнопки
-    void tick(boolean state);                           // опрос внешнего значения (0 нажато, 1 не нажато) (для матричных, резистивных клавиатур и джойстиков)
+    void tick(bool state);                              // опрос внешнего значения (0 нажато, 1 не нажато) (для матричных, резистивных клавиатур и джойстиков)
 
-    boolean isPress();      // возвращает true при нажатии на кнопку. Сбрасывается после вызова
-    boolean isRelease();    // возвращает true при отпускании кнопки. Сбрасывается после вызова
-    boolean isClick();      // возвращает true при клике. Сбрасывается после вызова
-    boolean isHolded();     // возвращает true при удержании дольше timeout. Сбрасывается после вызова
-    boolean isHold();       // возвращает true при нажатой кнопке, не сбрасывается
-    boolean state();        // возвращает состояние кнопки
+    bool isPress();      // возвращает true при нажатии на кнопку. Сбрасывается после вызова
+    bool isRelease();    // возвращает true при отпускании кнопки. Сбрасывается после вызова
+    bool isClick();      // возвращает true при клике. Сбрасывается после вызова
+    bool isHolded();     // возвращает true при удержании дольше timeout. Сбрасывается после вызова
+    bool isHold();       // возвращает true при нажатой кнопке, не сбрасывается
+    bool state();        // возвращает состояние кнопки
 
-    boolean isSingle();     // возвращает true при одиночном клике. Сбрасывается после вызова
-    boolean isDouble();     // возвращает true при двойном клике. Сбрасывается после вызова
-    boolean isTriple();     // возвращает true при тройном клике. Сбрасывается после вызова
-    
-    boolean hasClicks();    // проверка на наличие кликов. Сбрасывается после вызова
+    bool isSingle();     // возвращает true при одиночном клике. Сбрасывается после вызова
+    bool isDouble();     // возвращает true при двойном клике. Сбрасывается после вызова
+    bool isTriple();     // возвращает true при тройном клике. Сбрасывается после вызова
+
+    bool hasClicks();    // проверка на наличие кликов. Сбрасывается после вызова
     uint8_t getClicks();    // вернуть количество кликов
     uint8_t getHoldClicks();// вернуть количество кликов, предшествующее удержанию кнопки (для шаблона управления "клик + удержание")
 
-    boolean isStep();       // возвращает true по таймеру setStepTimeout, смотри пример
+    bool isStep();       // возвращает true по таймеру setStepTimeout, смотри пример
 
   private:
     void init();
