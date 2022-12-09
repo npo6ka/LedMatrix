@@ -1,7 +1,8 @@
 #pragma once
 
 #include "FastLED.h"
-#include "constants.h"
+#include "constants_window.h"
+//#include "constants_matrix.h"
 #include "debug_lib.h"
 
 // ************* НАСТРОЙКА МАТРИЦЫ **************
@@ -37,7 +38,7 @@
 #   define THIS_X (WIDTH - y - 1)
 #   define THIS_Y x
 #elif (CONNECTION_ANGLE == 3 && STRIP_DIRECTION == 0)
-#   define THIS_X (HEIGHT - x - 1) 
+#   define THIS_X (HEIGHT - x - 1)
 #   define THIS_Y (WIDTH - y - 1)
 #elif (CONNECTION_ANGLE == 3 && STRIP_DIRECTION == 1)
 #   define THIS_X (WIDTH - y - 1)
@@ -54,7 +55,7 @@ extern CRGB leds[LEDS_CNT];
 // Получить номер пикселя по координатам
 static uint16_t getPixNum(const uint8_t x, const uint8_t y);
 
-// получить объект пикселя по координатам 
+// получить объект пикселя по координатам
 static CRGB &getPix(int x, int y);
 
 // получить 24-битный код цвета из объекта пикселя
@@ -74,7 +75,7 @@ static void setPixColor(int x, int y, CRGB color);
 // Получить ссылку на матрицу светодиодов
 // !!! Не рекомендуется записывать значения напрямую в этот массив
 // так как значения в нем могут располагаться в различном порядке
-// для различных типов матриц и возможных поворотах матриц на 
+// для различных типов матриц и возможных поворотах матриц на
 // углы 90, 180, 270 градусов.
 static CRGB* getLeds(void);
 
@@ -98,8 +99,6 @@ static void led_setup()
     FastLED.addLeds<WS2812B, DATA_PIN, COLOR_ORDER>(leds, LEDS_CNT).setCorrection(TypicalLEDStrip);
     FastLED.setMaxPowerInVoltsAndMilliamps(5, CURRENT_LIMIT);
     FastLED.clear();
-
-    pinMode(LED_BUILTIN, OUTPUT);
 }
 
 // получить номер пикселя в ленте по координатам
