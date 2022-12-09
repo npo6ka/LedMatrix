@@ -3,7 +3,7 @@
 #include "effect.h"
 
 #define ACCURACY 100
-#define MAX_VEC_SIZE 10
+#define MAX_VEC_SIZE 20
 #define POINTS_AMNT 3
 
 typedef struct Point

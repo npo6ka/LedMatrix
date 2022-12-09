@@ -4,7 +4,7 @@
 
 class SimpleBalls : public Effect
 {
-    static const uint8_t balls_amount = 3;
+    static const uint8_t balls_amount = 4;
     int coord[balls_amount][2];
     int8_t vector[balls_amount][2];
     CRGB ballColors[balls_amount];
