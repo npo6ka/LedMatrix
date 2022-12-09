@@ -23,7 +23,6 @@
 #include "20_circular_point.h"
 #include "21_zigzag.h"
 #include "22_horizontal_rainbow_point.h"
-#include "23_test_shader.h"
 #include "24_ny2020.h"
 /*
 #include "testmode.h"*/
@@ -62,7 +61,6 @@ auto effectsFactories = {
     effectFactory<CircularPoint>(),
     effectFactory<ZigZag>(),
     // effectFactory<HorizontalRainbowPoint>(),
-    // effectFactory<TestShader>(),
     // effectFactory<NY2020>(),
 };
 
