@@ -1,8 +1,8 @@
 #pragma once
 
 #include "FastLED.h"
-#include "constants_window.h"
-//#include "constants_matrix.h"
+//#include "constants_window.h"
+#include "constants_matrix.h"
 #include "debug_lib.h"
 
 // ************* НАСТРОЙКА МАТРИЦЫ **************

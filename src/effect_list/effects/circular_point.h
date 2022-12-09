@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Effects/effect.h"
+#include "effect_list/effect.h"
 
 #define ACCURACY 10
 

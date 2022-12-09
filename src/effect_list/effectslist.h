@@ -1,6 +1,7 @@
 #pragma once
+#include <stdint.h>
 
-#include "erroreffect.h"
+class Effect;
 
 class EffectsList
 {

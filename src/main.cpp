@@ -1,5 +1,6 @@
 #include "button/button_handler.h"
-#include "effects/effectslist.h"
+#include "effect_list/effectslist.h"
+#include "effect_list/libs/lib_led.h"
 
 // все настройки матрицы находятся в lib_led.h
 // инициализация светодиодов
@@ -9,8 +10,6 @@ void setup() {
     randomSeed(millis() + analogRead(A0));
     debug_setup();
     led_setup();
-
-    // инициализация кнопок
     setup_buttons();
 
     FastLED.setBrightness(150);

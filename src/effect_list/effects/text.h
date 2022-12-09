@@ -1,7 +1,7 @@
 #pragma once
 
-#include "effect.h"
-#include "fonts.h"
+#include "effect_list/effect.h"
+#include "effect_list/libs/fonts.h"
 
 class TextMode : public Effect
 {
@@ -16,7 +16,7 @@ class TextMode : public Effect
         } else if (str[pos] == 0xd0) {
             pos++;
 
-            if (str[pos] >= 0x90 && str[pos] <= 0xbf) { 
+            if (str[pos] >= 0x90 && str[pos] <= 0xbf) {
                 return (uint16_t) str[pos] - 0xcfd0;
             } else if (str[pos] == 0x81) {
                 return (uint16_t) str[pos] - 0xcfd9;
@@ -75,7 +75,7 @@ class TextMode : public Effect
             return ch - 97;
         }
         out("Undefined symbols: %c\n", ch);
-        
+
         return 0;
     }
 
@@ -126,7 +126,7 @@ class TextMode : public Effect
 
         while (printed_text[pos] != '\0') {
             sym_pos = WIDTH + pos * (LET_WIDTH + SPACE) - tick / speed;
-            
+
             if (sym_pos > -LET_WIDTH && sym_pos < WIDTH) {
                 draw_symbol(printed_text[pos], (HEIGHT - LET_HEIGHT) / 2, sym_pos);
             }
@@ -160,7 +160,7 @@ public:
     void on_init()
     {
         printed_text = nullptr;
-        set_text("Снега нет, но вы держитесь...");
+        set_text("Улыбнись, скоро новый год )))");
         set_fps(60);
     }
 

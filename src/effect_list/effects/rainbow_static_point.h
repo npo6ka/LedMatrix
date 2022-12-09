@@ -2,7 +2,7 @@
 
 #define ACCURACY 10
 
-#include "effect.h"
+#include "effect_list/effect.h"
 
 class RainbowStaticPoint : public Effect
 {

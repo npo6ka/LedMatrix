@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Effects/effect.h"
+#include "effect_list/effect.h"
 
 #define NY_SPRITE_W 10
 #define NY_SPRITE_H 10

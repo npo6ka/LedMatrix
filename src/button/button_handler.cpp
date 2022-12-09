@@ -1,7 +1,9 @@
 #include "button_handler.h"
 #include "GyverButton.h"
 #include "debug_lib.h"
-#include "effects/effectslist.h"
+#include "effect_list/libs/lib_led.h"
+#include "effect_list/effectslist.h"
+
 
 GButton touch(BTN_PIN, LOW_PULL, NORM_OPEN);
 

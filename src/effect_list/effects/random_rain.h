@@ -1,6 +1,6 @@
 #pragma once
 
-#include "effect.h"
+#include "effect_list/effect.h"
 
 class RandomRain : public Effect
 {

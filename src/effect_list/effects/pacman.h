@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Effects/effect.h"
+#include "effect_list/effect.h"
 
 #define PACMAN_W 10
 #define PACMAN_H 10
