@@ -38,7 +38,7 @@ constexpr const auto effectFactory() {
 }
 
 auto effectsFactories = {
-    // effectFactory<SlowRandom>(),
+    effectFactory<SlowRandom>(),
     // effectFactory<SimpleRainbow>(),
     effectFactory<TextMode>(),
     effectFactory<Dribs>(),
@@ -124,7 +124,7 @@ void EffectsList::setEffect(const uint8_t &num) {
 }
 
 void EffectsList::nextEffect() {
-    if (curNum + 1 >= effectsFactories.size()) {
+    if (curNum + 1 >= (uint8_t)effectsFactories.size()) {
         setEffect(0);
     } else {
         setEffect(curNum + 1);
