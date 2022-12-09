@@ -28,8 +28,6 @@
 /*
 #include "testmode.h"*/
 
-#define MAX_EFFECTS 50
-
 template <class T>
 Effect *effectFactory1() {
     return new T();
@@ -41,58 +39,60 @@ constexpr const auto effectFactory() {
 }
 
 auto effectsFactories = {
-    effectFactory<SlowRandom>(),            // 0
-    effectFactory<SimpleRainbow>(),         // 1
-    effectFactory<Dribs>(),                 // 2
-    effectFactory<Rain>(),                  // 3
-    effectFactory<AllRandom>(),             // 4
-    effectFactory<Snow>(),                  // 5
-    effectFactory<Fire>(),                  // 6
-    effectFactory<TheMatrix>(),             // 7
-    effectFactory<SimpleBalls>(),           // 8
-    effectFactory<Confetti>(),              // 9
-    effectFactory<Starfall>(),              // 10
-    effectFactory<DynamicSquare>(),         // 11
-    effectFactory<RandomRain>(),            // 12
-    effectFactory<RainbowRain>(),           // 13
-    effectFactory<Points>(),                // 14
-    effectFactory<RainbowPoint>(),          // 15
-    effectFactory<RainbowStaticPoint>(),    // 16
-    effectFactory<TextMode>(),              // 17
-    effectFactory<Mouse>(),                 // 18
-    effectFactory<Pacman>(),                // 19
-    effectFactory<CircularPoint>(),         // 20
-    effectFactory<ZigZag>(),                // 21
-    effectFactory<HorizontalRainbowPoint>(),// 22
+    // effectFactory<SlowRandom>(),
+    // effectFactory<SimpleRainbow>(),
+    effectFactory<TextMode>(),
+    effectFactory<Dribs>(),
+    effectFactory<Rain>(),
+    // effectFactory<AllRandom>(),
+    effectFactory<Snow>(),
+    // effectFactory<Fire>(),
+    effectFactory<TheMatrix>(),
+    effectFactory<SimpleBalls>(),
+    effectFactory<Confetti>(),
+    effectFactory<Starfall>(),
+    // effectFactory<DynamicSquare>(),
+    effectFactory<RandomRain>(),
+    effectFactory<RainbowRain>(),
+    effectFactory<Points>(),
+    // effectFactory<RainbowPoint>(),
+    // effectFactory<RainbowStaticPoint>(),
+    // effectFactory<Mouse>(),
+    effectFactory<Pacman>(),
+    effectFactory<CircularPoint>(),
+    effectFactory<ZigZag>(),
+    // effectFactory<HorizontalRainbowPoint>(),
     // effectFactory<TestShader>(),
-    effectFactory<NY2020>(),                // 23
+    // effectFactory<NY2020>(),
 };
 
-EffectsList& EffectsList::getInstance() {
-    static EffectsList instance;
-    return instance;
-}
-
-EffectsList::EffectsList() {}
-
-Effect *EffectsList::getNewEffectInstance(uint8_t num) {
+static Effect *getNewEffectInstance(const uint8_t& num) {
     if (num >= effectsFactories.size()) {
-        return NULL;
+        return nullptr;
     } else {
         return effectsFactories.begin()[num]();
     }
 }
 
-void EffectsList::setErrorEffect() {
-    clearCurEffect();
-    curEffect = new ErrorEffect();
-}
+// private
 
-Effect *EffectsList::getCurEffect() {
+Effect *EffectsList::getCurEffect() const {
     return curEffect;
 }
 
-int EffectsList::getCurEffectNum() {
+// public
+EffectsList& EffectsList::getInstance() {
+    static EffectsList instance;
+    return instance;
+}
+
+void EffectsList::setErrorEffect() {
+    clearCurEffect();
+    curEffect = new ErrorEffect();
+    curNum = -1;
+}
+
+uint8_t EffectsList::getCurEffectNum() const {
     return curNum;
 }
 
@@ -100,26 +100,29 @@ void EffectsList::clearCurEffect() {
     if (getCurEffect()) {
         delete curEffect;
         curEffect = nullptr;
+        curNum = -1;
     }
 }
 
-void EffectsList::setEffect(int num) {
-    setEffect(getNewEffectInstance(num));
-    curNum = num;
-}
-
-void EffectsList::setEffect(Effect *eff) {
-    clearCurEffect();
-
-    curEffect = eff;
-    if (curEffect == NULL) {
+void EffectsList::setEffect(const uint8_t &num) {
+    if (num > effectsFactories.size()) {
+        out("ERROR: Effect number out of range\n");
         setErrorEffect();
-        curNum = -1;
+        return;
+    }
+
+    clearCurEffect();
+    curEffect = getNewEffectInstance(num);
+
+    if (!curEffect) {
+        out("ERROR: Effect not crated\n");
+        setErrorEffect();
         return;
     }
 
     curEffect->on_clear();
     curEffect->on_init();
+    curNum = num;
 }
 
 void EffectsList::nextEffect() {
