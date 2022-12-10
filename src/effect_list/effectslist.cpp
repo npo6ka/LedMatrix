@@ -25,6 +25,7 @@
 #include "effects/zigzag.h"
 #include "effects/horizontal_rainbow_point.h"
 #include "effects/ny2020.h"
+#include "effects/dribs_all_side.h"
 /*
 #include "testmode.h"*/
 
@@ -39,6 +40,7 @@ constexpr const auto effectFactory() {
 }
 
 auto effectsFactories = {
+    effectFactory<DribsAllSide>(),
     effectFactory<SlowRandom>(),
     // effectFactory<SimpleRainbow>(),
     effectFactory<TextMode>(),
