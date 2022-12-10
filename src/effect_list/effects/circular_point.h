@@ -6,14 +6,14 @@
 
 class CircularPoint : public Effect
 {
-    typedef struct Point
+    struct Point
     {
         int32_t x;
         int32_t y;
         uint8_t hue;
         uint32_t pr; //point_radius
         uint32_t br; //bright_radius
-    } Point;
+    };
 
     uint8_t tick;
     Point p1;

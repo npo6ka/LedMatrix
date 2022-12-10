@@ -6,17 +6,16 @@
 #define MAX_VEC_SIZE 20
 #define POINTS_AMNT 3
 
-typedef struct Point
-{
-  int32_t x;
-  int32_t y;
-  int32_t vec_x;
-  int32_t vec_y;
-  CRGB color;
-} Point;
-
 class Points : public Effect
 {
+    struct Point {
+        int32_t x;
+        int32_t y;
+        int32_t vec_x;
+        int32_t vec_y;
+        CRGB color;
+    };
+
     uint32_t point_size;
     uint32_t bright_radius;
     Point points[POINTS_AMNT];

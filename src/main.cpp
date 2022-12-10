@@ -8,6 +8,7 @@ CRGB leds[LEDS_CNT];
 
 void setup() {
     randomSeed(millis() + analogRead(A0));
+    random16_set_seed(millis() + analogRead(A0));
     debug_setup();
     led_setup();
     setup_buttons();
