@@ -28,6 +28,9 @@ public:
     void on_init() {
         set_fps(60);
         chsv = 0;
+        for (uint8_t i = 0; i < MAX_SNAKE; ++i) {
+            snakes[i].cl = 0;
+        }
     }
 
     void remove_snake(Snake &snake) {
