@@ -51,22 +51,22 @@ public:
                 switch (cur_snake.trend)
                 {
                 case Trend::up:
-                    if (--cur_snake.y >= HEIGHT) {
+                    if (--cur_snake.y >= WIDTH) {
                         remove_snake(cur_snake);
                     }
                     break;
                 case Trend::down:
-                    if (++cur_snake.y >= HEIGHT) {
+                    if (++cur_snake.y >= WIDTH) {
                         remove_snake(cur_snake);
                     }
                     break;
                 case Trend::left:
-                    if (--cur_snake.x >= WIDTH) {
+                    if (--cur_snake.x >= HEIGHT) {
                         remove_snake(cur_snake);
                     }
                     break;
                 case Trend::right:
-                    if (++cur_snake.x >= WIDTH) {
+                    if (++cur_snake.x >= HEIGHT) {
                         remove_snake(cur_snake);
                     }
                     break;
@@ -79,20 +79,20 @@ public:
                     switch (cur_snake.trend)
                     {
                     case Trend::up:
-                        cur_snake.x = random16(WIDTH - 1);
-                        cur_snake.y = HEIGHT - 1;
+                        cur_snake.x = random16(HEIGHT - 1);
+                        cur_snake.y = WIDTH - 1;
                         break;
                     case Trend::down:
-                        cur_snake.x = random16(WIDTH - 1);
+                        cur_snake.x = random16(HEIGHT - 1);
                         cur_snake.y = 0;
                         break;
                     case Trend::left:
-                        cur_snake.x = WIDTH - 1;
-                        cur_snake.y = random16(HEIGHT - 1);
+                        cur_snake.x = HEIGHT - 1;
+                        cur_snake.y = random16(WIDTH - 1);
                         break;
                     case Trend::right:
                         cur_snake.x = 0;
-                        cur_snake.y = random16(HEIGHT - 1);
+                        cur_snake.y = random16(WIDTH - 1);
                         break;
                     }
                 }
