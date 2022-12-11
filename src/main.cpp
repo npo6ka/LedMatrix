@@ -1,6 +1,7 @@
 #include "button/button_handler.h"
 #include "effect_list/effectslist.h"
 #include "effect_list/libs/lib_led.h"
+#include "wifi/wifi_time.h"
 
 // все настройки матрицы находятся в lib_led.h
 // инициализация светодиодов
@@ -15,6 +16,8 @@ void setup() {
 
     FastLED.setBrightness(150);
     EffectsList::getInstance().setEffect(0);
+
+    setupWiFi();
 }
 
 unsigned long tick = 0;
@@ -24,6 +27,7 @@ void loop() {
     EffectsList::getInstance().onTick();
 
     tick_buttons();
+    tick_wifi();
 
     // проверка реального тпс работы микроконтроллера
     /*tps++;
