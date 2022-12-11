@@ -104,9 +104,6 @@ public:
                 getPix(cur_snake.x, cur_snake.y) = cur_snake.cl;
             }
         }
-        /*for (int i = 0; i < LEDS_CNT; i++) {
-            getLeds()[i] = CRGB(random8(255), random8(255), random8(255));
-        }*/
 
         fader(5);
     }
