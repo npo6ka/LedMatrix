@@ -108,15 +108,15 @@ public:
 
                     getPix(HEIGHT - 1 - y, x) = color;
                 } else if (y == 8 && sparkless) {
-                    if (random8(20) == 0 && getPixColor(HEIGHT - y, x) != 0) {
-                        getPix(HEIGHT - 1 - y, x) = getPixColor(HEIGHT - y, x);
+                    if (random8(20) == 0 && getPix(HEIGHT - y, x)) {
+                        getPix(HEIGHT - 1 - y, x) = getPix(HEIGHT - y, x);
                     } else {
                         getPix(HEIGHT - 1 - y, x) = 0;
                     }
                 } else if (sparkless) {
                     // старая версия для яркости
-                    if (getPixColor(HEIGHT - y, x) > 0) {
-                        getPix(HEIGHT - 1 - y, x) = getPixColor(HEIGHT - y, x);
+                    if (getPix(HEIGHT - y, x)) {
+                        getPix(HEIGHT - 1 - y, x) = getPix(HEIGHT - y, x);
                     } else {
                         getPix(HEIGHT - 1 - y, x) = 0;
                     }

@@ -29,12 +29,12 @@ public:
                 bool dir = direction;
 
                 for (uint8_t y = 0; y < WIDTH; y++) {
-                    if (getPixColor(x, y)) {
+                    if (getPix(x, y)) {
                         if (x + 1 < HEIGHT) {
                             if (dir) {
-                                if (y + 1 < WIDTH) getPix(x + 1, y + 1) = getPixColor(x, y);
+                                if (y + 1 < WIDTH) getPix(x + 1, y + 1) = getPix(x, y);
                             } else {
-                                if (y - 1 >= 0) getPix(x + 1, y - 1) = getPixColor(x, y);
+                                if (y - 1 >= 0) getPix(x + 1, y - 1) = getPix(x, y);
                             }
                             dir = !dir;
                         }
@@ -47,7 +47,7 @@ public:
             for (uint8_t x = 0; x < WIDTH - 1; x++) {
                 // заполняем случайно верхнюю строку
                 // а также не даём двум блокам по вертикали вместе быть
-                if (getPixColor(1, x) == 0 && (random(0, density) == 0)) {
+                if (!getPix(1, x) && (random(0, density) == 0)) {
                     getPix(0, x) = 0xE0FFFF - 0x101010 * random(0, 4);
                     x++;
                 } else {

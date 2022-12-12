@@ -1,6 +1,5 @@
 #include "button_handler.h"
 #include "GyverButton.h"
-#include "debug_lib.h"
 #include "effect_list/libs/lib_led.h"
 #include "effect_list/effectslist.h"
 
@@ -19,7 +18,7 @@ void auto_mode_tick() {
     if (millis() - auto_mode_cnt > AUTOMOD_INTERVAL) {
         auto_mode_cnt = millis();
         EffectsList::getInstance().nextEffect();
-        out("auto next mode");
+        out("auto next mode\n");
     }
 }
 
@@ -31,17 +30,17 @@ void tick_buttons() {
     case 1U:
         if (auto_mode) {
             auto_mode = false;
-            out("auto mode off");
+            out("auto mode off\n");
         } else {
             EffectsList::getInstance().nextEffect();
-            out("next mode");
+            out("next mode\n");
         }
         break;
     case 2U:
         if (!auto_mode) {
             auto_mode = true;
             auto_mode_cnt = millis();
-            out("auto mode on");
+            out("auto mode on\n");
         }
         break;
     default:

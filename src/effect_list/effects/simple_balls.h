@@ -11,7 +11,7 @@ class SimpleBalls : public Effect
     bool ball_track = true;     // (0 / 1) - вкл/выкл следы шариков
     uint8_t track_step = 70;    // длина хвоста шарика (чем больше цифра, тем хвост короче)
     bool draw_walls = false;    // режим с рисованием препятствий для шаров
-    uint32_t wall_color = 0x00ff00;
+    CRGB wall_color = 0x00ff00;
 
 public:
     SimpleBalls() {}
@@ -45,19 +45,19 @@ public:
         for (uint8_t j = 0; j < balls_amount; j++) {
             // отскок от нарисованных препятствий
             if (draw_walls) {
-                uint32_t thisColor = getPixColor(coord[j][0] / 10 + 1, coord[j][1] / 10);
+                CRGB &thisColor = getPix(coord[j][0] / 10 + 1, coord[j][1] / 10);
                 if (thisColor == wall_color/* && vector[j][0] > 0*/) {
                     vector[j][0] = -vector[j][0];
                 }
-                thisColor = getPixColor(coord[j][0] / 10 - 1, coord[j][1] / 10);
+                thisColor = getPix(coord[j][0] / 10 - 1, coord[j][1] / 10);
                 if (thisColor == wall_color/* && vector[j][0] < 0*/) {
                     vector[j][0] = -vector[j][0];
                 }
-                thisColor = getPixColor(coord[j][0] / 10, coord[j][1] / 10 + 1);
+                thisColor = getPix(coord[j][0] / 10, coord[j][1] / 10 + 1);
                 if (thisColor == wall_color/* && vector[j][1] > 0*/) {
                     vector[j][1] = -vector[j][1];
                 }
-                thisColor = getPixColor(coord[j][0] / 10, coord[j][1] / 10 - 1);
+                thisColor = getPix(coord[j][0] / 10, coord[j][1] / 10 - 1);
                 if (thisColor == wall_color/* && vector[j][1] < 0*/) {
                     vector[j][1] = -vector[j][1];
                 }
