@@ -26,45 +26,51 @@
 #include "effects/horizontal_rainbow_point.h"
 #include "effects/ny2020.h"
 #include "effects/dribs_all_side.h"
+#include "effects/snake.h"
 /*
 #include "testmode.h"*/
 
+using EffectFactory = Effect* (*)();
+
 template <class T>
-Effect *effectFactory1() {
+Effect *makeEffect() {
     return new T();
 }
 
 template <class T>
-constexpr const auto effectFactory() {
-    return effectFactory1<T>;
+constexpr EffectFactory effectFactory() {
+    return makeEffect<T>;
 }
 
 auto effectsFactories = {
+    effectFactory<Snake>(),
+    effectFactory<DynamicSquare>(),
+    effectFactory<TheMatrix>(),
+    effectFactory<Starfall>(),
+    effectFactory<Snow>(),
+    effectFactory<SimpleBalls>(),
+    effectFactory<Confetti>(),
+    effectFactory<Fire>(),
     effectFactory<DribsAllSide>(),
     effectFactory<SlowRandom>(),
-    // effectFactory<SimpleRainbow>(),
+    effectFactory<SimpleRainbow>(),
     effectFactory<TextMode>(),
     effectFactory<Dribs>(),
     effectFactory<Rain>(),
-    // effectFactory<AllRandom>(),
-    effectFactory<Snow>(),
-    // effectFactory<Fire>(),
-    effectFactory<TheMatrix>(),
-    effectFactory<SimpleBalls>(),
-    effectFactory<Confetti>(),
-    effectFactory<Starfall>(),
-    // effectFactory<DynamicSquare>(),
+    effectFactory<AllRandom>(),
+
+    effectFactory<DynamicSquare>(),
     effectFactory<RandomRain>(),
     effectFactory<RainbowRain>(),
     effectFactory<Points>(),
-    // effectFactory<RainbowPoint>(),
-    // effectFactory<RainbowStaticPoint>(),
-    // effectFactory<Mouse>(),
+    effectFactory<RainbowPoint>(),
+    effectFactory<RainbowStaticPoint>(),
+    effectFactory<Mouse>(),
     effectFactory<Pacman>(),
     effectFactory<CircularPoint>(),
     effectFactory<ZigZag>(),
-    // effectFactory<HorizontalRainbowPoint>(),
-    // effectFactory<NY2020>(),
+    effectFactory<HorizontalRainbowPoint>(),
+    effectFactory<NY2020>(),
 };
 
 static Effect *getNewEffectInstance(const uint8_t& num) {
