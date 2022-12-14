@@ -58,7 +58,7 @@ void led_setup(void)
 }
 
 // получить номер пикселя в ленте по координатам
-static uint16_t getPixNum(const uint8_t &x, const uint8_t &y)
+static uint16_t getPixNum(uint8_t x, uint8_t y)
 {
     // x - номер строки (в циклах ассоциируется с HEIGHT)
     // y - номер столбца (в циклах ассоциируется с WIDTH)
@@ -78,7 +78,7 @@ static uint16_t getPixNum(const uint8_t &x, const uint8_t &y)
     }
 }
 
-CRGB &getPix(const int &x, const int &y) {
+CRGB &getPix(const int x, const int y) {
     if (x < 0 || x >= HEIGHT || y < 0 || y >= WIDTH) {
         out("Value out of range in function getPix %d %d\n", x, y);
         return leds[0];
@@ -91,7 +91,7 @@ CRGB* getLeds(void) {
     return leds;
 }
 
-void fader(const uint8_t &step) {
+void fader(uint8_t step) {
     for (uint8_t i = 0; i < HEIGHT; i++) {
         for (uint8_t j = 0; j < WIDTH; j++) {
             fadePix(i, j, step);
@@ -99,12 +99,11 @@ void fader(const uint8_t &step) {
     }
 }
 
-void fadePix(const uint8_t &x, const uint8_t &y, const uint8_t &step) {
+void fadePix(uint8_t x, uint8_t y, uint8_t step) {
     getPix(x, y).fadeToBlackBy(step);
 }
 
-void drawLine(const uint8_t &x1, const uint8_t &y1,
-    const uint8_t &x2, const uint8_t &y2, const CRGB &color)
+void drawLine(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, CRGB color)
 {
     // Рисование линии по Алгоритму Брезенхэма
     uint8_t deltaX = abs((int16_t)x2 - x1);
