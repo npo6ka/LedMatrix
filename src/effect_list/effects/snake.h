@@ -3,14 +3,14 @@
 #include "effect_list/libs/queue.h"
 #include "effect_list/effect.h"
 
-#define START_LENGTH 4      // начальная длина змейки
-#define MAX_SNAKE_LENGTH HEIGHT * WIDTH // максимальная длина змейки
+#define START_LENGTH 4                      // начальная длина змейки
+#define MAX_SNAKE_LENGTH HEIGHT * WIDTH     // максимальная длина змейки
 #if (HEIGHT / 2 < START_LENGTH)
 #   error Low HEIGHT size for starting snake mode
 #endif
 
-#define COLOR_SNAKE CRGB(CRGB::Green)     // Цыет змейки
-#define COLOR_APPLE CRGB(CRGB::Orange)    // Цвет яблока на поле
+#define COLOR_SNAKE CRGB(CRGB::Green)       // Цвет змейки
+#define COLOR_APPLE CRGB(CRGB::Orange)      // Цвет яблока на поле
 
 class Snake : public Effect
 {
@@ -27,8 +27,7 @@ class Snake : public Effect
         uint8_t y;
 
         void move(Trend tr) {
-            switch (tr)
-            {
+            switch (tr) {
             case Trend::up:
                 x--;
                 break;
@@ -47,8 +46,7 @@ class Snake : public Effect
         }
 
         void move_opposite(Trend tr) {
-            switch (tr)
-            {
+            switch (tr) {
             case Trend::up:
                 x++;
                 break;
@@ -73,20 +71,16 @@ class Snake : public Effect
 
     Queue<Trend, MAX_SNAKE_LENGTH> snake;
     Coord head, butt, apple;
-    uint16_t snakeLength;
-    Trend button;
-    Trend vector;
+    Trend button, vector;
+    bool apple_flag, end_game, gameDemo;
 
-    bool apple_flag, butt_flag, end_game;
-    bool gameDemo;
-
-    uint8_t step = 3;
-    uint8_t tick;
+    uint8_t tick, step = 3;
 
 public:
     void on_init() {
         set_fps(20);
         gameDemo = true;
+        tick = 0;
         button = Trend::none;
 
         newGameSnake();
@@ -127,7 +121,7 @@ public:
 
         if (!head.is_valid()) { // проверяем что змека не вышла за границы поля
             end_game = true;
-        } else if (snakeLength >= MAX_SNAKE_LENGTH) { // проверяем что змейка не прывисила максимальную длину
+        } else if (snake.size() + 1 >= MAX_SNAKE_LENGTH) { // проверяем что змейка не прывисила максимальную длину
             end_game = true;
         } else if ((getPix(head.x, head.y) && getPix(head.x, head.y) != CRGB(COLOR_APPLE))) { // проверяем что змейка врезалась во что то, но не в яблоко
             end_game = true;
@@ -137,10 +131,9 @@ public:
             bool is_feeding = false;
 
             if (getPix(head.x, head.y) == CRGB(COLOR_APPLE)) { // если попали головой в яблоко
-                apple_flag = false;                       // флаг что яблока больше нет
-                snakeLength++;                            // увеличить длину змеи
-                genApple();
+                apple_flag = false;                            // флаг что яблока больше нет
                 is_feeding = true;
+                genApple();
             }
 
             // если змея не в процессе роста, закрасить бывший хвост чёрным
@@ -240,7 +233,7 @@ public:
             return;
         }
 
-        uint16_t cnt = 0, pos = random16(LEDS_CNT - snakeLength);
+        uint16_t cnt = 0, pos = random16(LEDS_CNT - snake.size() - 1);
         // считаем пустые клетки и заодно проверяем равна ли
         // клетка тому что зарандомили
         for (uint8_t i = 0; i < HEIGHT; i++) {
@@ -265,14 +258,13 @@ public:
         button = Trend::none;
 
         // длина из настроек, начинаем в середине экрана, бла-бла-бла
-        snakeLength = START_LENGTH;
         head = {HEIGHT / 2 - 1, WIDTH / 2 - 1};
-        butt = {uint8_t(head.x + uint8_t(snakeLength) - 1), head.y}; // координата хвоста как голова - длина
+        butt = {uint8_t(head.x + uint8_t(START_LENGTH) - 1), head.y}; // координата хвоста как голова - длина
         getPix(head.x, head.y) = COLOR_SNAKE; // устанавливаем первый пиксель без добавления в очередь
         snake.clear();
 
         // первоначальная отрисовка змейки и забивка массива векторов для хвоста
-        for (uint8_t i = 1; i < snakeLength; i++) {
+        for (uint8_t i = 1; i < START_LENGTH; i++) {
             getPix(head.x + i, head.y) = COLOR_SNAKE;
             snake.push(Trend::up);
         }
