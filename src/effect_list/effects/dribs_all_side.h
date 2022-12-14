@@ -79,20 +79,20 @@ public:
                     switch (cur_snake.trend)
                     {
                     case Trend::up:
-                        cur_snake.x = random16(HEIGHT - 1);
+                        cur_snake.x = random16(HEIGHT);
                         cur_snake.y = WIDTH - 1;
                         break;
                     case Trend::down:
-                        cur_snake.x = random16(HEIGHT - 1);
+                        cur_snake.x = random16(HEIGHT);
                         cur_snake.y = 0;
                         break;
                     case Trend::left:
                         cur_snake.x = HEIGHT - 1;
-                        cur_snake.y = random16(WIDTH - 1);
+                        cur_snake.y = random16(WIDTH);
                         break;
                     case Trend::right:
                         cur_snake.x = 0;
-                        cur_snake.y = random16(WIDTH - 1);
+                        cur_snake.y = random16(WIDTH);
                         break;
                     }
                 }
