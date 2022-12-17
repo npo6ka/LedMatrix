@@ -26,7 +26,7 @@
 #include "effects/horizontal_rainbow_point.h"
 #include "effects/ny2020.h"
 #include "effects/dribs_all_side.h"
-#include "effects/snake.h"
+#include "effects/snake/snake.h"
 /*
 #include "testmode.h"*/
 

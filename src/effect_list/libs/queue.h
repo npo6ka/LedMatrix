@@ -34,19 +34,30 @@ public:
         return buf[start_pos];
     }
 
-    void pop() {
+    const T &back() const {
+        return buf[(max_size + end_pos - 1) % max_size];
+    }
+
+    void popFront() {
         if (start_pos != end_pos) {
             buf[start_pos] = T{};
             start_pos = (start_pos + 1) % max_size;
         }
     }
 
-    uint32_t size() {
+    void popBack() {
+        if (start_pos != end_pos) {
+            end_pos = (max_size + end_pos - 1) % max_size;
+            buf[end_pos] = T{};
+        }
+    }
+
+    uint32_t size() const {
         return (end_pos + max_size - start_pos) % max_size;
     }
 
-    void debug() {
-        out("bgn: %d end %d\n", start_pos, end_pos);
+    void debug() const {
+        out("bgn: %d end %d size %d\n", start_pos, end_pos, size());
         for (int i = 0; i < max_size; ++i) {
             out("%d ", int(buf[i]));
         }

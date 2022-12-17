@@ -5,6 +5,9 @@
 #include "constants_matrix.h"
 #include "debug_lib.h"
 
+static_assert(WIDTH < UINT8_MAX, "ERROR invalid WIDTH");
+static_assert(HEIGHT < UINT8_MAX, "ERROR invalid HEIGHT");
+
 // инициализация матрицы в библиотеке FastLED
 void led_setup(void);
 
