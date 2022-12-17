@@ -15,7 +15,7 @@ class Snake : public Effect
     uint8_t aiType = 3;
     SnakeAI *ai;
 
-    uint8_t tick, step = 1;
+    uint8_t tick, step = 3;
 
         // Если нужно, можно вызвать этот метод. Выводит отладочную информацию в терминал
     void debug() {
