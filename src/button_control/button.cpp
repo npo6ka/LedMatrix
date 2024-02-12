@@ -1,5 +1,5 @@
 #include "configs/constants.h"
-#include "button_handler.h"
+#include "button.h"
 
 #if BTN_ENABLE
 #include "GyverButton.h"
