@@ -1,4 +1,5 @@
 #include "button/button_handler.h"
+#include "ir_control/ir.h"
 #include "effect_list/effectslist.h"
 #include "effect_list/libs/lib_led.h"
 
@@ -15,21 +16,12 @@ void setup() {
 
     FastLED.setBrightness(150);
     EffectsList::getInstance().setEffect(0);
+    ir_setup();
 }
-
-// unsigned long tick = 0;
-// int tps = 0;
 
 void loop() {
     EffectsList::getInstance().onTick();
 
     tick_buttons();
-
-    // проверка реального тпс работы микроконтроллера
-    /*tps++;
-    if (millis() > tick * 1000 ) {
-        out("tps: %d fps: %.1f\n", tps, EffectsList::getInstance().getCurFPS());
-        tick++;
-        tps = 0;
-    }*/
+    ir_tick();
 }
