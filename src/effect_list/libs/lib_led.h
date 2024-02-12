@@ -2,7 +2,7 @@
 
 #include "FastLED.h"
 //#include "constants_window.h"
-#include "constants_matrix.h"
+#include "configs/constants.h"
 #include "debug_lib.h"
 
 static_assert(WIDTH < UINT8_MAX, "ERROR invalid WIDTH");
