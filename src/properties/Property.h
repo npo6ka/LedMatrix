@@ -17,7 +17,7 @@ public:
     virtual void load() = 0;
     virtual uint16_t size() const = 0;
 };
- 
+
 template<class T>
 class Property : IProperty {
     T m_value;
@@ -64,10 +64,10 @@ public:
 
     const T& operator->() const
     { return m_value; }
- 
+
     void save() const override
     {}
- 
+
     void load() override
     {}
 

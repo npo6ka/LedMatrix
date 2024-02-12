@@ -25,9 +25,9 @@ void PropertyStorage::add(IProperty* item)
 { items.push_back(item); }
 
 void PropertyStorage::clear(IProperty* item)
-{ 
+{
     if (items.size() > 0) {
-        items.clear(); 
+        items.clear();
     }
 }
 

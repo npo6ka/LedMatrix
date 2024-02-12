@@ -10,9 +10,9 @@ private:
     // singlton property
     // Конструкторы и оператор присваивания недоступны клиентам
     EffectsList();
-    EffectsList( const EffectsList& );  
+    EffectsList( const EffectsList& );
     EffectsList& operator=( EffectsList& );
-    
+
     int amnt;
     int curNum = 0;
     Effect *curEffect;

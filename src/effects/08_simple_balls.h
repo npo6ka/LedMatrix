@@ -75,6 +75,7 @@ public:
                 coord[j][0] = (HEIGHT - 1) * 10;
                 vector[j][0] = -vector[j][0];
             }
+
             if (coord[j][1] > (WIDTH - 1) * 10) {
                 coord[j][1] = (WIDTH - 1) * 10;
                 vector[j][1] = -vector[j][1];
