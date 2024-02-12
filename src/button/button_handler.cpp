@@ -1,8 +1,10 @@
+#include "configs/constants.h"
 #include "button_handler.h"
-#include "GyverButton.h"
-#include "effect_list/libs/lib_led.h"
-#include "effect_list/effectslist.h"
 
+#if BTN_ENABLE
+#include "GyverButton.h"
+#include "effect_list/libs/debug_lib.h"
+#include "effect_list/effectslist.h"
 
 GButton touch(BTN_PIN, LOW_PULL, NORM_OPEN);
 
@@ -14,7 +16,7 @@ void setup_buttons() {
     touch.setClickTimeout(BUTTON_CLICK_TIMEOUT);
 }
 
-void auto_mode_tick() {
+static void auto_mode_tick() {
     if (millis() - auto_mode_cnt > AUTOMOD_INTERVAL) {
         auto_mode_cnt = millis();
         EffectsList::getInstance().nextEffect();
@@ -48,3 +50,7 @@ void tick_buttons() {
     }
     if (auto_mode) auto_mode_tick();
 }
+#else
+void setup_buttons() {}
+void tick_buttons() {}
+#endif
