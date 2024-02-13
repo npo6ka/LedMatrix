@@ -1,12 +1,11 @@
 #pragma once
 
 #include "FastLED.h"
-//#include "constants_window.h"
 #include "configs/constants.h"
 #include "debug_lib.h"
 
-static_assert(WIDTH < UINT8_MAX, "ERROR invalid WIDTH");
-static_assert(HEIGHT < UINT8_MAX, "ERROR invalid HEIGHT");
+static_assert(WIDTH < UINT16_MAX, "ERROR invalid WIDTH");
+static_assert(HEIGHT < UINT16_MAX, "ERROR invalid HEIGHT");
 
 // инициализация матрицы в библиотеке FastLED
 void led_setup(void);

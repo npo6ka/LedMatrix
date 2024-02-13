@@ -17,9 +17,7 @@ public:
 
     void on_update()
     {
-        int i;
-
-        for (i = 0; i < LEDS_CNT; ++i) {
+        for (uint16_t i = 0; i < LEDS_CNT; ++i) {
             CRGB &cl = getLeds()[i];
             cl.fadeToBlackBy(step);
 

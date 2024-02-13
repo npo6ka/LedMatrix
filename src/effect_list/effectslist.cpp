@@ -3,30 +3,31 @@
 
 #include "effects/slow_random.h"
 #include "effects/simple_rainbow.h"
-#include "effects/dribs.h"
-#include "effects/rain.h"
-#include "effects/all_random.h"
-#include "effects/snow.h"
-#include "effects/fire.h"
-#include "effects/the_matrix.h"
-#include "effects/simple_balls.h"
+// #include "effects/dribs.h"
+// #include "effects/rain.h"
+// #include "effects/all_random.h"
+// #include "effects/snow.h"
+// #include "effects/fire.h"
+// #include "effects/the_matrix.h"
+// #include "effects/simple_balls.h"
 #include "effects/confetti.h"
-#include "effects/starfall.h"
-#include "effects/dynamic_square.h"
+// #include "effects/starfall.h"
+// #include "effects/dynamic_square.h"
 #include "effects/random_rain.h"
 #include "effects/rainbow_rain.h"
 #include "effects/points.h"
 #include "effects/rainbow_point.h"
 #include "effects/rainbow_static_point.h"
-#include "effects/text.h"
-#include "effects/mouse.h"
-#include "effects/pacman.h"
-#include "effects/circular_point.h"
-#include "effects/zigzag.h"
-#include "effects/horizontal_rainbow_point.h"
-#include "effects/ny2020.h"
-#include "effects/dribs_all_side.h"
-#include "effects/snake/snake.h"
+#include "effects/line_slow_point.h"
+// #include "effects/text.h"
+// #include "effects/mouse.h"
+// #include "effects/pacman.h"
+// #include "effects/circular_point.h"
+// #include "effects/zigzag.h"
+// #include "effects/horizontal_rainbow_point.h"
+// #include "effects/ny2020.h"
+// #include "effects/dribs_all_side.h"
+// #include "effects/snake/snake.h"
 /*
 #include "testmode.h"*/
 
@@ -43,34 +44,35 @@ constexpr EffectFactory effectFactory() {
 }
 
 auto effectsFactories = {
-    effectFactory<Snake>(),
-    effectFactory<DynamicSquare>(),
-    effectFactory<TheMatrix>(),
-    effectFactory<Starfall>(),
-    effectFactory<Snow>(),
-    effectFactory<SimpleBalls>(),
-    effectFactory<Confetti>(),
-    effectFactory<Fire>(),
-    effectFactory<DribsAllSide>(),
-    effectFactory<SlowRandom>(),
+    // effectFactory<Snake>(),
+    // effectFactory<DynamicSquare>(),
+    // effectFactory<TheMatrix>(),
+    // effectFactory<Starfall>(),
+    // effectFactory<Snow>(),
+    // effectFactory<SimpleBalls>(),
+    // effectFactory<Confetti>(),
+    // effectFactory<Fire>(),
+    // effectFactory<DribsAllSide>(),
+    // effectFactory<SlowRandom>(),
+    effectFactory<SlowPoints>(),
     effectFactory<SimpleRainbow>(),
-    effectFactory<TextMode>(),
-    effectFactory<Dribs>(),
-    effectFactory<Rain>(),
-    effectFactory<AllRandom>(),
+    // effectFactory<TextMode>(),
+    // effectFactory<Dribs>(),
+    // effectFactory<Rain>(),
+    // effectFactory<AllRandom>(),
 
-    effectFactory<DynamicSquare>(),
+    // effectFactory<DynamicSquare>(),
     effectFactory<RandomRain>(),
     effectFactory<RainbowRain>(),
     effectFactory<Points>(),
     effectFactory<RainbowPoint>(),
     effectFactory<RainbowStaticPoint>(),
-    effectFactory<Mouse>(),
-    effectFactory<Pacman>(),
-    effectFactory<CircularPoint>(),
-    effectFactory<ZigZag>(),
-    effectFactory<HorizontalRainbowPoint>(),
-    effectFactory<NY2020>(),
+    // effectFactory<Mouse>(),
+    // effectFactory<Pacman>(),
+    // effectFactory<CircularPoint>(),
+    // effectFactory<ZigZag>(),
+    // effectFactory<HorizontalRainbowPoint>(),
+    // effectFactory<NY2020>(),
 };
 
 static Effect *getNewEffectInstance(const uint8_t& num) {

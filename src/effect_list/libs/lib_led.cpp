@@ -58,7 +58,7 @@ void led_setup(void)
 }
 
 // получить номер пикселя в ленте по координатам
-static uint16_t getPixNum(uint8_t x, uint8_t y)
+static uint16_t getPixNum(uint16_t x, uint16_t y)
 {
     // x - номер строки (в циклах ассоциируется с HEIGHT)
     // y - номер столбца (в циклах ассоциируется с WIDTH)
@@ -99,21 +99,21 @@ void fader(uint8_t step) {
     }
 }
 
-void fadePix(uint8_t x, uint8_t y, uint8_t step) {
+void fadePix(uint16_t x, uint16_t y, uint8_t step) {
     getPix(x, y).fadeToBlackBy(step);
 }
 
-void drawLine(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, CRGB color)
+void drawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, CRGB color)
 {
     // Рисование линии по Алгоритму Брезенхэма
-    uint8_t deltaX = abs((int16_t)x2 - x1);
-    uint8_t deltaY = abs((int16_t)y2 - y1);
-    uint8_t x1_ = x1;
-    uint8_t y1_ = y1;
+    uint16_t deltaX = abs((int16_t)x2 - x1);
+    uint16_t deltaY = abs((int16_t)y2 - y1);
+    uint16_t x1_ = x1;
+    uint16_t y1_ = y1;
     int8_t signX = x1_ < x2 ? 1 : -1;
     int8_t signY = y1_ < y2 ? 1 : -1;
 
-    int16_t error = deltaX - deltaY;
+    int32_t error = deltaX - deltaY;
     int32_t error2;
 
     getPix(x2, y2) = color;

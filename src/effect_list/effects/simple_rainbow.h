@@ -14,12 +14,12 @@ public:
         tick = 0;
         phaseShift = 10;
 
-        set_fps(30);
+        set_fps(10);
     }
 
     void on_update()
     {
-        uint8_t x, y;
+        uint16_t x, y;
         tick = tick % (256);
 
         for (x = 0; x < HEIGHT; x++) {
