@@ -3,6 +3,7 @@
 
 #if IR_ENABLE
 #include <NecDecoder.h>
+#include "effect_list/effectslist.h"
 
 NecDecoder ir;
 
@@ -28,9 +29,11 @@ void ir_tick() {
             break;
         case 0x5a:
             Serial.print("→\n");
+            EffectsList::getInstance().nextEffect();
             break;
         case 0x10:
             Serial.print("←\n");
+            EffectsList::getInstance().prevEffect();
             break;
         case 0x38:
             Serial.print("OK\n");
