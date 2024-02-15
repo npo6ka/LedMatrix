@@ -1,7 +1,6 @@
 #pragma once
 
 #include "FastLED.h"
-//#include "constants_window.h"
 #include "configs/constants.h"
 #include "debug_lib.h"
 

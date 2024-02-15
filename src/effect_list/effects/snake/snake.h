@@ -1,6 +1,6 @@
 #pragma once
 
-#include "effect_list/libs/queue.h"
+#include "libs/queue.h"
 #include "effect_list/effect.h"
 #include "simple_ai.h"
 #include "a_star_ai.h"

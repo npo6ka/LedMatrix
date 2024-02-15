@@ -1,7 +1,7 @@
 #pragma once
 
 #include "stdint.h"
-#include "effect_list/libs/lib_led.h"
+#include "libs/lib_led.h"
 
 #define START_LENGTH 4                      // начальная длина змейки
 #define MAX_SNAKE_LENGTH HEIGHT * WIDTH     // максимальная длина змейки

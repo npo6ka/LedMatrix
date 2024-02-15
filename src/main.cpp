@@ -1,7 +1,7 @@
 #include "button_control/button.h"
 #include "ir_control/ir.h"
 #include "effect_list/effectslist.h"
-#include "effect_list/libs/lib_led.h"
+#include "libs/lib_led.h"
 
 // все настройки матрицы находятся в lib_led.h
 // инициализация светодиодов

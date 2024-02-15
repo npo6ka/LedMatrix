@@ -3,7 +3,7 @@
 
 #if BTN_ENABLE
 #include "GyverButton.h"
-#include "effect_list/libs/debug_lib.h"
+#include "libs/debug_lib.h"
 #include "effect_list/effectslist.h"
 
 GButton touch(BTN_PIN, LOW_PULL, NORM_OPEN);

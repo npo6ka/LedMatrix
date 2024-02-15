@@ -1,7 +1,7 @@
 #pragma once
 
 #include "effect_list/effect.h"
-#include "effect_list/libs/fonts.h"
+#include "libs/fonts.h"
 
 class TextMode : public Effect
 {
