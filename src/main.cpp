@@ -1,7 +1,8 @@
-#include "button/button_handler.h"
-#include "effects/effectslist.h"
-#include "effects/lib_led.h"
 #include "LittleFS.h"
+#include "button_control/button.h"
+#include "ir_control/ir.h"
+#include "effect_list/effectslist.h"
+#include "libs/lib_led.h"
 
 // все настройки матрицы находятся в lib_led.h
 // инициализация светодиодов
@@ -12,40 +13,21 @@ void setup() {
     random16_set_seed(millis() + analogRead(A0));
     debug_setup();
     led_setup();
-
-    // инициализация кнопок
     setup_buttons();
-
-    FastLED.setBrightness(50);
-    EffectsList::getInstance().setEffect(0);
+    ir_setup();
 }
-
-// unsigned long tick = 0;
-// int tps = 0;
 
 void loop() {
     EffectsList::getInstance().onTick();
 
     tick_buttons();
-
-    // проверка реального тпс работы микроконтроллера
-    // tps++;
-    // if (millis() > tick * 1000 ) {
-    //     out("tps: %d fps: %.1f\n", tps, EffectsList::getInstance().getCurFPS());
-    //     tick++;
-    //     tps = 0;
-    // }
+    ir_tick();
 }*/
 
 
 
 void setup() {
     Serial.begin(115200);
-
-    uint8_t val = beatsin8(4);
-
-
-
 
     // if (!LittleFS.begin()) {
     //     Serial.println("An Error has occurred while mounting LittleFS");

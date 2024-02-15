@@ -1,6 +1,6 @@
-#include "debug_lib.h"
+#include "libs/debug_lib.h"
 #include <eeprom.h>
-#include "constants.h"
+#include "configs/constants.h"
 
 static uint16_t read_address(uint32_t offset) {
     // if (offset < 4095) {

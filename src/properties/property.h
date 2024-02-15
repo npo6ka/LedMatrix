@@ -1,6 +1,6 @@
 #pragma once
 
-#include "debug_lib.h"
+#include "libs/debug_lib.h"
 #include "property_storage.h"
 
 class ISaveable {
