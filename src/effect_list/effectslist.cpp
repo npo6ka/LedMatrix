@@ -182,3 +182,7 @@ void EffectsList::onTick() {
 float EffectsList::getCurFPS() {
     return (float)fps / 10;
 }
+
+bool EffectsList::effectIsEnd() {
+    return curEffect->is_end();
+}

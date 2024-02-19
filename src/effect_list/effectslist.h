@@ -29,4 +29,5 @@ public:
     void reloadCurEff();
     void onTick();
     float getCurFPS();
+    bool effectIsEnd();
 };

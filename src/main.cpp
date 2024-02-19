@@ -1,5 +1,4 @@
-#include "button_control/button.h"
-#include "ir_control/ir.h"
+#include "controls/button.h"
 #include "effect_list/effectslist.h"
 #include "libs/lib_led.h"
 
@@ -12,16 +11,16 @@ void setup() {
     random16_set_seed(millis() + analogRead(A0));
     debug_setup();
     led_setup();
-    setup_buttons();
+    //setup_buttons();
 
     FastLED.setBrightness(150);
     EffectsList::getInstance().setEffect(0);
-    ir_setup();
+    //ir_setup();
 }
 
 void loop() {
     EffectsList::getInstance().onTick();
 
-    tick_buttons();
-    ir_tick();
+    //tick_buttons();
+    //ir_tick();
 }
