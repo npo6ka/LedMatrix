@@ -2,6 +2,9 @@
 
 enum class ControlState {
     None,
+    PowerOn,
+    PowerOff,
+    PowerSwich,
     NextMode,
     PrevMode,
     AutoControlEnable,

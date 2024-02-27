@@ -3,7 +3,10 @@
 #include "control.h"
 
 class IR: public IControl {
-public:
     IR();
+    IR(const IR& );
+    IR& operator=(IR& );
+public:
+    static IR *instance();
     ControlState tick() final;
 };
