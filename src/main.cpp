@@ -1,7 +1,10 @@
-#include "button_control/button.h"
 #include "ir_control/ir.h"
+#include "button_control/button.h"
 #include "effect_list/effectslist.h"
 #include "libs/lib_led.h"
+#if IR_ENABLE
+#   include <IRremoteInt.h>
+#endif
 
 // все настройки матрицы находятся в lib_led.h
 // инициализация светодиодов
@@ -20,6 +23,9 @@ void setup() {
 }
 
 void loop() {
+#if IR_ENABLE
+    if (IrReceiver.isIdle())
+#endif
     EffectsList::getInstance().onTick();
 
     tick_buttons();
