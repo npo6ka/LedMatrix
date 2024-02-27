@@ -1,3 +1,9 @@
 #pragma once
-void ir_setup();
-void ir_tick();
+
+#include "control.h"
+
+class IR: public IControl {
+public:
+    IR();
+    ControlState tick() final;
+};

@@ -44,4 +44,5 @@
 #define AUTOMOD_DEF_STATE       true                        // Начальное состояние автомода. true - вкл, false - выкл
 
 #define IR_ENABLE               false                       // подключить урпавление через ИК приёмник
-#define IR_PIN                  (D1)                        // пин к которому подключен ИК приёмник
+#define IR_RECEIVE_PIN          (D5)                        // пин к которому подключен ИК приёмник
+#define DECODE_SAMSUNG                                      // тип ИК пульта которые даёт команды

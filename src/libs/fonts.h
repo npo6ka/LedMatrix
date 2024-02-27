@@ -2,7 +2,7 @@
 
 #define LET_WIDTH 5       // ширина буквы шрифта
 #define LET_HEIGHT 8      // высота буквы шрифта
-#define SPACE 1           // пробел
+#define FONT_SPACE 1      // пробел
 
 #define SYM_AMNT 159      // количество символов в массиве
 #define SYM_SIZE 5        // кол-во байт занимаемых 1 символом
