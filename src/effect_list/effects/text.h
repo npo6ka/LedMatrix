@@ -125,7 +125,7 @@ class TextMode : public Effect
         int32_t sym_pos = 0;
 
         while (printed_text[pos] != '\0') {
-            sym_pos = WIDTH + pos * (LET_WIDTH + SPACE) - tick / speed;
+            sym_pos = WIDTH + pos * (LET_WIDTH + FONT_SPACE) - tick / speed;
 
             if (sym_pos > -LET_WIDTH && sym_pos < WIDTH) {
                 draw_symbol(printed_text[pos], (HEIGHT - LET_HEIGHT) / 2, sym_pos);
