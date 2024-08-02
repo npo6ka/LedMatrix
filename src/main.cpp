@@ -9,7 +9,8 @@
 // инициализация светодиодов
 CRGB leds[LEDS_CNT];
 
-void setup() {
+int main() {
+    //setup
     randomSeed(millis() + analogRead(A0));
     random16_set_seed(millis() + analogRead(A0));
     debug_setup();
@@ -19,14 +20,17 @@ void setup() {
     FastLED.setBrightness(150);
     EffectsList::getInstance().setEffect(0);
     //ir_setup();
-}
 
-void loop() {
-#if IR_ENABLE
-    if (IrReceiver.isIdle())
-#endif
-    EffectsList::getInstance().onTick();
 
-    //tick_buttons();
-    //ir_tick();
+
+    //loop
+    while (1) {
+#   if IR_ENABLE
+        if (IrReceiver.isIdle())
+#   endif
+        EffectsList::getInstance().onTick();
+
+        //tick_buttons();
+        //ir_tick();
+        }
 }

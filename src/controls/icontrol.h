@@ -14,6 +14,6 @@ enum class ControlState {
 
 class IControl {
 public:
-    virtual ControlState tick();
+    virtual ControlState tick() = 0;
 };
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "control.h"
+#include "icontrol.h"
 
 class IR: public IControl {
     IR();

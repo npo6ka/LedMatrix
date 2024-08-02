@@ -1,6 +1,6 @@
 #pragma once
 
-#include "control.h"
+#include "icontrol.h"
 #include "GyverButton.h"
 
 class Button: public IControl {
