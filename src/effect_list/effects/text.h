@@ -159,7 +159,7 @@ class TextMode : public Effect {
 
   void on_init() {
     printed_text = nullptr;
-    set_text("Улыбнись этому прекрасному дню))");
+    set_text("В предновогодние дни принято желать друг другу много хорошего) счастливого Нового года !!!");
     set_fps(60);
   }
 

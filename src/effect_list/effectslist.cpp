@@ -43,33 +43,34 @@ constexpr EffectFactory effectFactory() {
 }
 
 auto effectsFactories = {
+    effectFactory<TextMode>(),
     effectFactory<Snake>(),
-    effectFactory<DynamicSquare>(),
+    //effectFactory<DynamicSquare>(),
     effectFactory<TheMatrix>(),
     effectFactory<Starfall>(),
+    effectFactory<RandomRain>(),
     effectFactory<Snow>(),
     effectFactory<SimpleBalls>(),
     effectFactory<Confetti>(),
     effectFactory<Fire>(),
     effectFactory<DribsAllSide>(),
-    effectFactory<SlowRandom>(),
-    effectFactory<SimpleRainbow>(),
-    effectFactory<TextMode>(),
+    //effectFactory<SlowRandom>(),
+    //effectFactory<SimpleRainbow>(),
+    
     effectFactory<Dribs>(),
     effectFactory<Rain>(),
-    effectFactory<AllRandom>(),
+    //effectFactory<AllRandom>(),
 
-    effectFactory<DynamicSquare>(),
-    effectFactory<RandomRain>(),
+    
     effectFactory<RainbowRain>(),
     effectFactory<Points>(),
-    effectFactory<RainbowPoint>(),
-    effectFactory<RainbowStaticPoint>(),
-    effectFactory<Mouse>(),
+    //effectFactory<RainbowPoint>(),
+    //effectFactory<RainbowStaticPoint>(),
+    //effectFactory<Mouse>(),
     effectFactory<Pacman>(),
-    effectFactory<CircularPoint>(),
+    //effectFactory<CircularPoint>(),
     effectFactory<ZigZag>(),
-    effectFactory<HorizontalRainbowPoint>(),
+    //effectFactory<HorizontalRainbowPoint>(),
     effectFactory<NY2020>(),
 };
 
