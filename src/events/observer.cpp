@@ -1,74 +1,107 @@
-
-#include "libs/debug_lib.h"
 #include "observer.h"
 
 
-void Observer::Observer::subscribeModeListEvents(IObservableModeList *inst) {
-    if (modeList) out("WARN: Observer: Multipule initialization modeList\n");
-    modeList = inst;
-}
-void Observer::subscribeAutomodeEvents(IObservableAutomode *inst) {
-    if (automode) out("WARN: Observer: Multipule initialization automode\n");
-    automode = inst;
-}
-void Observer::subscribePowerEvents(IObservablePower *inst) {
-    if (power) out("WARN: Observer: Multipule initialization power\n");
-    power = inst;
-}
-void Observer::subscribeCurModeEvents(IObservableMode *inst) {
-    if (curMode) out("WARN: Observer: Multipule initialization curMode\n");
-    curMode = inst;
-}
-// -------------------------------------
-void Observer::notityNextMode() {
-    modeList->eventNextMode();
+int Observable::type_to_int(EventType etype) {
+  if (etype >= EventType::ChangeAutoMod && etype < EventType::EventAmount) {
+    return static_cast<int>(etype);
+  } else {
+    out("Error check EventType: out of range\n");
+    return 0;
+  }
 }
 
-void Observer::notityPrevMode() {
-    modeList->eventPrevMode();
-}
-// -------------------------------------
-void Observer::notityAutomodeSet(bool val) {
-    automode->eventAutomodeSet(val);
-}
-
-void Observer::notityAutomodeSwitch() {
-    automode->eventAutomodeSwitch();
-}
-// -------------------------------------
-void Observer::notityPowerSet(bool val) {
-    power->eventPowerSet(val);
+Observable::Observable() {
+  int eventAmount = static_cast<int>(EventType::EventAmount);
+  _observerList = new std::pair<int, IObserver **>[eventAmount];
+  for (int i = 0; i < eventAmount; i++) {
+    _observerList[i].first = 0;
+    _observerList[i].second = nullptr;
+  }
 }
 
-void Observer::notityPowerSwitch() {
-    power->eventPowerSwitch();
-}
-// -------------------------------------
-void Observer::notityBrightnessSet(int val) {
-    curMode->eventBrightnessSet(val);
-}
-
-void Observer::notityBrightnessIncrement(int val) {
-    curMode->eventBrightnessIncrement(val);
+Observable::~Observable() {
+  int eventAmount = static_cast<int>(EventType::EventAmount);
+  for (int i = 0; i < eventAmount; ++i) {
+    if (_observerList[i].second) {
+      free(_observerList[i].second);
+    }
+  }
+  free(_observerList);
 }
 
-void Observer::notityBrightnessReduction(int val) {
-    curMode->eventBrightnessReduction(val);
+
+Observable &Observable::instance() {
+  static Observable singleton;
+  return singleton;
 }
 
-void Observer::notitySpeedSet(int val) {
-    curMode->eventSpeedSet(val);
+void Observable::instanceAddObserver(EventType etype, IObserver *observer) {
+  int type = type_to_int(etype);
+  // ищем пустую ячейку для записи
+  int empty_location = -1;
+  int observer_location = -1;
+  for (int i = 0; i < _observerList[type].first; ++i) {
+    if (_observerList[type].second[i] == nullptr) {
+      empty_location = i;
+    }
+    if (_observerList[type].second[i] == observer) {
+      observer_location = i;
+      break;
+    }
+  }
+  if (observer_location) {
+    out("Error addObserver: observer exists on list");
+    return;
+  }
+  // если не нашли пустую ячейку расширяем память
+  if (empty_location == -1) {
+    _observerList[type].first++;
+    _observerList[type].second =
+        (IObserver **)realloc(_observerList[type].second,
+                              sizeof(IObserver *) * _observerList[type].first);
+    _observerList[type].second[_observerList[type].first - 1] = observer;
+  } else {
+    // если нашли пустую ячейку, то записываем туда
+    _observerList[type].second[empty_location] = observer;
+  }
 }
 
-void Observer::notitySpeedIncrement(int val) {
-    curMode->eventSpeedIncrement(val);
+void Observable::instanceRemoveObserver(EventType etype, IObserver *observer) {
+  int type = type_to_int(etype);
+  int observer_location = -1;
+
+  for (int i = 0; i < _observerList[type].first; ++i) {
+    if (_observerList[type].second[i] == observer) {
+      observer_location = i;
+      break;
+    }
+  }
+
+  if (observer_location != -1) {
+    _observerList[type].second[observer_location] = nullptr;
+  } else {
+    out("Error removeObserver: EventType not found\n");
+  }
 }
 
-void Observer::notitySpeedReduction(int val) {
-    curMode->eventSpeedReduction(val);
+void Observable::instanceNotify(EventType etype, Event *event) {
+  int type = type_to_int(etype);
+
+  for (int i = 0; i < _observerList[type].first; ++i) {
+    if (_observerList[type].second[i]) {
+      _observerList[type].second[i]->handleEvent(etype, event);
+    }
+  }
 }
 
-template<class T>
-void Observer::notityModeSetVal(uint8_t argId, T val) {
-    curMode->eventModeSetVal(argId, (uint64_t)val);
+void Observable::addObserver(EventType etype, IObserver *observer) {
+  Observable::instance().instanceAddObserver(etype, observer);
+}
+
+void Observable::removeObserver(EventType etype, IObserver *observer) {
+  Observable::instance().instanceRemoveObserver(etype, observer);
+}
+
+void Observable::notify(EventType etype, Event *event) {
+  Observable::instance().instanceNotify(etype, event);
 }

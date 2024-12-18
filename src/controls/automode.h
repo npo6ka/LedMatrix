@@ -1,7 +1,7 @@
 #pragma once
-#include "icontrol.h"
+#include "events/observer.h"
 
-class AutoControl: public IControl {
+class AutoControl: public IObserver {
     bool _state; // = AUTOMOD_DEF_STATE;
     unsigned long _prev_time; // = 0;
     unsigned long _delay;// = AUTOMOD_INTERVAL;
