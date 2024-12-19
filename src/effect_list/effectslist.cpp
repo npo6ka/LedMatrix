@@ -83,6 +83,14 @@ static Effect *getNewEffectInstance(const uint8_t& num) {
 
 // private
 
+EffectsList::EffectsList() {
+    Observable::subscribe(EventType::ChangeMode, this);
+};
+
+EffectsList::~EffectsList() {
+    Observable::unsubscribe(EventType::ChangeMode, this);
+};
+
 Effect *EffectsList::getCurEffect() const {
     return curEffect;
 }
@@ -185,4 +193,17 @@ float EffectsList::getCurFPS() {
 
 bool EffectsList::effectIsEnd() {
     return curEffect->is_end();
+}
+
+void EffectsList::handleEvent(Event *event) {
+    if (event->type == EventType::ChangeMode) {
+        ChangeModEvent *ev = static_cast<ChangeModEvent *>(event);
+        if (ev->type == ChangeModEvent::Type::Next) {
+            nextEffect();
+        } else if (ev->type == ChangeModEvent::Type::Previous) {
+            prevEffect();
+        } else if (ev->type == ChangeModEvent::Type::Set) {
+            setEffect(ev->id);
+        }
+    }
 }

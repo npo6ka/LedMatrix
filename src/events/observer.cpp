@@ -1,5 +1,6 @@
 #include "observer.h"
-
+#include "configs/constants.h"
+#include "libs/debug_lib.h"
 
 int Observable::type_to_int(EventType etype) {
   if (etype >= EventType::ChangeAutoMod && etype < EventType::EventAmount) {
@@ -84,24 +85,24 @@ void Observable::instanceRemoveObserver(EventType etype, IObserver *observer) {
   }
 }
 
-void Observable::instanceNotify(EventType etype, Event *event) {
-  int type = type_to_int(etype);
+void Observable::instanceNotify(Event &event) {
+  int type = type_to_int(event.type);
 
   for (int i = 0; i < _observerList[type].first; ++i) {
     if (_observerList[type].second[i]) {
-      _observerList[type].second[i]->handleEvent(etype, event);
+      _observerList[type].second[i]->handleEvent(&event);
     }
   }
 }
 
-void Observable::addObserver(EventType etype, IObserver *observer) {
+void Observable::subscribe(EventType etype, IObserver *observer) {
   Observable::instance().instanceAddObserver(etype, observer);
 }
 
-void Observable::removeObserver(EventType etype, IObserver *observer) {
+void Observable::unsubscribe(EventType etype, IObserver *observer) {
   Observable::instance().instanceRemoveObserver(etype, observer);
 }
 
-void Observable::notify(EventType etype, Event *event) {
-  Observable::instance().instanceNotify(etype, event);
+void Observable::notify(Event &event) {
+  Observable::instance().instanceNotify(event);
 }

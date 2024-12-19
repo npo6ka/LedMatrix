@@ -31,7 +31,7 @@
     free(szBuffer);
     return nBufferLength - 1;
   }
-# else
-#   define debug_setup() ;
-#   define out(A, ...) ;
-# endif
+#else
+#define debug_setup();
+#define out(A, ...);
+#endif

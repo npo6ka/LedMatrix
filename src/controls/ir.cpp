@@ -1,48 +1,35 @@
 #include "configs/constants.h"
 #include "ir.h"
-
-#if IR_ENABLE
 #include "libs/debug_lib.h"
 #undef DEBUG
 // #include "TinyIRReceiver.hpp"
 #include <IRremote.hpp>
+#include "events/observer.h"
 
-IR::IR() {
-    IrReceiver.begin(IR_RECEIVE_PIN, DISABLE_LED_FEEDBACK); // Start the receiver
+IR::IR(uint8_t pin) {
+    IrReceiver.begin(pin, DISABLE_LED_FEEDBACK); // Start the receiver
 }
 
-IR *IR::instance() {
-    static IR ins;
-    return &ins;
-}
-
-ControlState IR::tick() {
-    ControlState state = ControlState::None;
+void IR::onTick() {
     if (IrReceiver.decode()) {
         switch (IrReceiver.decodedIRData.command) {
             case 0x45: // <<
-                state = ControlState::PrevMode;
+                // Observable::notify(ChangeModEvent({EventType::ChangeMode, ChangeModEvent::Type::Previous, 0}));
                 break;
             case 0x47: // play
-                state = ControlState::PowerOn;
+                // Observable::notify(ChangeBoolEvent({EventType::ChangePowerState, true}));
                 break;
             case 0x4a: // ||
-                state = ControlState::PowerOff;
+                // Observable::notify(ChangeBoolEvent({EventType::ChangePowerState, false}));
                 break;
             case 0x48: // >>
-                state = ControlState::NextMode;
+                // Observable::notify(ChangeModEvent({EventType::ChangeMode, ChangeModEvent::Type::Next, 0}));
                 break;
         }
         IrReceiver.resume(); // Enable receiving of the next value
     }
-    return state;
 }
-#else
-IR::IR() {}
-IR *IR::instance() {
-    return nullptr;
+
+bool IR::isIdle() {
+    return IrReceiver.isIdle();
 }
-ControlState IR::tick() {
-    return ControlState::None;
-}
-#endif

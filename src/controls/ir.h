@@ -1,12 +1,11 @@
 #pragma once
+#include "stdint.h"
 
-#include "icontrol.h"
-
-class IR: public IControl {
-    IR();
-    IR(const IR& );
-    IR& operator=(IR& );
+class IR {
+    IR(const IR& val) = delete;
+    IR& operator=(IR& val) = delete;
 public:
-    static IR *instance();
-    ControlState tick() final;
+    IR(uint8_t pin);
+    void onTick();
+    bool isIdle();
 };

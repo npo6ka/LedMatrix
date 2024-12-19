@@ -1,22 +1,28 @@
 #pragma once
+#include "configs/constants.h"
 #include "events/observer.h"
 
-class AutoControl: public IObserver {
-    bool _state; // = AUTOMOD_DEF_STATE;
-    unsigned long _prev_time; // = 0;
-    unsigned long _delay;// = AUTOMOD_INTERVAL;
+class AutoChangeMode: public IObserver {
+    bool _isEnable;
+    unsigned long _savedTime;
+    unsigned long _delay;
 public:
     // Создание автоматического переключения режимов
     // default_is_on - включено ли переключение режимов по умолчанию
     // delay - задержка переключения режимов
     // переключение режимов может происходить дольше, если у текущего режима используется флаг is_end
-    AutoControl(bool is_on, unsigned long delay);
-    ~AutoControl() {}
+    AutoChangeMode(bool isEnable = AUTOMOD_DEF_STATE, unsigned long delay = AUTOMOD_INTERVAL);
+    ~AutoChangeMode();
 
     // Тик для автоматического переключения режимов
-    ControlState tick() final;
+    void onTick();
 
     // Установка состояния автоматического переключения режимов
     // true - автопереключение включено
-    void set_state(bool is_on);
+    void setIsEnable(bool isEnable);
+
+    // Установка времени между переключениями режимов
+    void setDelay(unsigned long delay);
+
+    virtual void handleEvent(Event *event) override;
 };
