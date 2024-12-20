@@ -85,12 +85,12 @@ void Observable::instanceRemoveObserver(EventType etype, IObserver *observer) {
   }
 }
 
-void Observable::instanceNotify(Event &event) {
-  int type = type_to_int(event.type);
+void Observable::instanceNotify(Event *event) {
+  int type = type_to_int(event->type);
 
   for (int i = 0; i < _observerList[type].first; ++i) {
     if (_observerList[type].second[i]) {
-      _observerList[type].second[i]->handleEvent(&event);
+      _observerList[type].second[i]->handleEvent(event);
     }
   }
 }
@@ -103,6 +103,6 @@ void Observable::unsubscribe(EventType etype, IObserver *observer) {
   Observable::instance().instanceRemoveObserver(etype, observer);
 }
 
-void Observable::notify(Event &event) {
+void Observable::notify(Event *event) {
   Observable::instance().instanceNotify(event);
 }

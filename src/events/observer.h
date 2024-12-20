@@ -12,6 +12,7 @@
 class IObserver {
 public:
   virtual void handleEvent(Event *event) = 0;
+  virtual ~IObserver() = default;
 };
 
 class Observable {
@@ -30,10 +31,13 @@ private:
 
   void instanceAddObserver(EventType etype, IObserver *observer);
   void instanceRemoveObserver(EventType etype, IObserver *observer);
-  void instanceNotify(Event &event);
+  void instanceNotify(Event *event);
 
 public:
+  // подписаться на события определённого типа
   static void subscribe(EventType etype, IObserver *observer);
+  // отписаться на события определённого типа
   static void unsubscribe(EventType etype, IObserver *observer);
-  static void notify(Event &event);
+  // уведомить всех подписчиков о событии
+  static void notify(Event *event);
 };

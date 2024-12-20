@@ -1,8 +1,8 @@
 #pragma once
 #include "events/observer.h"
-#include "controls/ir.h"
 #include "controls/automode.h"
 #include "controls/button.h"
+#include "controls/ir.h"
 
 class MyApplication : public IObserver {
 private:

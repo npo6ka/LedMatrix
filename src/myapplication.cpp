@@ -7,8 +7,11 @@
 // инициализация светодиодов
 CRGB leds[LEDS_CNT];
 
-MyApplication::MyApplication() : _button(Button(BTN_PIN, LOW_PULL, NORM_OPEN)), _power(true) {
-    _ir = std::move(IR(IR_RECEIVE_PIN));
+MyApplication::MyApplication() :
+        _autoMod(AUTOMOD_DEF_STATE, AUTOMOD_INTERVAL),
+        _button(BTN_PIN, LOW_PULL, NORM_OPEN),
+        _ir(IR_RECEIVE_PIN),
+        _power(true) {
     randomSeed(millis() + analogRead(A0));
     random16_set_seed(millis() + analogRead(A0));
     debug_setup();
@@ -17,7 +20,9 @@ MyApplication::MyApplication() : _button(Button(BTN_PIN, LOW_PULL, NORM_OPEN)), 
     FastLED.setBrightness(150);
 
     Observable::subscribe(EventType::ChangePowerState, this);
-    //Observable::notify(ChangeModEvent({EventType::ChangeMode, ChangeModEvent::Type::Set, 0}));
+
+    auto ev = ChangeModEvent({EventType::ChangeMode, ChangeModEvent::Type::Set});
+    Observable::notify(&ev);
 };
 
 void MyApplication::onTick() {

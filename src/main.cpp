@@ -1,8 +1,9 @@
 #include "myapplication.h"
 
-int main() {
-    MyApplication app;
-    while (true) {
-        app.onTick();
-    }
+MyApplication app;
+
+void setup() {}
+
+void loop() {
+    app.onTick();
 }

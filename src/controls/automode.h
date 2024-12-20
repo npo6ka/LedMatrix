@@ -1,5 +1,4 @@
 #pragma once
-#include "configs/constants.h"
 #include "events/observer.h"
 
 class AutoChangeMode: public IObserver {
@@ -11,7 +10,7 @@ public:
     // default_is_on - включено ли переключение режимов по умолчанию
     // delay - задержка переключения режимов
     // переключение режимов может происходить дольше, если у текущего режима используется флаг is_end
-    AutoChangeMode(bool isEnable = AUTOMOD_DEF_STATE, unsigned long delay = AUTOMOD_INTERVAL);
+    AutoChangeMode(bool isEnable, unsigned long delay);
     ~AutoChangeMode();
 
     // Тик для автоматического переключения режимов

@@ -12,11 +12,13 @@ void Button::onTick() {
     uint8_t clickCount = touch.hasClicks() ? touch.getClicks() : 0U;
     switch (clickCount) {
         case 1U: {
-            //Observable::notify(ChangeModEvent({EventType::ChangeMode, ChangeModEvent::Type::Next, 0}));
+            auto ev = ChangeModEvent({EventType::ChangeMode, ChangeModEvent::Type::Next});
+            Observable::notify(&ev);
             break;
         }
         case 2U: {
-            //Observable::notify(Event({EventType::ChangeAutoMod}));
+            auto ev = Event({EventType::ChangeAutoMod});
+            Observable::notify(&ev);
             break;
         }
         default:

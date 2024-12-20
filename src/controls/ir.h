@@ -3,7 +3,7 @@
 
 class IR {
     IR(const IR& val) = delete;
-    IR& operator=(IR& val) = delete;
+    IR& operator=(const IR& val) = delete;
 public:
     IR(uint8_t pin);
     void onTick();

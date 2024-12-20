@@ -14,7 +14,8 @@ AutoChangeMode::~AutoChangeMode() {
 void AutoChangeMode::onTick() {
     if (_isEnable) {
         if (millis() - _savedTime > _delay /*&& EffectsList::getInstance().effectIsEnd()*/) {
-            //Observable::notify(ChangeModEvent({EventType::ChangeMode, ChangeModEvent::Type::Next, 0}));
+            auto ev = ChangeModEvent({EventType::ChangeMode, ChangeModEvent::Type::Next, 0});
+            Observable::notify(&ev);
             out("AutoControl: next mode\n");
         }
     }
