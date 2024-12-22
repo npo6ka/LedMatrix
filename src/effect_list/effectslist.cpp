@@ -84,6 +84,7 @@ static Effect *getNewEffectInstance(const uint8_t& num) {
 // private
 
 EffectsList::EffectsList() {
+    curEffect = nullptr;
     Observable::subscribe(EventType::ChangeMode, this);
 };
 
@@ -162,6 +163,8 @@ void EffectsList::reloadCurEff() {
 }
 
 void EffectsList::onTick() {
+    if (curEffect == nullptr)
+        return;
     unsigned long tick_size = 1000000 / curEffect->get_fps();
 
     // проверяем соответствие фпса указанному в режиме

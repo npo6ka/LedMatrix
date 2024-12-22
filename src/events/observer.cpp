@@ -50,8 +50,8 @@ void Observable::instanceAddObserver(EventType etype, IObserver *observer) {
       break;
     }
   }
-  if (observer_location) {
-    out("Error addObserver: observer exists on list");
+  if (observer_location > -1) {
+    out("Error addObserver: observer exists on list %d, 0x%lx", (int)etype, (uint64_t)observer);
     return;
   }
   // если не нашли пустую ячейку расширяем память

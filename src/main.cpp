@@ -2,7 +2,9 @@
 
 MyApplication app;
 
-void setup() {}
+void setup() {
+    app.onInit();
+}
 
 void loop() {
     app.onTick();

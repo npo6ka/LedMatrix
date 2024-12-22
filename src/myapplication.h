@@ -8,7 +8,7 @@ class MyApplication : public IObserver {
 private:
     AutoChangeMode _autoMod;
     Button _button;
-    IR _ir;
+    // IR _ir;
     bool _power;
 
     MyApplication(const MyApplication &) = delete;
@@ -19,5 +19,6 @@ private:
 public:
     MyApplication();
     void onTick();
+    void onInit();
     virtual void handleEvent(Event *event) override;
 };

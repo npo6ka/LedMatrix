@@ -5,6 +5,7 @@
 AutoChangeMode::AutoChangeMode(bool isEnable, unsigned long delay) : _isEnable(false), _delay(delay) {
     setIsEnable(isEnable);
     Observable::subscribe(EventType::ChangeMode, this);
+    Observable::subscribe(EventType::ChangeAutoMod, this);
 }
 
 AutoChangeMode::~AutoChangeMode() {
