@@ -5,7 +5,8 @@ class IR {
     IR(const IR& val) = delete;
     IR& operator=(const IR& val) = delete;
 public:
-    IR(uint8_t pin);
+    IR() {};
+    void onInit(int pin);
     void onTick();
     bool isIdle();
 };

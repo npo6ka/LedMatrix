@@ -6,7 +6,7 @@
 #include <IRremote.hpp>
 #include "events/observer.h"
 
-IR::IR(uint8_t pin) {
+void IR::onInit(int pin) {
     IrReceiver.begin(pin, DISABLE_LED_FEEDBACK); // Start the receiver
 }
 

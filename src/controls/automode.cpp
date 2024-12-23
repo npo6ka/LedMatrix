@@ -6,6 +6,7 @@ AutoChangeMode::AutoChangeMode(bool isEnable, unsigned long delay) : _isEnable(f
     setIsEnable(isEnable);
     Observable::subscribe(EventType::ChangeMode, this);
     Observable::subscribe(EventType::ChangeAutoMod, this);
+    Observable::subscribe(EventType::ChangePowerState, this);
 }
 
 AutoChangeMode::~AutoChangeMode() {
@@ -39,5 +40,8 @@ void AutoChangeMode::handleEvent(Event *event) {
         _savedTime = millis();
     } else if (event->type == EventType::ChangeAutoMod) {
         setIsEnable(!_isEnable);
+    } else if (event->type == EventType::ChangePowerState) {
+        ChangeBoolEvent *ev = static_cast<ChangeBoolEvent *>(event);
+        setIsEnable(ev->new_val);
     }
 }
