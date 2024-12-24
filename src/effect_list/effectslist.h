@@ -1,9 +1,10 @@
 #pragma once
 #include <stdint.h>
+#include "events/observer.h"
 
 class Effect;
 
-class EffectsList
+class EffectsList : public IObserver
 {
 private:
     uint8_t curNum = 0;
@@ -13,20 +14,23 @@ private:
 
     // singlton property
     // Конструкторы и оператор присваивания недоступны клиентам
-    EffectsList() {};
+    EffectsList();
+    ~EffectsList();
     EffectsList(const EffectsList& );
     EffectsList& operator=(EffectsList& );
     Effect *getCurEffect() const;
+    void clearCurEffect();
 
 public:
     static EffectsList& getInstance();
     void setErrorEffect();
     uint8_t getCurEffectNum() const;
-    void clearCurEffect();
     void setEffect(const uint8_t &num);
     void nextEffect();
     void prevEffect();
     void reloadCurEff();
     void onTick();
     float getCurFPS();
+    bool effectIsEnd();
+    virtual void handleEvent(Event *event) override;
 };
