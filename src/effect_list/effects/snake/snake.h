@@ -34,7 +34,6 @@ class Snake : public Effect
         getPix(apple.x, apple.y) = COLOR_APPLE;
 
         // Тут мозг змеки
-
         if (ai) {
             button = ai->getTrend(head, apple, vector);
         }
@@ -169,7 +168,7 @@ class Snake : public Effect
 
 public:
     void on_init() override {
-        set_fps(20);
+        set_fps(40);
         tick = 0;
         button = Trend::none;
 
