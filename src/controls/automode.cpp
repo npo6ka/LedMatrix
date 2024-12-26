@@ -1,6 +1,7 @@
 #include "configs/constants.h"
 #include "libs/debug_lib.h"
 #include "automode.h"
+#include <Arduino.h>
 
 AutoChangeMode::AutoChangeMode(bool isEnable, unsigned long delay) : _isEnable(false), _delay(delay) {
     setIsEnable(isEnable);
