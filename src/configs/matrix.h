@@ -47,3 +47,6 @@
 #define IR_ENABLE               true                        // подключить урпавление через ИК приёмник
 #define IR_RECEIVE_PIN          (D6)                        // пин к которому подключен ИК приёмник
 #define DECODE_SAMSUNG                                      // тип ИК пульта которые даёт команды
+
+#define RELAY_PIN               (D7)
+#define RELAY_DELAY             100

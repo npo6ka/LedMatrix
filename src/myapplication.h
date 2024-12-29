@@ -3,6 +3,7 @@
 #include "controls/automode.h"
 #include "controls/button.h"
 #include "controls/ir.h"
+#include "modules/relay.h"
 
 class MyApplication : public IObserver {
 private:
@@ -10,6 +11,7 @@ private:
     Button _button;
     IR _ir;
     bool _power;
+    Relay _relay;
 
     MyApplication(const MyApplication &) = delete;
     MyApplication& operator=(const MyApplication& other) = delete;
