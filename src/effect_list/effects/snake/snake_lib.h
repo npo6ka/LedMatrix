@@ -1,7 +1,6 @@
 #pragma once
 
 #include "stdint.h"
-#include "libs/lib_led.h"
 
 #define START_LENGTH 4                      // начальная длина змейки
 #define MAX_SNAKE_LENGTH HEIGHT * WIDTH     // максимальная длина змейки
@@ -41,16 +40,16 @@ struct Coord {
     void move(Trend tr) {
         switch (tr) {
         case Trend::up:
-            x--;
+            y--;
             break;
         case Trend::right:
-            y++;
-            break;
-        case Trend::down:
             x++;
             break;
+        case Trend::down:
+            y++;
+            break;
         case Trend::left:
-            y--;
+            x--;
             break;
         case Trend::none:
             break;
@@ -64,7 +63,7 @@ struct Coord {
     }
 
     operator bool() const {
-        return x < HEIGHT && y < WIDTH;
+        return x < WIDTH && y < HEIGHT;
     }
 
     bool operator==(Coord a) const {

@@ -1,12 +1,13 @@
 #pragma once
 
 #include "effect_list/effect.h"
+#include "libs/led_matrix.h"
 
 class Snow : public Effect
 {
     uint8_t step;
     uint8_t tick;
-    int density;
+    uint8_t density;
     bool direction;
 public:
     Snow() {}
@@ -20,41 +21,46 @@ public:
         set_fps(60);
     }
 
+    void move_snow()
+    {
+        // сдвигаем вниз
+        for (auto y : LedMatrix.rangeY().reverse()) {
+            bool dir = direction;
+
+            for (auto x : LedMatrix.rangeX()) {
+                auto& pix = LedMatrix.at(x, y);
+                if (pix) {
+                    if (y + 1 < LedMatrix.height()) {
+                        if (dir) {
+                            LedMatrix.at(x + 1, y + 1) = pix;
+                        } else {
+                            LedMatrix.at(x - 1, y + 1) = pix;
+                        }
+                        dir = !dir;
+                    }
+
+                    pix = 0x0;
+                }
+            }
+        }
+
+        for (auto x : LedMatrix.rangeX(0, -2)) {
+            // заполняем случайно верхнюю строку
+            // а также не даём двум блокам по вертикали вместе быть
+            if (!LedMatrix.at(x, 1) && (random8(density) == 0)) {
+                LedMatrix.at(x, 0) = 0xE0FFFF - 0x101010 * random8(4);
+                x++;
+            } else {
+                LedMatrix.at(x, 0) = 0x000000;
+            }
+        }
+    }
+
     void on_update()
     {
         if (tick >= step) {
             direction = !direction;
-            // сдвигаем вниз
-            for (int8_t x = HEIGHT - 1; x >= 0; --x) {
-                bool dir = direction;
-
-                for (uint8_t y = 0; y < WIDTH; y++) {
-                    if (getPix(x, y)) {
-                        if (x + 1 < HEIGHT) {
-                            if (dir) {
-                                if (y + 1 < WIDTH) getPix(x + 1, y + 1) = getPix(x, y);
-                            } else {
-                                if (y - 1 >= 0) getPix(x + 1, y - 1) = getPix(x, y);
-                            }
-                            dir = !dir;
-                        }
-
-                        getPix(x, y) = 0x0;
-                    }
-                }
-            }
-
-            for (uint8_t x = 0; x < WIDTH - 1; x++) {
-                // заполняем случайно верхнюю строку
-                // а также не даём двум блокам по вертикали вместе быть
-                if (!getPix(1, x) && (random(0, density) == 0)) {
-                    getPix(0, x) = 0xE0FFFF - 0x101010 * random(0, 4);
-                    x++;
-                } else {
-                    getPix(0, x) = 0x000000;
-                }
-            }
-
+            move_snow();
             tick = 0;
         } else {
             tick++;

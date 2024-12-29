@@ -12,7 +12,7 @@ class AStarSnakeAI : public SnakeAI {
     };
 
     // Queue<Trend, MAX_SNAKE_LENGTH>
-    Node nodes[HEIGHT][WIDTH];
+    Node nodes[WIDTH][HEIGHT];
     Queue<Trend, MAX_SNAKE_LENGTH / 2> path;
     uint8_t amntStep = 0;
     static const uint8_t maxAmntStep = 1;
@@ -22,8 +22,8 @@ class AStarSnakeAI : public SnakeAI {
     }
 
     int getOutCostFactor(Coord coord) {
-        if (coord.x == 0 || coord.x == HEIGHT - 1 ||
-            coord.y == 0 || coord.y == WIDTH - 1) {
+        if (coord.x == 0 || coord.x == WIDTH - 1 ||
+            coord.y == 0 || coord.y == HEIGHT - 1) {
             return 5;
         }
         return 0;
@@ -32,7 +32,7 @@ class AStarSnakeAI : public SnakeAI {
     int getAtSnakeFactor(Coord coord, uint16_t cost) {
         for (auto i: {Trend::up, Trend::down, Trend::left, Trend::right}) {
             Coord val = coord.moveTo(i);
-            if (val && getPix(val.x, val.y) == COLOR_SNAKE)
+            if (val && LedMatrix.at(val.x, val.y) == COLOR_SNAKE)
                 return 30;
         }
         return 0;
@@ -48,7 +48,7 @@ class AStarSnakeAI : public SnakeAI {
         if (node.is_locked)
             return;
 
-        if (getPix(coord.x, coord.y) == COLOR_SNAKE) {
+        if (LedMatrix.at(coord.x, coord.y) == COLOR_SNAKE) {
             node.is_locked = true;
             return;
         }
@@ -81,8 +81,8 @@ class AStarSnakeAI : public SnakeAI {
     template <class Action>
     void printMas(Action &&action, const char *text) const {
         out("------------------- %s -----------------\n", text);
-        for (uint8_t i = 0; i < HEIGHT; ++i) {
-            for (uint8_t j = 0; j < WIDTH; ++j) {
+        for (uint8_t i = 0; i < WIDTH; ++i) {
+            for (uint8_t j = 0; j < HEIGHT; ++j) {
                 action(nodes[i][j]);
                 out(" ");
             }
@@ -105,8 +105,8 @@ class AStarSnakeAI : public SnakeAI {
     Coord findMin() const {
         const Node *min = nullptr;
         Coord pos = {0xff, 0xff};
-        for (uint8_t i = 0; i < HEIGHT; ++i) {
-            for (uint8_t j = 0; j < WIDTH; ++j) {
+        for (uint8_t i = 0; i < WIDTH; ++i) {
+            for (uint8_t j = 0; j < HEIGHT; ++j) {
                 const Node &node = nodes[i][j];
                 if (!node.is_locked && node.is_visited) {
                     if (!min || min->cost > node.cost) {

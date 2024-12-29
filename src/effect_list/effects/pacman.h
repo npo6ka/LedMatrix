@@ -44,24 +44,18 @@ public:
 
     void on_update()
     {
-        fader(255);
-        CRGB c(255, 255, 255);
-        for (int i = PACMAN_W - phase ; i < WIDTH ; i += 4)
-        {
-            setPixCl(PACMAN_H / 2 - 1, i, c);
-            setPixCl(PACMAN_H / 2 - 1, i + 1, c);
-            setPixCl(PACMAN_H / 2, i, c);
-            setPixCl(PACMAN_H / 2, i + 1, c);
+        LedMatrix.clear();
+
+
+        for (auto i : LedMatrix.rangeX(PACMAN_W - phase).step(4)) {
+            int j = PACMAN_H / 2 - 1;
+            LedMatrix.draw_rect(i, j, i + 2, j + 2, CRGB(255, 255, 255));
         }
         drawSprite(0, 0, PACMAN_W, PACMAN_H, phase / 2 ? pacman1 : pacman2);
         phase = (phase + 1) % 4;
     }
-private:
-    static void setPixCl(int16_t x, int16_t y, CRGB cl) {
-        if (x >= 0 && x < HEIGHT && y >= 0 && y < WIDTH) 
-            getPix(x, y) = cl;
-    }
 
+private:
     static void drawSprite(int x, int y, int w, int h, const uint32_t *spr)
     {
         for (int i = 0 ; i < w ; ++i)
@@ -69,8 +63,9 @@ private:
             for (int j = 0 ; j < h ; ++j)
             {
                 int v = pgm_read_dword(spr + i + j * w);
-                if (v)
-                    setPixCl(y + j, x + i, CRGB(v));
+                if (v) {
+                    LedMatrix.at(x + i, y + j) = CRGB(v);
+                }
             }
         }
     }

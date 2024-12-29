@@ -1,23 +1,16 @@
 #pragma once
 
 #include "effect_list/effect.h"
+#include "effect_list/effects/snake/snake_lib.h"
 
 #define MAX_SNAKE 10
 
 class DribsAllSide : public Effect
 {
-    enum Trend {
-        up = 1,
-        down,
-        left,
-        right
-    };
-
     struct Snake {
-        uint16_t x;
-        uint16_t y;
-        CRGB cl;
-        Trend trend; // 1 up 2 down 3 left 4 right
+        Coord pos;
+        CRGB color;
+        Trend trend;
     };
 
     Snake snakes[MAX_SNAKE];
@@ -29,85 +22,64 @@ public:
         set_fps(60);
         chsv = 0;
         for (uint8_t i = 0; i < MAX_SNAKE; ++i) {
-            snakes[i].cl = 0;
+            snakes[i].color = 0;
         }
     }
 
     void remove_snake(Snake &snake) {
-        snake.cl = 0;
+        snake.color = 0;
     }
 
     void create_snake(Snake &snake) {
-        snake.cl = CHSV(chsv, 255, 255);
+        snake.color = CHSV(chsv, 255, 255);
         snake.trend = Trend(random8(4) + 1);
+
+        switch (snake.trend) {
+        case Trend::up:
+            snake.pos.x = random16(WIDTH);
+            snake.pos.y = HEIGHT - 1;
+            break;
+        case Trend::down:
+            snake.pos.x = random16(WIDTH);
+            snake.pos.y = 0;
+            break;
+        case Trend::left:
+            snake.pos.x = WIDTH - 1;
+            snake.pos.y = random16(HEIGHT);
+            break;
+        case Trend::right:
+            snake.pos.x = 0;
+            snake.pos.y = random16(HEIGHT);
+            break;
+        }
     }
 
     void on_update() {
         chsv++;
 
         for (uint8_t i = 0; i < MAX_SNAKE; ++i) {
-            Snake &cur_snake = snakes[i];
-            if (cur_snake.cl) {
-                switch (cur_snake.trend)
-                {
-                case Trend::up:
-                    if (--cur_snake.y >= WIDTH) {
-                        remove_snake(cur_snake);
-                    }
-                    break;
-                case Trend::down:
-                    if (++cur_snake.y >= WIDTH) {
-                        remove_snake(cur_snake);
-                    }
-                    break;
-                case Trend::left:
-                    if (--cur_snake.x >= HEIGHT) {
-                        remove_snake(cur_snake);
-                    }
-                    break;
-                case Trend::right:
-                    if (++cur_snake.x >= HEIGHT) {
-                        remove_snake(cur_snake);
-                    }
-                    break;
-                }
-            } else {
-                //generate new snake
-                if (!random16(100)) {
-                    create_snake(cur_snake);
+            Snake &snake = snakes[i];
 
-                    switch (cur_snake.trend)
-                    {
-                    case Trend::up:
-                        cur_snake.x = random16(HEIGHT);
-                        cur_snake.y = WIDTH - 1;
-                        break;
-                    case Trend::down:
-                        cur_snake.x = random16(HEIGHT);
-                        cur_snake.y = 0;
-                        break;
-                    case Trend::left:
-                        cur_snake.x = HEIGHT - 1;
-                        cur_snake.y = random16(WIDTH);
-                        break;
-                    case Trend::right:
-                        cur_snake.x = 0;
-                        cur_snake.y = random16(WIDTH);
-                        break;
-                    }
+            if (snake.color) {
+                snake.pos.move(snake.trend);
+
+                if (!snake.pos) {
+                    remove_snake(snake);
                 }
+            } else if (!random16(100)) { //generate new snake
+                create_snake(snake);
             }
         }
     }
 
     void on_render() {
         for (uint8_t i = 0; i < MAX_SNAKE; ++i) {
-            Snake cur_snake = snakes[i];
-            if (cur_snake.cl) {
-                getPix(cur_snake.x, cur_snake.y) = cur_snake.cl;
+            auto& snake = snakes[i];
+            if (snake.color) {
+                LedMatrix.at(snake.pos.x, snake.pos.y) = snake.color;
             }
         }
 
-        fader(5);
+        LedMatrix.fader(5);
     }
 };

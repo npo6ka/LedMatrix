@@ -18,46 +18,40 @@ public:
 
     void on_init() {
         for (uint8_t j = 0; j < balls_amount; j++) {
-            int sign;
-
             // забиваем случайными данными
-            coord[j][0] = HEIGHT / 2 * 10;
-            random(2) ? sign = 1 : sign = -1;
-            vector[j][0] = random(4, 15) * sign;
-            coord[j][1] = WIDTH / 2 * 10;
-            random(2) ? sign = 1 : sign = -1;
-            vector[j][1] = random(4, 15) * sign;
-            ballColors[j] = CHSV(random(0, 9) * 28, 255, 255);
+            coord[j][0] = WIDTH / 2 * 10;
+            vector[j][0] = random8(4, 15) * (random8(2) ? 1 : -1);
+            coord[j][1] = HEIGHT / 2 * 10;
+            vector[j][1] = random8(4, 15) * (random8(2) ? 1 : -1);
+            ballColors[j] = CHSV(random8(0, 9) * 28, 255, 255);
         }
         set_fps(30);
     }
 
     void on_update() {
         if (!ball_track)    // если режим БЕЗ следов шариков
-            FastLED.clear();  // очистить
+            LedMatrix.clear();
         else {              // режим со следами
-            fader(track_step);
+            LedMatrix.fader(track_step);
         }
-
-        getLeds()[0].fadeToBlackBy(1);
 
         // движение шариков
         for (uint8_t j = 0; j < balls_amount; j++) {
             // отскок от нарисованных препятствий
             if (draw_walls) {
-                CRGB &thisColor = getPix(coord[j][0] / 10 + 1, coord[j][1] / 10);
+                CRGB &thisColor = LedMatrix.at(coord[j][0] / 10 + 1, coord[j][1] / 10);
                 if (thisColor == wall_color/* && vector[j][0] > 0*/) {
                     vector[j][0] = -vector[j][0];
                 }
-                thisColor = getPix(coord[j][0] / 10 - 1, coord[j][1] / 10);
+                thisColor = LedMatrix.at(coord[j][0] / 10 - 1, coord[j][1] / 10);
                 if (thisColor == wall_color/* && vector[j][0] < 0*/) {
                     vector[j][0] = -vector[j][0];
                 }
-                thisColor = getPix(coord[j][0] / 10, coord[j][1] / 10 + 1);
+                thisColor = LedMatrix.at(coord[j][0] / 10, coord[j][1] / 10 + 1);
                 if (thisColor == wall_color/* && vector[j][1] > 0*/) {
                     vector[j][1] = -vector[j][1];
                 }
-                thisColor = getPix(coord[j][0] / 10, coord[j][1] / 10 - 1);
+                thisColor = LedMatrix.at(coord[j][0] / 10, coord[j][1] / 10 - 1);
                 if (thisColor == wall_color/* && vector[j][1] < 0*/) {
                     vector[j][1] = -vector[j][1];
                 }
@@ -72,15 +66,15 @@ public:
                 }
             }
 
-            if (coord[j][0] > (HEIGHT - 1) * 10) {
-                coord[j][0] = (HEIGHT - 1) * 10;
+            if (coord[j][0] > (WIDTH - 1) * 10) {
+                coord[j][0] = (WIDTH - 1) * 10;
                 vector[j][0] = -vector[j][0];
             }
-            if (coord[j][1] > (WIDTH - 1) * 10) {
-                coord[j][1] = (WIDTH - 1) * 10;
+            if (coord[j][1] > (HEIGHT - 1) * 10) {
+                coord[j][1] = (HEIGHT - 1) * 10;
                 vector[j][1] = -vector[j][1];
             }
-            getPix(coord[j][0] / 10, coord[j][1] / 10) = ballColors[j];
+            LedMatrix.at(coord[j][0] / 10, coord[j][1] / 10) = ballColors[j];
         }
     }
 };

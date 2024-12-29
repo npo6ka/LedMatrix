@@ -46,16 +46,14 @@ static void drawSprite(int x, int y, uint32_t *spr)
         for (int j = 0 ; j < H ; ++j)
         {
             int v = pgm_read_dword(spr + i + j * W);
-            if (y + j >= 0 && y + j < HEIGHT && x + i >= 0 && x + i < WIDTH) {
-                getPix(y + j, x + i) = CRGB(v);
-            }
+            LedMatrix.at(x + i, y + j) = CRGB(v);
         }
     }
 }
 
 void Mouse::on_update()
 {
-    fader(255);
+    LedMatrix.clear();
     x = (x + 1) % WIDTH;
     drawSprite(x, 0, x % 2 ? mouse1 : mouse2);
     drawSprite(x - WIDTH, 0, x % 2 ? mouse1 : mouse2);

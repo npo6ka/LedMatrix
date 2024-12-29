@@ -21,14 +21,11 @@ public:
 
     void on_update()
     {
-        int i;
-
-        for (i = 0; i < LEDS_CNT; ++i) {
-            CRGB &cl = getLeds()[i];
-            cl.fadeToBlackBy(fade_step);
+        for (auto& led : LedMatrix) {
+            led.fadeToBlackBy(fade_step);
 
             if (random16(300) == 0) {
-                cl = CHSV(tick / rainbow_step, 255, 255);
+                led = CHSV(tick / rainbow_step, 255, 255);
             }
         }
 

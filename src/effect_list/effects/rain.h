@@ -14,18 +14,14 @@ public:
     }
 
     void on_update() {
-        int i;
-
-        for (i = 0; i < LEDS_CNT; ++i) {
-            CRGB &cl = getLeds()[i];
-
+        for (auto& led : LedMatrix) {
             if (random8(255) == 0) {
-                cl = CRGB(0, 0, 255);
-            } else if (cl.b > 0) {
-                if (cl.b > step) {
-                    cl = CRGB(0, 0, cl.b - step);
+                led = CRGB(0, 0, 255);
+            } else if (led.b > 0) {
+                if (led.b > step) {
+                    led = CRGB(0, 0, led.b - step);
                 } else {
-                    cl = CRGB(0, 0, 0);
+                    led = CRGB(0, 0, 0);
                 }
             }
         }

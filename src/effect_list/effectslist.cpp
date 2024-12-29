@@ -27,8 +27,6 @@
 #include "effects/ny2020.h"
 #include "effects/dribs_all_side.h"
 #include "effects/snake/snake.h"
-/*
-#include "testmode.h"*/
 
 using EffectFactory = Effect* (*)();
 
@@ -43,34 +41,36 @@ constexpr EffectFactory effectFactory() {
 }
 
 auto effectsFactories = {
-    effectFactory<Snake>(),
-    effectFactory<DynamicSquare>(),
-    effectFactory<TheMatrix>(),
-    effectFactory<Starfall>(),
-    effectFactory<Snow>(),
-    effectFactory<SimpleBalls>(),
-    effectFactory<Confetti>(),
-    effectFactory<Fire>(),
-    effectFactory<DribsAllSide>(),
-    effectFactory<SlowRandom>(),
-    effectFactory<SimpleRainbow>(),
-    effectFactory<TextMode>(),
-    effectFactory<Dribs>(),
-    effectFactory<Rain>(),
-    effectFactory<AllRandom>(),
+    // effectFactory<Easy>(),
+    // effectFactory<Snake>(),
+    // effectFactory<DynamicSquare>(),
+    // effectFactory<TheMatrix>(),
+    // effectFactory<Starfall>(),
+    // effectFactory<Snow>(),
+    // effectFactory<SimpleBalls>(),
+    // effectFactory<Confetti>(),
+    // effectFactory<Fire>(),
+    // effectFactory<DribsAllSide>(),
+    // effectFactory<SlowRandom>(),
+    // effectFactory<SimpleRainbow>(),
+    // effectFactory<TextMode>(),
+    // effectFactory<Dribs>(),
+    // effectFactory<Rain>(),
+    // effectFactory<AllRandom>(),
 
-    effectFactory<DynamicSquare>(),
-    effectFactory<RandomRain>(),
-    effectFactory<RainbowRain>(),
-    effectFactory<Points>(),
-    effectFactory<RainbowPoint>(),
-    effectFactory<RainbowStaticPoint>(),
-    effectFactory<Mouse>(),
-    effectFactory<Pacman>(),
-    effectFactory<CircularPoint>(),
-    effectFactory<ZigZag>(),
-    effectFactory<HorizontalRainbowPoint>(),
-    effectFactory<NY2020>(),
+    // effectFactory<DynamicSquare>(),
+    // effectFactory<RandomRain>(),
+    // effectFactory<RainbowRain>(),
+    // effectFactory<Points>(),
+    // effectFactory<RainbowPoint>(),
+    // effectFactory<RainbowStaticPoint>(),
+    // effectFactory<Mouse>(),
+    // effectFactory<Pacman>(),
+    // effectFactory<CircularPoint>(),
+    // effectFactory<ZigZag>(),
+    // effectFactory<HorizontalRainbowPoint>(),
+    // effectFactory<NY2020>(),
+    effectFactory<Snake>()
 };
 
 static Effect *getNewEffectInstance(const uint8_t& num) {

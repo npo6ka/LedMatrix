@@ -310,7 +310,9 @@ public:
     {
         FastLED.clear();
         for (int i = 0 ; i < NY_COUNT ; ++i) {
-            drawSprite(i * (NY_SPRITE_W + 1) - phase, 0, sprites[items[i]]);
+            int x = i * (NY_SPRITE_W + 1) - phase;
+            int y = (HEIGHT - NY_SPRITE_H) / 2;
+            drawSprite(x, y, sprites[items[i]]);
         }
         phase = (phase + 1) % (NY_SPRITE_W + 1);
         if (phase == 0)
@@ -329,9 +331,7 @@ private:
             for (int j = 0 ; j < NY_SPRITE_H ; ++j)
             {
                 int v = pgm_read_dword(spr + i + j * NY_SPRITE_W);
-                if (y + j >= 0 && y + j < HEIGHT && x + i >= 0 && x + i < WIDTH) {
-                    getPix(y + j, x + i) = CRGB(v);
-                }
+                LedMatrix.at(x + i, y + j) = CRGB(v);
             }
         }
     }
