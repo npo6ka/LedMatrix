@@ -3,7 +3,7 @@
 #if DEBUG
   #include <SoftwareSerial.h>
 
-  void static debug_setup()
+  inline void debug_setup()
   {
     Serial.begin(115200);
   }
@@ -17,7 +17,7 @@
    *    отрицательное чило - нехватка памяти, модуль числа равен запрашиваемой памяти
    *    положительное число - количество символов, выведенное в Serial
    */
-  const static size_t out(const char *szFormat, ...)
+  inline const size_t out(const char *szFormat, ...)
   {
     va_list argptr;
     va_start(argptr, szFormat);
@@ -31,7 +31,7 @@
     free(szBuffer);
     return nBufferLength - 1;
   }
-# else
-#   define debug_setup() ;
-#   define out(A, ...) ;
-# endif
+#else
+#define debug_setup();
+#define out(A, ...);
+#endif

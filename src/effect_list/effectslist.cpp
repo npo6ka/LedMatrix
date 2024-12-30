@@ -85,6 +85,15 @@ static Effect *getNewEffectInstance(const uint8_t& num) {
 
 // private
 
+EffectsList::EffectsList() {
+    curEffect = nullptr;
+    Observable::subscribe(EventType::ChangeMode, this);
+};
+
+EffectsList::~EffectsList() {
+    Observable::unsubscribe(EventType::ChangeMode, this);
+};
+
 Effect *EffectsList::getCurEffect() const {
     return curEffect;
 }
@@ -156,6 +165,8 @@ void EffectsList::reloadCurEff() {
 }
 
 void EffectsList::onTick() {
+    if (curEffect == nullptr)
+        return;
     unsigned long tick_size = 1000000 / curEffect->get_fps();
 
     // проверяем соответствие фпса указанному в режиме
@@ -183,4 +194,21 @@ void EffectsList::onTick() {
 
 float EffectsList::getCurFPS() {
     return (float)fps / 10;
+}
+
+bool EffectsList::effectIsEnd() {
+    return curEffect->is_end();
+}
+
+void EffectsList::handleEvent(Event *event) {
+    if (event->type == EventType::ChangeMode) {
+        ChangeModEvent *ev = static_cast<ChangeModEvent *>(event);
+        if (ev->type == ChangeModEvent::Type::Next) {
+            nextEffect();
+        } else if (ev->type == ChangeModEvent::Type::Previous) {
+            prevEffect();
+        } else if (ev->type == ChangeModEvent::Type::Set) {
+            setEffect(ev->id);
+        }
+    }
 }
