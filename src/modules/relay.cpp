@@ -10,7 +10,6 @@ void Relay::onInit() {
 void Relay::onTick() {
     if (_time == 0) {
         if (*_powerState != _relayState) {
-            Serial.printf("change power\n");
             digitalWrite(_pin, HIGH);
             _time = millis();
             _relayState = *_powerState;

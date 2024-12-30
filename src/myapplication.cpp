@@ -9,10 +9,17 @@ CRGB leds[LEDS_CNT];
 
 MyApplication::MyApplication() :
         _autoMod(AUTOMOD_DEF_STATE, AUTOMOD_INTERVAL),
-        _button(BTN_PIN, LOW_PULL, NORM_OPEN),
-        _ir(),
-        _power(true),
-        _relay(RELAY_PIN, &_power) {
+        _power(true)
+#if BTN_ENABLE
+        , _button(BTN_PIN, LOW_PULL, NORM_OPEN)
+#endif
+#if IR_ENABLE
+        , _ir()
+#endif
+#if RELAY_ENABLE
+        , _relay(RELAY_PIN, &_power)
+#endif
+{
     Observable::subscribe(EventType::ChangePowerState, this);
 };
 
@@ -22,8 +29,12 @@ void MyApplication::onInit() {
     random16_set_seed(millis() + analogRead(A0));
     debug_setup();
     led_setup();
+#if IR_ENABLE
     _ir.onInit(IR_RECEIVE_PIN);
+#endif
+#if RELAY_ENABLE
     _relay.onInit();
+#endif
 
     EffectsList::getInstance(); // инициализируем EffectsList, чтобы сработало уведомление о новом режиме
     auto ev = ChangeModEvent({EventType::ChangeMode, ChangeModEvent::Type::Set, 0});
@@ -31,14 +42,23 @@ void MyApplication::onInit() {
 }
 
 void MyApplication::onTick() {
-    if (_ir.isIdle()) {
+#if IR_ENABLE
+    if (_ir.isIdle())
+#endif
+    {
         if (_power) {
             EffectsList::getInstance().onTick();
         }
         _autoMod.onTick();
+#if BTN_ENABLE
         _button.onTick();
+#endif
+#if IR_ENABLE
         _ir.onTick();
+#endif
+#if RELAY_ENABLE
         _relay.onTick();
+#endif
     }
 }
 

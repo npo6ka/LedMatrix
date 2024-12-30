@@ -1,2 +1,3 @@
-//#include "window.h"
+#pragma once
+// #include "window.h"
 #include "matrix.h"

@@ -1,17 +1,33 @@
 #pragma once
+
+#include <Arduino.h>
+#include "configs/constants.h"
 #include "events/observer.h"
 #include "controls/automode.h"
-#include "controls/button.h"
-#include "controls/ir.h"
-#include "modules/relay.h"
+
+#if BTN_ENABLE
+#   include "controls/button.h"
+#endif
+#if IR_ENABLE
+#   include "controls/ir.h"
+#endif
+#if RELAY_ENABLE
+#   include "modules/relay.h"
+#endif
 
 class MyApplication : public IObserver {
 private:
     AutoChangeMode _autoMod;
-    Button _button;
-    IR _ir;
     bool _power;
+#if BTN_ENABLE
+    Button _button;
+#endif
+#if IR_ENABLE
+    IR _ir;
+#endif
+#if RELAY_ENABLE
     Relay _relay;
+#endif
 
     MyApplication(const MyApplication &) = delete;
     MyApplication& operator=(const MyApplication& other) = delete;

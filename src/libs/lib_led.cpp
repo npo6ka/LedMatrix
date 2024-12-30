@@ -52,7 +52,7 @@ extern CRGB leds[LEDS_CNT];
  */
 void led_setup(void)
 {
-    FastLED.addLeds<WS2812B, DATA_PIN, COLOR_ORDER>(leds, LEDS_CNT).setCorrection(TypicalLEDStrip);
+    FastLED.addLeds<WS2812B, LED_PIN, COLOR_ORDER>(leds, LEDS_CNT).setCorrection(TypicalLEDStrip);
     FastLED.setMaxPowerInVoltsAndMilliamps(5, CURRENT_LIMIT);
     FastLED.setBrightness(LED_BRIGHTNRSS);
     FastLED.clear();
