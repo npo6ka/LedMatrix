@@ -12,6 +12,7 @@ MyApplication::MyApplication() :
         _button(BTN_PIN, LOW_PULL, NORM_OPEN),
         _ir(),
         _power(true),
+        _wifi2024(),
         _relay(RELAY_PIN, &_power) {
     Observable::subscribe(EventType::ChangePowerState, this);
 };
@@ -24,6 +25,7 @@ void MyApplication::onInit() {
     led_setup();
     _ir.onInit(IR_RECEIVE_PIN);
     _relay.onInit();
+    _wifi2024.onInit();
 
     EffectsList::getInstance(); // инициализируем EffectsList, чтобы сработало уведомление о новом режиме
     auto ev = ChangeModEvent({EventType::ChangeMode, ChangeModEvent::Type::Set, 0});
@@ -39,6 +41,7 @@ void MyApplication::onTick() {
         _button.onTick();
         _ir.onTick();
         _relay.onTick();
+        _wifi2024.onTick();
     }
 }
 
