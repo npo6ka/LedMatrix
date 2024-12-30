@@ -4,30 +4,30 @@
 #include "libs/debug_lib.h"
 
 #if (CONNECTION_ANGLE == 0)
-#   define _X x
-#   define _Y (HEIGHT - y - 1)
+#   define POS_X x
+#   define POS_Y (HEIGHT - y - 1)
 #elif (CONNECTION_ANGLE == 1)
-#   define _X x
-#   define _Y y
+#   define POS_X x
+#   define POS_Y y
 #elif (CONNECTION_ANGLE == 2)
-#   define _X (WIDTH - x - 1)
-#   define _Y y
+#   define POS_X (WIDTH - x - 1)
+#   define POS_Y y
 #elif (CONNECTION_ANGLE == 3)
-#   define _X (WIDTH - x - 1)
-#   define _Y (HEIGHT - y - 1)
+#   define POS_X (WIDTH - x - 1)
+#   define POS_Y (HEIGHT - y - 1)
 #else
-#   define _X x
-#   define _Y y
+#   define POS_X x
+#   define POS_Y y
 #   pragma message "Wrong matrix parameters! Set to default"
 #endif
 
 #if (STRIP_DIRECTION == 0)
-#   define THIS_X _X
-#   define THIS_Y _Y
+#   define THIS_X POS_X
+#   define THIS_Y POS_Y
 #   define THIS_H HEIGHT
 #else
-#   define THIS_X _Y
-#   define THIS_Y _X
+#   define THIS_X POS_Y
+#   define THIS_Y POS_X
 #   define THIS_H WIDTH
 #endif
 

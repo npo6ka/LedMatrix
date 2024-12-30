@@ -27,7 +27,7 @@
     szBuffer = (char *) malloc(nBufferLength);
     if (! szBuffer) return - nBufferLength;
     vsnprintf(szBuffer, nBufferLength, szFormat, argptr);
-    Serial.printf(szBuffer);
+    Serial.print(szBuffer);
     free(szBuffer);
     return nBufferLength - 1;
   }
