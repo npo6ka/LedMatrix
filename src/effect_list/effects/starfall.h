@@ -7,6 +7,7 @@ class Starfall : public Effect
     uint8_t saturation = 150;
     uint8_t density = 60;
     uint8_t tail_step = 100;
+    uint8_t border = 2;
 public:
     Starfall () {}
 
@@ -16,36 +17,36 @@ public:
 
     void on_update() {
         // заполняем головами комет левую и верхнюю линию
-        for (uint8_t i = 0; i <= HEIGHT - 3; i++) {
-            if (!getPix(i, WIDTH - 1)
-                && (random(0, density) == 0)
-                && i + 1 < HEIGHT && !getPix(i + 1, WIDTH - 1)
-                && i - 1 >= 0 && !getPix(i - 1, WIDTH - 1)) {
-                getPix(i, WIDTH - 1) = CHSV(random(0, 200), saturation, 255);
+        for (auto x : LedMatrix.rangeX(0, -border)) {
+            if (!LedMatrix.at(x, 0)
+                && (random8(0, density) == 0)
+                && !LedMatrix.at(x + 1, 0)
+                && !LedMatrix.at(x - 1, 0)) {
+                LedMatrix.at(x, 0) = CHSV(random8(0, 200), saturation, 255);
             }
         }
-        for (uint8_t i = 3; i < WIDTH; i++) {
-            if (!getPix(0, i)
-                && (random(0, density) == 0)
-                && i + 1 < WIDTH && !getPix(0, i + 1)
-                && i - 1 >= 0 && !getPix(0, i - 1)) {
-                getPix(0, i) = CHSV(random(0, 200), saturation, 255);
+        for (auto y : LedMatrix.rangeY(0, -border)) {
+            if (!LedMatrix.at(0, y)
+                && (random8(0, density) == 0)
+                && !LedMatrix.at(0, y + 1)
+                && !LedMatrix.at(0, y - 1)) {
+                LedMatrix.at(0, y) = CHSV(random8(0, 200), saturation, 255);
             }
         }
 
         // сдвигаем по диагонали
-        for (uint8_t x = HEIGHT - 1; x > 0; x--) {
-            for (int16_t y = WIDTH - 2; y >= 0; y--) {
-                getPix(x, y) = getPix(x - 1, y + 1);
+        for (auto x : LedMatrix.rangeX(1).reverse()) {
+            for (auto y : LedMatrix.rangeY(1).reverse()) {
+                LedMatrix.at(x, y) = LedMatrix.at(x - 1, y - 1);
             }
         }
 
         // уменьшаем яркость левой и верхней линии, формируем "хвосты"
-        for (uint8_t i = 0; i <= HEIGHT - 3; i++) {
-            fadePix(i, WIDTH - 1, tail_step);
+        for (auto x : LedMatrix.rangeX(0, -border)) {
+            LedMatrix.at(x, 0).fadeToBlackBy(tail_step);
         }
-        for (uint8_t i = 3; i < WIDTH; i++) {
-            fadePix(0, i, tail_step);
+        for (auto y : LedMatrix.rangeY(0, -border)) {
+            LedMatrix.at(0, y).fadeToBlackBy(tail_step);
         }
     }
 };

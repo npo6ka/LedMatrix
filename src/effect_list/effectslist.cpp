@@ -27,8 +27,6 @@
 #include "effects/ny2020.h"
 #include "effects/dribs_all_side.h"
 #include "effects/snake/snake.h"
-/*
-#include "testmode.h"*/
 
 using EffectFactory = Effect* (*)();
 
@@ -59,7 +57,6 @@ auto effectsFactories = {
     effectFactory<Rain>(),
     effectFactory<AllRandom>(),
 
-    effectFactory<DynamicSquare>(),
     effectFactory<RandomRain>(),
     effectFactory<RainbowRain>(),
     effectFactory<Points>(),

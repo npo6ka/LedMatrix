@@ -33,24 +33,23 @@ class RainbowPoint : public Effect
         if (x < 0) {
             x = 0;
             rainbow_point_gen_vector(true);
-        } else if (x >= ACCURACY * HEIGHT) {
-            x = ACCURACY * HEIGHT - 1;
+        } else if (x >= ACCURACY * LEDS_WIDTH) {
+            x = ACCURACY * LEDS_WIDTH - 1;
             rainbow_point_gen_vector(true);
         }
 
         if (y < 0) {
             y = 0;
             rainbow_point_gen_vector(false);
-        } else if (y >= ACCURACY * WIDTH) {
-            y = ACCURACY * WIDTH - 1;
+        } else if (y >= ACCURACY * LEDS_HEIGHT) {
+            y = ACCURACY * LEDS_HEIGHT - 1;
             rainbow_point_gen_vector(false);
         }
     }
 
     void rainbow_point_render_point() {
-        int i, j;
-        for (i = 0; i < HEIGHT; ++i) {
-            for(j = 0; j < WIDTH; ++j) {
+        for (auto i : LedMatrix.rangeX()) {
+            for(auto j : LedMatrix.rangeY()) {
                 int loc_x = i * ACCURACY + ACCURACY / 2;
                 int loc_y = j * ACCURACY + ACCURACY / 2;
 
@@ -58,7 +57,7 @@ class RainbowPoint : public Effect
 
                 float chsv = (distance / 8 + tick / tick_size) % 255;
 
-                getPix(i, j) = CHSV(chsv, 255, 255);
+                LedMatrix.at(i, j) = CHSV(chsv, 255, 255);
             }
         }
     }
@@ -69,11 +68,10 @@ public:
     void on_init()
     {
         tick = 0;
-        x = random16(0, (HEIGHT - 1) * ACCURACY);
-        y = random16(0, (WIDTH - 1) * ACCURACY);
-
-        vec_x = (int32_t)random(0, max_vec_size * 2) - max_vec_size;
-        vec_y = (int32_t)random(0, max_vec_size * 2) - max_vec_size;
+        x = random16(0, LEDS_WIDTH * ACCURACY);
+        y = random16(0, LEDS_HEIGHT * ACCURACY);
+        vec_x = random(0, max_vec_size * 2) - max_vec_size;
+        vec_y = random(0, max_vec_size * 2) - max_vec_size;
 
         set_fps(60);
     }

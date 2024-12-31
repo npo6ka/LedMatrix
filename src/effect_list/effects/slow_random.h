@@ -4,7 +4,7 @@
 
 class SlowRandom : public Effect
 {
-    uint8_t inc_val[LEDS_CNT];
+    uint8_t inc_val[LEDS_SIZE];
     int step;
 
 public:
@@ -25,26 +25,22 @@ public:
         step = 1;
         set_fps(120);
 
-        CRGB *leds = getLeds();
-
-        for (uint16_t i = 0; i < LEDS_CNT; i++) {
-            CRGB &cur_cl = leds[i];
+        for (size_t i = 0; i < LedMatrix.size(); i++) {
+            auto &led = LedMatrix.at(i);
             inc_val[i] =
-                gen_led(cur_cl.r) << 4 |
-                gen_led(cur_cl.g) << 2 |
-                gen_led(cur_cl.b);
+                gen_led(led.r) << 4 |
+                gen_led(led.g) << 2 |
+                gen_led(led.b);
         }
     }
 
     void on_update() {
-        CRGB *leds = getLeds();
-
-        for (uint16_t i = 0; i < LEDS_CNT; i++) {
-            CRGB &cur_cl = leds[i];
+        for (size_t i = 0; i < LedMatrix.size(); i++) {
+            auto &led = LedMatrix.at(i);
             inc_val[i] =
-                proc_val(cur_cl.r, (inc_val[i] >> 4) & 0x3, cur_cl) << 4 |
-                proc_val(cur_cl.g, (inc_val[i] >> 2) & 0x3, cur_cl) << 2 |
-                proc_val(cur_cl.b, inc_val[i] & 0x3, cur_cl);
+                proc_val(led.r, (inc_val[i] >> 4) & 0x3, led) << 4 |
+                proc_val(led.g, (inc_val[i] >> 2) & 0x3, led) << 2 |
+                proc_val(led.b, (inc_val[i] >> 0) & 0x3, led);
         }
     }
 

@@ -1,11 +1,7 @@
 #include "myapplication.h"
 
-#include "libs/lib_led.h"
+#include "libs/led_matrix.h"
 #include "effect_list/effectslist.h"
-
-// все настройки матрицы находятся в lib_led.h
-// инициализация светодиодов
-CRGB leds[LEDS_CNT];
 
 MyApplication::MyApplication() :
         _autoMod(AUTOMOD_DEF_STATE, AUTOMOD_INTERVAL),
@@ -28,7 +24,7 @@ void MyApplication::onInit() {
     randomSeed(millis() + analogRead(A0));
     random16_set_seed(millis() + analogRead(A0));
     debug_setup();
-    led_setup();
+    LedMatrix.setup();
 #if IR_ENABLE
     _ir.onInit(IR_RECEIVE_PIN);
 #endif

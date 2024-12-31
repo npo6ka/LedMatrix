@@ -31,7 +31,10 @@
     free(szBuffer);
     return nBufferLength - 1;
   }
+
+  #define outln(fmt, ...) out(fmt "\n", ##__VA_ARGS__)
 #else
 #define debug_setup();
-#define out(A, ...);
+#define out(fmt, ...);
+#define outln(fmt, ...);
 #endif

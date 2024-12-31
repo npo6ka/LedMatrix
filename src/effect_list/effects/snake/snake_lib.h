@@ -1,11 +1,10 @@
 #pragma once
 
 #include "stdint.h"
-#include "libs/lib_led.h"
 
 #define START_LENGTH 4                      // начальная длина змейки
-#define MAX_SNAKE_LENGTH HEIGHT * WIDTH     // максимальная длина змейки
-static_assert(HEIGHT / 2 >= START_LENGTH, "Low HEIGHT size for starting snake mode");
+#define MAX_SNAKE_LENGTH LEDS_HEIGHT * LEDS_WIDTH     // максимальная длина змейки
+static_assert(LEDS_HEIGHT / 2 >= START_LENGTH, "Low LEDS_HEIGHT size for starting snake mode");
 
 #define COLOR_SNAKE CRGB(CRGB::Green)       // Цвет змейки
 #define COLOR_APPLE CRGB(CRGB::Orange)      // Цвет яблока на поле
@@ -41,16 +40,16 @@ struct Coord {
     void move(Trend tr) {
         switch (tr) {
         case Trend::up:
-            x--;
+            y--;
             break;
         case Trend::right:
-            y++;
-            break;
-        case Trend::down:
             x++;
             break;
+        case Trend::down:
+            y++;
+            break;
         case Trend::left:
-            y--;
+            x--;
             break;
         case Trend::none:
             break;
@@ -64,7 +63,7 @@ struct Coord {
     }
 
     operator bool() const {
-        return x < HEIGHT && y < WIDTH;
+        return x < LEDS_WIDTH && y < LEDS_HEIGHT;
     }
 
     bool operator==(Coord a) const {

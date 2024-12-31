@@ -35,16 +35,15 @@ private:
 
     static void render_point(Point pnt)
     {
-      int i, j;
-      for (i = 0; i < HEIGHT; ++i) {
-        for(j = 0; j < WIDTH; ++j) {
+      for (auto i : LedMatrix.rangeX()) {
+        for (auto j : LedMatrix.rangeY()) {
           int loc_x = i * ACCURACY + ACCURACY / 2;
           int loc_y = j * ACCURACY + ACCURACY / 2;
 
           uint32_t distance = sqrt((loc_x - pnt.x) * (loc_x - pnt.x) + (loc_y - pnt.y) * (loc_y - pnt.y));
 
           float bright = get_func_brithtness(distance, pnt) * 0.7f;
-          CRGB &clr = getPix(i, j);
+          CRGB &clr = LedMatrix.at(i, j);
           CRGB pnt_clr = CHSV(pnt.hue, 255, 255);
           clr.r = qadd8(clr.r, (float)pnt_clr.r * bright);
           clr.g = qadd8(clr.g, (float)pnt_clr.g * bright);
@@ -61,7 +60,7 @@ public:
         v = 1;
 
         p1.hue = 0;
-        p1.pr = (min(HEIGHT, WIDTH) / 4 + 1) * ACCURACY;
+        p1.pr = (min(LEDS_HEIGHT, LEDS_WIDTH) / 4 + 1) * ACCURACY;
         p1.br = 0;
         rainbow_tick_size = 1;
     }
@@ -74,11 +73,11 @@ public:
     void on_update(void) {
         float angle = get_pi_tick(tick);
         float move_radius = 0.7f;// 0.7 .. 0.9
-        p1.x = ACCURACY * HEIGHT * (move_radius * cos(angle) + 1) / 2;
-        p1.y = ACCURACY * WIDTH * (move_radius * sin(angle) + 1) / 2;
+        p1.x = ACCURACY * LEDS_WIDTH * (move_radius * cos(angle) + 1) / 2;
+        p1.y = ACCURACY * LEDS_HEIGHT * (move_radius * sin(angle) + 1) / 2;
         p1.hue += rainbow_tick_size;
 
-        fader(5);
+        LedMatrix.fader(5);
         render_point(p1);
         tick = tick + 3;
     }
