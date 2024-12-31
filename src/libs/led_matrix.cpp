@@ -1,34 +1,40 @@
 #include "led_matrix.h"
 
 #include "configs/constants.h"
+#include "fl/xymap.h"
 #include "libs/debug_lib.h"
 
-#if (CONNECTION_ANGLE == 0)
-#   define POS_X x
-#   define POS_Y (HEIGHT - y - 1)
-#elif (CONNECTION_ANGLE == 1)
-#   define POS_X x
-#   define POS_Y y
-#elif (CONNECTION_ANGLE == 2)
-#   define POS_X (WIDTH - x - 1)
-#   define POS_Y y
-#elif (CONNECTION_ANGLE == 3)
-#   define POS_X (WIDTH - x - 1)
-#   define POS_Y (HEIGHT - y - 1)
+static_assert(LEDS_WIDTH <= LEDS_HW_WIDTH, "invalid LEDS_WIDTH");
+static_assert(LEDS_HEIGHT <= LEDS_HW_HEIGHT, "invalid LEDS_HEIGHT");
+static_assert(LEDS_HW_WIDTH < std::numeric_limits<index_t>::max(), "invalid LEDS_WIDTH");
+static_assert(LEDS_HW_HEIGHT < std::numeric_limits<index_t>::max(), "invalid LEDS_HEIGHT");
+
+#if (LEDS_CONNECTION_ANGLE == 0)
+    #define POS_X x
+    #define POS_Y (LEDS_HW_HEIGHT - y - 1)
+#elif (LEDS_CONNECTION_ANGLE == 1)
+    #define POS_X x
+    #define POS_Y y
+#elif (LEDS_CONNECTION_ANGLE == 2)
+    #define POS_X (LEDS_HW_WIDTH - x - 1)
+    #define POS_Y y
+#elif (LEDS_CONNECTION_ANGLE == 3)
+    #define POS_X (LEDS_HW_WIDTH - x - 1)
+    #define POS_Y (LEDS_HW_HEIGHT - y - 1)
 #else
-#   define POS_X x
-#   define POS_Y y
-#   pragma message "Wrong matrix parameters! Set to default"
+    #define POS_X x
+    #define POS_Y y
+    #pragma message "Wrong matrix parameters! Set to default"
 #endif
 
-#if (STRIP_DIRECTION == 0)
-#   define THIS_X POS_X
-#   define THIS_Y POS_Y
-#   define THIS_H HEIGHT
+#if (LEDS_STRIP_DIRECTION == 0)
+    #define THIS_X POS_X
+    #define THIS_Y POS_Y
+    #define THIS_H LEDS_HW_HEIGHT
 #else
-#   define THIS_X POS_Y
-#   define THIS_Y POS_X
-#   define THIS_H WIDTH
+    #define THIS_X POS_Y
+    #define THIS_Y POS_X
+    #define THIS_H LEDS_HW_WIDTH
 #endif
 
 CLedMatrix LedMatrix;
@@ -40,28 +46,46 @@ static CRGB& get_dummy_pix() {
     return _dummy_pix;
 }
 
-static size_t get_pix_num(index_t x, index_t y)
-{
-    // x - номер столбца (в циклах ассоциируется с WIDTH)
-    // y - номер строки (в циклах ассоциируется с HEIGHT)
+static index_t get_pix_num(index_t x, index_t y) {
+    // x - номер столбца (в циклах ассоциируется с LEDS_WIDTH)
+    // y - номер строки (в циклах ассоциируется с LEDS_HEIGHT)
     // матрица нумеруется сверху вниз по y, слева направо по x
     // 00 01 02
     // 10 11 12
     // 20 21 22
 
-    if (MATRIX_TYPE || THIS_Y % 2 == 0) {
+    if (LEDS_MATRIX_TYPE || THIS_Y % 2 == 0) {
         return THIS_Y * THIS_H + THIS_X;
     } else {
         return THIS_Y * THIS_H + THIS_H - THIS_X - 1;
     }
 }
 
+static uint16_t get_pix_num_xy_map(uint16_t x, uint16_t y, uint16_t w, uint16_t h) { return get_pix_num(x, y); }
+
+CLedMatrix::CLedMatrix() : _xyMap(fl::XYMap::constructWithUserFunction(width(), height(), get_pix_num_xy_map)) {
+    _xyMap.convertToLookUpTable();
+}
+
 void CLedMatrix::setup() {
-    FastLED.addLeds<WS2812B, DATA_PIN, COLOR_ORDER>(_leds, size());
+    FastLED.addLeds<WS2812B, LEDS_PIN, LEDS_COLOR_ORDER>(_leds, LEDS_HW_SIZE);
     FastLED.setCorrection(TypicalLEDStrip);
-    FastLED.setMaxPowerInVoltsAndMilliamps(5, CURRENT_LIMIT);
-    FastLED.setBrightness(LED_BRIGHTNRSS);
+    FastLED.setMaxPowerInVoltsAndMilliamps(5, LEDS_MAX_POWER);
+    FastLED.setBrightness(LEDS_BRIGHTNRSS);
     FastLED.clear();
+}
+
+CRGB& CLedMatrix::atUnsafe(size_t index) {
+#if LEDS_WIDTH == LEDS_HW_WIDTH && LEDS_HEIGHT == LEDS_HW_HEIGHT
+    return _leds[index];
+#else
+    return atUnsafe(index % LEDS_WIDTH, index / LEDS_WIDTH);
+#endif
+}
+
+CRGB& CLedMatrix::atUnsafe(index_t x, index_t y) {
+    //
+    return _leds[_xyMap.mapToIndex(x, y)];
 }
 
 CRGB& CLedMatrix::at(size_t index) {
@@ -69,7 +93,7 @@ CRGB& CLedMatrix::at(size_t index) {
         return get_dummy_pix();
     }
 
-    return _leds[index];
+    return atUnsafe(index);
 }
 
 CRGB& CLedMatrix::at(index_t x, index_t y) {
@@ -77,25 +101,29 @@ CRGB& CLedMatrix::at(index_t x, index_t y) {
         return get_dummy_pix();
     }
 
-    return _leds[get_pix_num(x, y)];
+    return atUnsafe(x, y);
 }
 
 void CLedMatrix::clear() {
-    for (auto& pix : *this) {
-        pix = CRGB(0, 0, 0);
+    for (size_t i = 0; i < size(); ++i) {
+        atUnsafe(i) = CRGB(0, 0, 0);
     }
 }
 
 void CLedMatrix::fader(uint8_t fadefactor) {
-    for (auto& pix : *this) {
-        pix.fadeToBlackBy(fadefactor);
+    for (size_t i = 0; i < size(); ++i) {
+        atUnsafe(i).fadeToBlackBy(fadefactor);
     }
 }
 
-void CLedMatrix::draw_line(index_t x1, index_t y1, index_t x2, index_t y2, CRGB color) {
+void CLedMatrix::drawLine(index_t x1, index_t y1, index_t x2, index_t y2, CRGB color) {
     // Рисование линии по Алгоритму Брезенхэма
-    if (x1 > x2) std::swap(x1, x2);
-    if (y1 > y2) std::swap(y1, y2);
+    if (x1 > x2) {
+        std::swap(x1, x2);
+    }
+    if (y1 > y2) {
+        std::swap(y1, y2);
+    }
 
     index_t deltaX = abs(x2 - x1);
     index_t deltaY = abs(y2 - y1);
@@ -120,9 +148,13 @@ void CLedMatrix::draw_line(index_t x1, index_t y1, index_t x2, index_t y2, CRGB 
     }
 }
 
-void CLedMatrix::draw_rect(index_t x1, index_t y1, index_t x2, index_t y2, CRGB color) {
-    if (x1 > x2) std::swap(x1, x2);
-    if (y1 > y2) std::swap(y1, y2);
+void CLedMatrix::drawRect(index_t x1, index_t y1, index_t x2, index_t y2, CRGB color) {
+    if (x1 > x2) {
+        std::swap(x1, x2);
+    }
+    if (y1 > y2) {
+        std::swap(y1, y2);
+    }
 
     for (index_t x = x1; x < x2; ++x) {
         for (index_t y = y1; y < y2; ++y) {
@@ -131,9 +163,9 @@ void CLedMatrix::draw_rect(index_t x1, index_t y1, index_t x2, index_t y2, CRGB 
     }
 }
 
-void CLedMatrix::draw_border(index_t x1, index_t y1, index_t x2, index_t y2, index_t s, CRGB color) {
-    draw_rect(x1 + 0, y1 + 0, x2 + 0, y1 + s, color);
-    draw_rect(x1 + 0, y2 - s, x2 + 0, y2 + 0, color);
-    draw_rect(x1 + 0, y1 + s, x1 + s, y2 - s, color);
-    draw_rect(x2 - s, y1 + s, x2 + 0, y2 - s, color);
+void CLedMatrix::drawRectBorder(index_t x1, index_t y1, index_t x2, index_t y2, index_t s, CRGB color) {
+    drawRect(x1 + 0, y1 + 0, x2 + 0, y1 + s, color);
+    drawRect(x1 + 0, y2 - s, x2 + 0, y2 + 0, color);
+    drawRect(x1 + 0, y1 + s, x1 + s, y2 - s, color);
+    drawRect(x2 - s, y1 + s, x2 + 0, y2 - s, color);
 }

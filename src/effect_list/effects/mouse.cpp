@@ -54,7 +54,7 @@ static void drawSprite(int x, int y, uint32_t *spr)
 void Mouse::on_update()
 {
     LedMatrix.clear();
-    x = (x + 1) % WIDTH;
+    x = (x + 1) % LedMatrix.width();
     drawSprite(x, 0, x % 2 ? mouse1 : mouse2);
-    drawSprite(x - WIDTH, 0, x % 2 ? mouse1 : mouse2);
+    drawSprite(x - LedMatrix.width(), 0, x % 2 ? mouse1 : mouse2);
 }

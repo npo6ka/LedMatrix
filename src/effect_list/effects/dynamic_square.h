@@ -22,7 +22,7 @@ public:
         auto color = CHSV(hsv, 255, 255);
         auto offset = abs(-int(radius) / 2 + cur_ring);
 
-        LedMatrix.draw_border(offset, offset, LedMatrix.width() - offset, LedMatrix.height() - offset, 1, color);
+        LedMatrix.drawRectBorder(offset, offset, LedMatrix.width() - offset, LedMatrix.height() - offset, 1, color);
 
         cur_ring = (cur_ring + 1) % (radius);
         hsv = (hsv + 1) % 256;

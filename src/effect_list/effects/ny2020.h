@@ -280,7 +280,7 @@ static const uint32_t sprite19[NY_SPRITE_W*NY_SPRITE_H] PROGMEM = {
 #undef O
 #undef P
 
-#define NY_COUNT (WIDTH / NY_SPRITE_W + 2)
+#define NY_COUNT (LEDS_WIDTH / NY_SPRITE_W + 2)
 
 static const uint32_t * const sprites[] =
 {
@@ -311,7 +311,7 @@ public:
         FastLED.clear();
         for (int i = 0 ; i < NY_COUNT ; ++i) {
             int x = i * (NY_SPRITE_W + 1) - phase;
-            int y = (HEIGHT - NY_SPRITE_H) / 2;
+            int y = (LEDS_HEIGHT - NY_SPRITE_H) / 2;
             drawSprite(x, y, sprites[items[i]]);
         }
         phase = (phase + 1) % (NY_SPRITE_W + 1);

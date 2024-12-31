@@ -60,7 +60,7 @@ public:
         v = 1;
 
         p1.hue = 0;
-        p1.pr = (min(HEIGHT, WIDTH) / 4 + 1) * ACCURACY;
+        p1.pr = (min(LEDS_HEIGHT, LEDS_WIDTH) / 4 + 1) * ACCURACY;
         p1.br = 0;
         rainbow_tick_size = 1;
     }
@@ -73,8 +73,8 @@ public:
     void on_update(void) {
         float angle = get_pi_tick(tick);
         float move_radius = 0.7f;// 0.7 .. 0.9
-        p1.x = ACCURACY * WIDTH * (move_radius * cos(angle) + 1) / 2;
-        p1.y = ACCURACY * HEIGHT * (move_radius * sin(angle) + 1) / 2;
+        p1.x = ACCURACY * LEDS_WIDTH * (move_radius * cos(angle) + 1) / 2;
+        p1.y = ACCURACY * LEDS_HEIGHT * (move_radius * sin(angle) + 1) / 2;
         p1.hue += rainbow_tick_size;
 
         LedMatrix.fader(5);

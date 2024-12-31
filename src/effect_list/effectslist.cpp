@@ -57,7 +57,6 @@ auto effectsFactories = {
     effectFactory<Rain>(),
     effectFactory<AllRandom>(),
 
-    effectFactory<DynamicSquare>(),
     effectFactory<RandomRain>(),
     effectFactory<RainbowRain>(),
     effectFactory<Points>(),
@@ -69,7 +68,6 @@ auto effectsFactories = {
     effectFactory<ZigZag>(),
     effectFactory<HorizontalRainbowPoint>(),
     effectFactory<NY2020>(),
-    effectFactory<Snake>()
 };
 
 static Effect *getNewEffectInstance(const uint8_t& num) {

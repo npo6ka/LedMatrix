@@ -13,8 +13,8 @@ public:
     }
 
     void on_update() {
-        for (auto& led : LedMatrix) {
-            led = CRGB(random8(255), random8(255), random8(255));
+        for (size_t i = 0; i < LedMatrix.size(); ++i) {
+            LedMatrix.at(i) = CRGB(random8(255), random8(255), random8(255));
         }
     }
 };

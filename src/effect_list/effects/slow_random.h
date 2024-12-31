@@ -4,7 +4,7 @@
 
 class SlowRandom : public Effect
 {
-    uint8_t inc_val[LEDS_CNT];
+    uint8_t inc_val[LEDS_SIZE];
     int step;
 
 public:
@@ -25,7 +25,7 @@ public:
         step = 1;
         set_fps(120);
 
-        for (uint16_t i = 0; i < LedMatrix.size(); i++) {
+        for (size_t i = 0; i < LedMatrix.size(); i++) {
             auto &led = LedMatrix.at(i);
             inc_val[i] =
                 gen_led(led.r) << 4 |
@@ -35,7 +35,7 @@ public:
     }
 
     void on_update() {
-        for (uint16_t i = 0; i < LedMatrix.size(); i++) {
+        for (size_t i = 0; i < LedMatrix.size(); i++) {
             auto &led = LedMatrix.at(i);
             inc_val[i] =
                 proc_val(led.r, (inc_val[i] >> 4) & 0x3, led) << 4 |

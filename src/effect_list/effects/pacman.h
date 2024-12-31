@@ -46,11 +46,11 @@ public:
     {
         LedMatrix.clear();
 
-
         for (auto i : LedMatrix.rangeX(PACMAN_W - phase).step(4)) {
             int j = PACMAN_H / 2 - 1;
-            LedMatrix.draw_rect(i, j, i + 2, j + 2, CRGB(255, 255, 255));
+            LedMatrix.drawRect(i, j, i + 2, j + 2, CRGB(255, 255, 255));
         }
+        
         drawSprite(0, 0, PACMAN_W, PACMAN_H, phase / 2 ? pacman1 : pacman2);
         phase = (phase + 1) % 4;
     }

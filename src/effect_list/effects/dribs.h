@@ -4,7 +4,7 @@
 
 class Dribs : public Effect
 {
-    uint8_t cur_drib[WIDTH];
+    uint8_t cur_drib[LEDS_WIDTH];
     uint8_t lenght;
 public:
     void on_init()

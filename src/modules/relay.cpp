@@ -4,7 +4,7 @@
 #include "configs/constants.h"
 
 void Relay::onInit() {
-    pinMode(_pin, OUTPUT);
+    //pinMode(_pin, OUTPUT);
 }
 
 void Relay::onTick() {

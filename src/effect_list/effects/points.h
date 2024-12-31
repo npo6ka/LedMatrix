@@ -42,16 +42,16 @@ class Points : public Effect
         if (pnt.x < 0) {
             pnt.x = 0;
             gen_vector(pnt, true);
-        } else if (pnt.x >= ACCURACY * WIDTH) {
-            pnt.x = ACCURACY * WIDTH - 1;
+        } else if (pnt.x >= ACCURACY * LEDS_WIDTH) {
+            pnt.x = ACCURACY * LEDS_WIDTH - 1;
             gen_vector(pnt, true);
         }
 
         if (pnt.y < 0) {
             pnt.y = 0;
             gen_vector(pnt, false);
-        } else if (pnt.y >= ACCURACY * HEIGHT) {
-            pnt.y = ACCURACY * HEIGHT - 1;
+        } else if (pnt.y >= ACCURACY * LEDS_HEIGHT) {
+            pnt.y = ACCURACY * LEDS_HEIGHT - 1;
             gen_vector(pnt, false);
         }
     }
@@ -98,8 +98,8 @@ public:
         bright_radius = 400;
 
         for (i = 0; i < POINTS_AMNT; ++i) {
-            points[i].x = random16(0, WIDTH * ACCURACY);
-            points[i].y = random16(0, HEIGHT * ACCURACY);
+            points[i].x = random16(0, LEDS_WIDTH * ACCURACY);
+            points[i].y = random16(0, LEDS_HEIGHT * ACCURACY);
 
             points[i].vec_x = random(0, MAX_VEC_SIZE * 2) - MAX_VEC_SIZE;
             points[i].vec_y = random(0, MAX_VEC_SIZE * 2) - MAX_VEC_SIZE;

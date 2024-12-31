@@ -109,10 +109,10 @@ class TextMode : public Effect {
     int32_t sym_pos = 0;
 
     while (current_text[pos] != '\0') {
-      sym_pos = WIDTH + pos * (LET_WIDTH + FONT_SPACE) - tick / speed;
+      sym_pos = LEDS_WIDTH + pos * (LET_WIDTH + FONT_SPACE) - tick / speed;
 
-      if (sym_pos > -LET_WIDTH && sym_pos < WIDTH) {
-        draw_symbol(current_text[pos], sym_pos, (HEIGHT - LET_HEIGHT) / 2);
+      if (sym_pos > -LET_WIDTH && sym_pos < LEDS_WIDTH) {
+        draw_symbol(current_text[pos], sym_pos, (LEDS_HEIGHT - LET_HEIGHT) / 2);
       }
 
       pos++;

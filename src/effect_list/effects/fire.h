@@ -129,7 +129,7 @@ public:
     uint8_t view_x_to_mask(index_t x) {
         uint8_t res = x;
         if (align_center) {
-            res += (LedMatrix.width() - mask_w) / 2;
+            res += mask_w - (LedMatrix.width() - mask_w) / 2;
         }
         if (res >= mask_w) {
             res %= mask_w;

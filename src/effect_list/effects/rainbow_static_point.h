@@ -10,8 +10,8 @@ class RainbowStaticPoint : public Effect
     uint8_t tick_size = 4; //кол-во тиков до инкремента тика радуги
 
     void rainbow_static_point_render_point() {
-        int x = WIDTH/ 2 * ACCURACY;
-        int y = HEIGHT / 2 * ACCURACY;
+        int x = LEDS_WIDTH/ 2 * ACCURACY;
+        int y = LEDS_HEIGHT / 2 * ACCURACY;
 
         for (auto i : LedMatrix.rangeX()) {
             for(auto j : LedMatrix.rangeY()) {

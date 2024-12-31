@@ -78,8 +78,8 @@ class Snake : public Effect
             // ну в общем плавно моргнуть, типо змейке "больно"
 
             for (uint8_t bright = 0; bright < 16; ++bright) {
-                for (auto& led : LedMatrix) {
-                    led = CRGB::Red / 15 * bright;
+                for (size_t i = 0; i < LedMatrix.size(); ++i) {
+                    LedMatrix.at(i) = CRGB::Red / 15 * bright;
                 }
 
                 FastLED.show();
@@ -117,7 +117,7 @@ class Snake : public Effect
             return;
         }
 
-        uint16_t cnt = 0, pos = random16(LEDS_CNT - snake.size() - 1);
+        uint16_t cnt = 0, pos = random16(LedMatrix.size() - snake.size() - 1);
         // считаем пустые клетки и заодно проверяем равна ли
         // клетка тому что зарандомили
         for (auto x : LedMatrix.rangeX()) {
@@ -142,7 +142,7 @@ class Snake : public Effect
         button = Trend::none;
 
         // длина из настроек, начинаем в середине экрана, бла-бла-бла
-        head = {WIDTH / 2 - 1, HEIGHT / 2 - 1};
+        head = {LEDS_WIDTH / 2 - 1, LEDS_HEIGHT / 2 - 1};
         butt = head;
         LedMatrix.at(head.x, head.y) = COLOR_SNAKE; // устанавливаем первый пиксель без добавления в очередь
         snake.clear();

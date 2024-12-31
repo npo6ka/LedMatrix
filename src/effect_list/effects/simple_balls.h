@@ -19,9 +19,9 @@ public:
     void on_init() {
         for (uint8_t j = 0; j < balls_amount; j++) {
             // забиваем случайными данными
-            coord[j][0] = WIDTH / 2 * 10;
+            coord[j][0] = LEDS_WIDTH / 2 * 10;
             vector[j][0] = random8(4, 15) * (random8(2) ? 1 : -1);
-            coord[j][1] = HEIGHT / 2 * 10;
+            coord[j][1] = LEDS_HEIGHT / 2 * 10;
             vector[j][1] = random8(4, 15) * (random8(2) ? 1 : -1);
             ballColors[j] = CHSV(random8(0, 9) * 28, 255, 255);
         }
@@ -66,12 +66,12 @@ public:
                 }
             }
 
-            if (coord[j][0] > (WIDTH - 1) * 10) {
-                coord[j][0] = (WIDTH - 1) * 10;
+            if (coord[j][0] > (LEDS_WIDTH - 1) * 10) {
+                coord[j][0] = (LEDS_WIDTH - 1) * 10;
                 vector[j][0] = -vector[j][0];
             }
-            if (coord[j][1] > (HEIGHT - 1) * 10) {
-                coord[j][1] = (HEIGHT - 1) * 10;
+            if (coord[j][1] > (LEDS_HEIGHT - 1) * 10) {
+                coord[j][1] = (LEDS_HEIGHT - 1) * 10;
                 vector[j][1] = -vector[j][1];
             }
             LedMatrix.at(coord[j][0] / 10, coord[j][1] / 10) = ballColors[j];

@@ -21,7 +21,8 @@ public:
 
     void on_update()
     {
-        for (auto& led : LedMatrix) {
+        for (size_t i = 0; i < LedMatrix.size(); ++i) {
+            auto& led = LedMatrix.at(i);
             led.fadeToBlackBy(fade_step);
 
             if (random16(300) == 0) {

@@ -13,7 +13,7 @@ class ZigZag : public Effect
 
 public:
     ZigZag() {
-        set_fps(5);
+        set_fps(20);
     }
 
     void on_init() {

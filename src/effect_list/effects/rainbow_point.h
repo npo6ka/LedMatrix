@@ -33,16 +33,16 @@ class RainbowPoint : public Effect
         if (x < 0) {
             x = 0;
             rainbow_point_gen_vector(true);
-        } else if (x >= ACCURACY * WIDTH) {
-            x = ACCURACY * WIDTH - 1;
+        } else if (x >= ACCURACY * LEDS_WIDTH) {
+            x = ACCURACY * LEDS_WIDTH - 1;
             rainbow_point_gen_vector(true);
         }
 
         if (y < 0) {
             y = 0;
             rainbow_point_gen_vector(false);
-        } else if (y >= ACCURACY * HEIGHT) {
-            y = ACCURACY * HEIGHT - 1;
+        } else if (y >= ACCURACY * LEDS_HEIGHT) {
+            y = ACCURACY * LEDS_HEIGHT - 1;
             rainbow_point_gen_vector(false);
         }
     }
@@ -68,8 +68,8 @@ public:
     void on_init()
     {
         tick = 0;
-        x = random16(0, WIDTH * ACCURACY);
-        y = random16(0, HEIGHT * ACCURACY);
+        x = random16(0, LEDS_WIDTH * ACCURACY);
+        y = random16(0, LEDS_HEIGHT * ACCURACY);
         vec_x = random(0, max_vec_size * 2) - max_vec_size;
         vec_y = random(0, max_vec_size * 2) - max_vec_size;
 

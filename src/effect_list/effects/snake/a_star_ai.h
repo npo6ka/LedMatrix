@@ -12,7 +12,7 @@ class AStarSnakeAI : public SnakeAI {
     };
 
     // Queue<Trend, MAX_SNAKE_LENGTH>
-    Node nodes[WIDTH][HEIGHT];
+    Node nodes[LEDS_WIDTH][LEDS_HEIGHT];
     Queue<Trend, MAX_SNAKE_LENGTH / 2> path;
     uint8_t amntStep = 0;
     static const uint8_t maxAmntStep = 1;
@@ -22,8 +22,8 @@ class AStarSnakeAI : public SnakeAI {
     }
 
     int getOutCostFactor(Coord coord) {
-        if (coord.x == 0 || coord.x == WIDTH - 1 ||
-            coord.y == 0 || coord.y == HEIGHT - 1) {
+        if (coord.x == 0 || coord.x == LEDS_WIDTH - 1 ||
+            coord.y == 0 || coord.y == LEDS_HEIGHT - 1) {
             return 5;
         }
         return 0;
@@ -81,8 +81,8 @@ class AStarSnakeAI : public SnakeAI {
     template <class Action>
     void printMas(Action &&action, const char *text) const {
         out("------------------- %s -----------------\n", text);
-        for (uint8_t i = 0; i < WIDTH; ++i) {
-            for (uint8_t j = 0; j < HEIGHT; ++j) {
+        for (uint8_t i = 0; i < LEDS_WIDTH; ++i) {
+            for (uint8_t j = 0; j < LEDS_HEIGHT; ++j) {
                 action(nodes[i][j]);
                 out(" ");
             }
@@ -105,8 +105,8 @@ class AStarSnakeAI : public SnakeAI {
     Coord findMin() const {
         const Node *min = nullptr;
         Coord pos = {0xff, 0xff};
-        for (uint8_t i = 0; i < WIDTH; ++i) {
-            for (uint8_t j = 0; j < HEIGHT; ++j) {
+        for (uint8_t i = 0; i < LEDS_WIDTH; ++i) {
+            for (uint8_t j = 0; j < LEDS_HEIGHT; ++j) {
                 const Node &node = nodes[i][j];
                 if (!node.is_locked && node.is_visited) {
                     if (!min || min->cost > node.cost) {
