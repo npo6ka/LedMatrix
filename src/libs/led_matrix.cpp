@@ -6,8 +6,8 @@
 
 static_assert(LEDS_WIDTH <= LEDS_HW_WIDTH, "invalid LEDS_WIDTH");
 static_assert(LEDS_HEIGHT <= LEDS_HW_HEIGHT, "invalid LEDS_HEIGHT");
-static_assert(LEDS_HW_WIDTH < std::numeric_limits<index_t>::max(), "invalid LEDS_WIDTH");
-static_assert(LEDS_HW_HEIGHT < std::numeric_limits<index_t>::max(), "invalid LEDS_HEIGHT");
+static_assert(LEDS_HW_WIDTH < std::numeric_limits<index_t>::max(), "invalid LEDS_HW_WIDTH");
+static_assert(LEDS_HW_HEIGHT < std::numeric_limits<index_t>::max(), "invalid LEDS_HW_HEIGHT");
 
 #if (LEDS_CONNECTION_ANGLE == 0)
     #define POS_X x
@@ -84,7 +84,6 @@ CRGB& CLedMatrix::atUnsafe(size_t index) {
 }
 
 CRGB& CLedMatrix::atUnsafe(index_t x, index_t y) {
-    //
     return _leds[_xyMap.mapToIndex(x, y)];
 }
 
