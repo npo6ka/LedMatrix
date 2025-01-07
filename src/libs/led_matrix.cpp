@@ -118,18 +118,14 @@ void CLedMatrix::fader(uint8_t fadefactor) {
 
 void CLedMatrix::drawLine(index_t x1, index_t y1, index_t x2, index_t y2, CRGB color) {
     // Рисование линии по Алгоритму Брезенхэма
-    if (x1 > x2) {
-        std::swap(x1, x2);
-    }
-    if (y1 > y2) {
-        std::swap(y1, y2);
-    }
-
-    index_t deltaX = abs(x2 - x1);
-    index_t deltaY = abs(y2 - y1);
+    index_t deltaX = abs((int16_t)x2 - x1);
+    index_t deltaY = abs((int16_t)y2 - y1);
     index_t x1_ = x1;
     index_t y1_ = y1;
-    int32_t error = deltaX - deltaY;
+    int8_t signX = x1_ < x2 ? 1 : -1;
+    int8_t signY = y1_ < y2 ? 1 : -1;
+
+    int16_t error = deltaX - deltaY;
     int32_t error2;
 
     at(x2, y2) = color;
@@ -139,11 +135,11 @@ void CLedMatrix::drawLine(index_t x1, index_t y1, index_t x2, index_t y2, CRGB c
 
         if (error2 > -deltaY) {
             error -= deltaY;
-            x1_ += 1;
+            x1_ += signX;
         }
         if (error2 < deltaX) {
             error += deltaX;
-            y1_ += 1;
+            y1_ += signY;
         }
     }
 }

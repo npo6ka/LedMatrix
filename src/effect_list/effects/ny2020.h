@@ -312,7 +312,7 @@ public:
         for (int i = 0 ; i < NY_COUNT ; ++i) {
             int x = i * (NY_SPRITE_W + 1) - phase;
             int y = (LEDS_HEIGHT - NY_SPRITE_H) / 2;
-            drawSprite(x, y, sprites[items[i]]);
+            LedMatrix.drawSprite<NY_SPRITE_W, NY_SPRITE_H>(x, y, sprites[items[i]]);
         }
         phase = (phase + 1) % (NY_SPRITE_W + 1);
         if (phase == 0)
@@ -321,18 +321,6 @@ public:
                 items[i - 1] = items[i];
             }
             items[NY_COUNT - 1] = random8(NY_TYPES);
-        }
-    }
-private:
-    static void drawSprite(int x, int y, const uint32_t *spr)
-    {
-        for (int i = 0 ; i < NY_SPRITE_W ; ++i)
-        {
-            for (int j = 0 ; j < NY_SPRITE_H ; ++j)
-            {
-                int v = pgm_read_dword(spr + i + j * NY_SPRITE_W);
-                LedMatrix.at(x + i, y + j) = CRGB(v);
-            }
         }
     }
 

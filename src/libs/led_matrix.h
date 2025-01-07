@@ -16,13 +16,13 @@ public:
     void setup();
 
     // Получить количество пикселей в матрице
-    constexpr size_t size() const { return LEDS_SIZE; }
+    size_t size() const { return LEDS_SIZE; }
 
     // Получить ширину матрицы
-    constexpr index_t width() const { return LEDS_WIDTH; }
+    index_t width() const { return LEDS_WIDTH; }
 
     // Получить высоту матрицы
-    constexpr index_t height() const { return LEDS_HEIGHT; }
+    index_t height() const { return LEDS_HEIGHT; }
 
     // Получить пиксель по порядковому индексы (UB в случае выхода за границы)
     CRGB& atUnsafe(size_t index);
@@ -67,6 +67,20 @@ public:
     // size - размер бордюра
     // color - цвет, которым будет нарисована линия
     void drawRectBorder(index_t x1, index_t y1, index_t x2, index_t y2, index_t size, CRGB color);
+
+    template <index_t W, index_t H>
+    void drawSprite(index_t x, index_t y, const uint32_t* sprite) {
+        for (index_t j = 0 ; j < H ; ++j) {
+            for (index_t i = 0 ; i < W ; ++i) {
+                at(x + i, y + j) = CRGB(pgm_read_dword(sprite++));
+            }
+        }
+    }
+
+    template <index_t W, index_t H>
+    void drawSprite(index_t x, index_t y, const uint32_t (&sprite)[H][W]) {
+        drawSprite<W, H>(x, y, &sprite[0][0]);
+    }
 
     // range по ширине матрицы для range-based-циклов
     // left - левая граница (включительно)

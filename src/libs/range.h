@@ -58,7 +58,7 @@ struct Range
     }
 
     Range<T, RangeReverseIterator> reverse() const {
-        static_assert(!is_reversed);
+        static_assert(!is_reversed, "do not reverse reverced iterator");
         return Range<T, RangeReverseIterator>(_to, _from, _step);
     }
     
