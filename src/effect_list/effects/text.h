@@ -111,7 +111,7 @@ class TextMode : public Effect {
       sym_pos = LEDS_WIDTH + pos * (LET_WIDTH + FONT_SPACE) - tick / speed;
 
       if (sym_pos > -LET_WIDTH && sym_pos < LEDS_WIDTH) {
-        draw_symbol(current_text[pos], (LEDS_HEIGHT - LET_HEIGHT) / 2, sym_pos);
+        draw_symbol(current_text[pos], sym_pos, (LEDS_HEIGHT - LET_HEIGHT) / 2);
       }
 
       pos++;
