@@ -7,7 +7,6 @@
 #include "configs/constants.h"
 #include "libs/debug_lib.h"
 #include "libs/range.h"
-#include "fl/xymap.h"
 
 class CLedMatrix {
 public:
@@ -108,7 +107,6 @@ private:
 
 private:
     CRGB _leds[LEDS_HW_SIZE];
-    fl::XYMap _xyMap;
 };
 
 extern CLedMatrix LedMatrix;
