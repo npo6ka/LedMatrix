@@ -3,8 +3,7 @@
 #include "stdint.h"
 
 template <class T>
-struct RangeIterator
-{
+struct RangeIterator {
     using iterator = RangeIterator;
 
     RangeIterator(T value, T step) : _value(value), _step(step) {}
@@ -25,8 +24,7 @@ private:
 };
 
 template <class T>
-struct RangeReverseIterator
-{
+struct RangeReverseIterator {
     using iterator = RangeReverseIterator;
 
     RangeReverseIterator(T value, T step) : _value(value), _step(step) {}
@@ -47,9 +45,9 @@ private:
 };
 
 template <class T, template <class> class Iterator = RangeIterator>
-struct Range
-{
-    static constexpr bool is_reversed = fl::is_same<Iterator<T>, RangeReverseIterator<T>>::value;
+struct Range {
+    // fl::is_same not exists yet
+    // static constexpr bool is_reversed = fl::is_same<Iterator<T>, RangeReverseIterator<T>>::value;
 
     Range(T from, T to, T step = 1) : _from(from), _to(to), _step(step) {}
 
@@ -58,7 +56,7 @@ struct Range
     }
 
     Range<T, RangeReverseIterator> reverse() const {
-        static_assert(!is_reversed, "do not reverse reverced iterator");
+        // static_assert(!is_reversed, "do not reverse reverced iterator");
         return Range<T, RangeReverseIterator>(_to, _from, _step);
     }
     

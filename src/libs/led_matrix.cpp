@@ -1,7 +1,6 @@
 #include "led_matrix.h"
 
 #include "configs/constants.h"
-#include "fl/xymap.h"
 #include "libs/debug_lib.h"
 
 static_assert(LEDS_WIDTH <= LEDS_HW_WIDTH, "invalid LEDS_WIDTH");
