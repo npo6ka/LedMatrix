@@ -2,10 +2,9 @@
 
 #include "effect_list/effect.h"
 #include "libs/fonts.h"
-#include "fl/scoped_ptr.h"
 
 class TextMode : public Effect {
-  fl::scoped_array<uint8_t> current_text;
+  uint8_t *current_text;
   uint32_t speed = 5;
   uint32_t tick;
   const uint8_t font[SYM_AMNT][SYM_SIZE] = DEFAULT_FONTS;
@@ -36,22 +35,22 @@ class TextMode : public Effect {
     return 0;
   }
 
-  fl::scoped_array<uint8_t> convert_utf8_to_cp1251(const char *str) {
+  uint8_t *convert_utf8_to_cp1251(const char *str) {
     uint32_t pos = 0;
     uint32_t size = 0;
 
-    if (str == nullptr) return fl::scoped_array<uint8_t>{};
+    if (str == nullptr) return nullptr;
     while (str[pos] != '\0') {
       if (convert_char_utf8_to_cp1251(str, pos)) {
         size++;
       } else {
         out("Unknown symbol: pos %d: '%c' %d\n", pos, str[pos], str[pos]);
-        return fl::scoped_array<uint8_t>{};
+        return nullptr;
       }
       pos++;
     }
 
-    fl::scoped_array<uint8_t> ret_str{new uint8_t[size + 1]};
+    uint8_t *ret_str = new uint8_t[size + 1];
     pos = 0;
     uint32_t npos = 0;
 
@@ -103,7 +102,7 @@ class TextMode : public Effect {
   }
 
   void draw_text() {
-    if (!current_text) return;
+    if (current_text == nullptr) return;
 
     uint32_t pos = 0;
     int32_t sym_pos = 0;
@@ -112,7 +111,7 @@ class TextMode : public Effect {
       sym_pos = LEDS_WIDTH + pos * (LET_WIDTH + FONT_SPACE) - tick / speed;
 
       if (sym_pos > -LET_WIDTH && sym_pos < LEDS_WIDTH) {
-        draw_symbol(current_text[pos], sym_pos, (LEDS_HEIGHT - LET_HEIGHT) / 2);
+        draw_symbol(current_text[pos], (LEDS_HEIGHT - LET_HEIGHT) / 2, sym_pos);
       }
 
       pos++;
@@ -125,12 +124,23 @@ class TextMode : public Effect {
 
  public:
   TextMode() {}
+  ~TextMode() {
+    if (current_text) {
+      delete current_text;
+    }
+  }
 
   void set_text(const char *text) {
+    if (current_text) {
+      delete current_text;
+      current_text = nullptr;
+    }
+
     current_text = convert_utf8_to_cp1251(text);
   }
 
   void on_init() {
+    current_text = nullptr;
     set_text("Улыбнись этому прекрасному дню))");
     set_fps(60);
   }

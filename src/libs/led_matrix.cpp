@@ -1,7 +1,6 @@
 #include "led_matrix.h"
 
 #include "configs/constants.h"
-#include "fl/xymap.h"
 #include "libs/debug_lib.h"
 
 static_assert(LEDS_WIDTH <= LEDS_HW_WIDTH, "invalid LEDS_WIDTH");
@@ -61,11 +60,7 @@ static index_t get_pix_num(index_t x, index_t y) {
     }
 }
 
-static uint16_t get_pix_num_xy_map(uint16_t x, uint16_t y, uint16_t w, uint16_t h) { return get_pix_num(x, y); }
-
-CLedMatrix::CLedMatrix() : _xyMap(fl::XYMap::constructWithUserFunction(width(), height(), get_pix_num_xy_map)) {
-    _xyMap.convertToLookUpTable();
-}
+CLedMatrix::CLedMatrix() {}
 
 void CLedMatrix::setup() {
     FastLED.addLeds<WS2812B, LEDS_PIN, LEDS_COLOR_ORDER>(_leds, LEDS_HW_SIZE);
@@ -84,7 +79,7 @@ CRGB& CLedMatrix::atUnsafe(size_t index) {
 }
 
 CRGB& CLedMatrix::atUnsafe(index_t x, index_t y) {
-    return _leds[_xyMap.mapToIndex(x, y)];
+    return _leds[get_pix_num(x, y)];
 }
 
 CRGB& CLedMatrix::at(size_t index) {
