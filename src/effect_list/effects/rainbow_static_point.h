@@ -10,12 +10,11 @@ class RainbowStaticPoint : public Effect
     uint8_t tick_size = 4; //кол-во тиков до инкремента тика радуги
 
     void rainbow_static_point_render_point() {
-        int i, j;
-        int x = HEIGHT / 2 * ACCURACY;
-        int y = WIDTH / 2 * ACCURACY;
+        int x = LEDS_WIDTH/ 2 * ACCURACY;
+        int y = LEDS_HEIGHT / 2 * ACCURACY;
 
-        for (i = 0; i < HEIGHT; ++i) {
-            for(j = 0; j < WIDTH; ++j) {
+        for (auto i : LedMatrix.rangeX()) {
+            for(auto j : LedMatrix.rangeY()) {
                 int loc_x = i * ACCURACY + ACCURACY / 2;
                 int loc_y = j * ACCURACY + ACCURACY / 2;
 
@@ -23,7 +22,7 @@ class RainbowStaticPoint : public Effect
 
                 float chsv = (distance + tick / tick_size) % 255;
 
-                getPix(i, j) = CHSV(chsv, 255, 255);
+                LedMatrix.at(i, j) = CHSV(chsv, 255, 255);
             }
         }
     }

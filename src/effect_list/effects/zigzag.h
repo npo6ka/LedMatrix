@@ -12,7 +12,9 @@ class ZigZag : public Effect
     uint8_t tick;
 
 public:
-    ZigZag() {}
+    ZigZag() {
+        set_fps(20);
+    }
 
     void on_init() {
         x = 0;
@@ -24,8 +26,8 @@ public:
     }
 
     void on_update(void) {
-        fader(1);
-        getPix(x, y) = CHSV(hue, 255, 255);
+        LedMatrix.fader(1);
+        LedMatrix.at(x, y) = CHSV(hue, 255, 255);
 
         tick++;
         if (tick >= step) {
@@ -34,7 +36,7 @@ public:
         }
 
         if (dir) {
-            if (x + 1 >= HEIGHT) {
+            if (x >= LedMatrix.width()) {
                 y++;
                 dir = !dir;
             } else {
@@ -49,7 +51,7 @@ public:
             }
         }
 
-        if (y >= WIDTH) {
+        if (y >= LedMatrix.height()) {
             y = 0;
         }
     }

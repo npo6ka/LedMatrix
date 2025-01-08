@@ -17,20 +17,18 @@ public:
 
     void on_update()
     {
-        int i;
-
-        for (i = 0; i < LEDS_CNT; ++i) {
-            CRGB &cl = getLeds()[i];
-            cl.fadeToBlackBy(step);
+        for (size_t i = 0; i < LedMatrix.size(); ++i) {
+            auto& led = LedMatrix.at(i);
+            led.fadeToBlackBy(step);
 
             if (random16(500) == 0) {
-                cl.r = 255;
+                led.r = 255;
             }
             if (random16(500) == 0) {
-                cl.g = 255;
+                led.g = 255;
             }
             if (random16(500) == 0) {
-                cl.b = 255;
+                led.b = 255;
             }
         }
     }
