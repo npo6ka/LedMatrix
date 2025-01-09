@@ -4,7 +4,7 @@
 #include "libs/fonts.h"
 
 class TextMode : public Effect {
-  uint8_t *printed_text;
+  uint8_t *current_text;
   uint32_t speed = 5;
   uint32_t tick;
   const uint8_t font[SYM_AMNT][SYM_SIZE] = DEFAULT_FONTS;
@@ -95,41 +95,23 @@ class TextMode : public Effect {
         }
 
         if (cur_byte & (1 << cur_bit)) {
-          if (x_offset + j >= 0 && x_offset + j < HEIGHT && y_offset + i >= 0 &&
-              y_offset + i < WIDTH) {
-            getPix(x_offset + j, y_offset + i) = 0xff00ff;
-          }
+          LedMatrix.at(x_offset + i, y_offset + j) = 0xff00ff;
         }
       }
     }
-
-    // збс чётко всё
-    /*for(uint8_t i = 0; i < LET_HEIGHT; ++i) {
-        for (uint8_t j = 0; j < LET_WIDTH; ++j) {
-            uint8_t cur_bit = (i * LET_WIDTH + j) % 8;
-            if (cur_bit == 0) {
-                cur_byte = font[ch][byte_num];
-                byte_num++;
-            }
-            out("%x %x\n", cur_byte, cur_bit);
-            if (cur_byte & (1 << cur_bit)) {
-                getPix(i, j) = 0xff00ff;
-            }
-        }
-    }*/
   }
 
   void draw_text() {
-    if (printed_text == nullptr) return;
+    if (current_text == nullptr) return;
 
     uint32_t pos = 0;
     int32_t sym_pos = 0;
 
-    while (printed_text[pos] != '\0') {
-      sym_pos = WIDTH + pos * (LET_WIDTH + FONT_SPACE) - tick / speed;
+    while (current_text[pos] != '\0') {
+      sym_pos = LEDS_WIDTH + pos * (LET_WIDTH + FONT_SPACE) - tick / speed;
 
-      if (sym_pos > -LET_WIDTH && sym_pos < WIDTH) {
-        draw_symbol(printed_text[pos], (HEIGHT - LET_HEIGHT) / 2, sym_pos);
+      if (sym_pos > -LET_WIDTH && sym_pos < LEDS_WIDTH) {
+        draw_symbol(current_text[pos], sym_pos, (LEDS_HEIGHT - LET_HEIGHT) / 2);
       }
 
       pos++;
@@ -143,22 +125,22 @@ class TextMode : public Effect {
  public:
   TextMode() {}
   ~TextMode() {
-    if (printed_text) {
-      delete printed_text;
+    if (current_text) {
+      delete current_text;
     }
   }
 
   void set_text(const char *text) {
-    if (printed_text) {
-      delete printed_text;
-      printed_text = nullptr;
+    if (current_text) {
+      delete current_text;
+      current_text = nullptr;
     }
 
-    printed_text = convert_utf8_to_cp1251(text);
+    current_text = convert_utf8_to_cp1251(text);
   }
 
   void on_init() {
-    printed_text = nullptr;
+    current_text = nullptr;
     set_text("Улыбнись этому прекрасному дню))");
     set_fps(60);
   }

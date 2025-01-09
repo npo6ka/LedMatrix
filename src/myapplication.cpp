@@ -1,15 +1,11 @@
 #include "myapplication.h"
 
-#include "libs/lib_led.h"
+#include "libs/led_matrix.h"
 #include "effect_list/effectslist.h"
 
-// все настройки матрицы находятся в lib_led.h
-// инициализация светодиодов
-CRGB leds[LEDS_CNT];
-
 MyApplication::MyApplication() :
-        _autoMod(AUTOMOD_DEF_STATE, AUTOMOD_INTERVAL),
-        _power(true)
+        _isPowerOn(true),
+        _autoMod(AUTOMOD_DEF_STATE, _isPowerOn, AUTOMOD_INTERVAL)
 #if BTN_ENABLE
         , _button(BTN_PIN, LOW_PULL, NORM_OPEN)
 #endif
@@ -17,18 +13,24 @@ MyApplication::MyApplication() :
         , _ir()
 #endif
 #if RELAY_ENABLE
-        , _relay(RELAY_PIN, &_power)
+        , _relay(RELAY_PIN, &_isPowerOn)
 #endif
 {
     Observable::subscribe(EventType::ChangePowerState, this);
+    Observable::subscribe(EventType::SetPowerState, this);
 };
+
+MyApplication::~MyApplication() {
+    Observable::unsubscribe(EventType::ChangePowerState, this);
+    Observable::unsubscribe(EventType::SetPowerState, this);
+}
 
 // лучше всё по максимому инициализировать тут
 void MyApplication::onInit() {
     randomSeed(millis() + analogRead(A0));
     random16_set_seed(millis() + analogRead(A0));
     debug_setup();
-    led_setup();
+    LedMatrix.setup();
 #if IR_ENABLE
     _ir.onInit(IR_RECEIVE_PIN);
 #endif
@@ -46,10 +48,10 @@ void MyApplication::onTick() {
     if (_ir.isIdle())
 #endif
     {
-        if (_power) {
+        if (_isPowerOn) {
             EffectsList::getInstance().onTick();
+            _autoMod.onTick();
         }
-        _autoMod.onTick();
 #if BTN_ENABLE
         _button.onTick();
 #endif
@@ -62,13 +64,23 @@ void MyApplication::onTick() {
     }
 }
 
+void MyApplication::setPowerState(bool newState) {
+    if (_isPowerOn == newState) return;
+
+    _isPowerOn = newState;
+    _autoMod.setPowerState(newState);
+    if (!_isPowerOn) {
+        // Очистить матрицу
+        FastLED.clear();
+        FastLED.show();
+    }
+}
+
 void MyApplication::handleEvent(Event *event) {
     if (event->type == EventType::ChangePowerState) {
+        setPowerState(!_isPowerOn);
+    } else if (event->type == EventType::SetPowerState) {
         ChangeBoolEvent *ev = static_cast<ChangeBoolEvent *>(event);
-        _power = !_power; //_power = ev->new_val; нужно подумать как пофиксить
-        if (!_power) {
-            FastLED.clear();
-            FastLED.show();
-        }
+        setPowerState(ev->new_val);
     }
 }

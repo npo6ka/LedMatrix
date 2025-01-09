@@ -17,8 +17,8 @@
 
 class MyApplication : public IObserver {
 private:
+    bool _isPowerOn;
     AutoChangeMode _autoMod;
-    bool _power;
 #if BTN_ENABLE
     Button _button;
 #endif
@@ -34,8 +34,10 @@ private:
     MyApplication(MyApplication&& other) = delete;
     MyApplication& operator=(MyApplication&& other) = delete;
 
+    void setPowerState(bool state);
 public:
     MyApplication();
+    ~MyApplication();
     void onTick();
     void onInit();
     virtual void handleEvent(Event *event) override;

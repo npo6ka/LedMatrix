@@ -14,7 +14,7 @@ class SlowPoints : public Effect
     uint8_t tick = 0;
 
     static const uint8_t point_height = 16;
-    static const uint8_t max_point_num = LEDS_CNT / point_height * 2;
+    static const uint8_t max_point_num = LEDS_SIZE / point_height * 2;
     Point points[max_point_num] = {};
 
     void sort() {
@@ -44,7 +44,7 @@ class SlowPoints : public Effect
         for (int i = 0; i < cnt; ++i) {
             if (random8() < 3) {
                 uint16_t max_pos = 0;
-                uint16_t min_pos = 0; //ищем максимальное растояние между точками
+                uint16_t min_pos = 0; // ищем максимальное растояние между точками
                 for (int j = 1; j < max_point_num; ++j) {
                     if (points[j].pos - points[j - 1].pos > max_pos - min_pos) {
                         min_pos = points[j - 1].pos;
@@ -53,9 +53,9 @@ class SlowPoints : public Effect
                 }
 
                 // проверяем ещё последний диапозон
-                if (LEDS_CNT - 1 - points[max_point_num - 1].pos > max_pos - min_pos) {
+                if (int32_t(LedMatrix.size()) - 1 - points[max_point_num - 1].pos > max_pos - min_pos) {
                     min_pos = points[max_point_num - 1].pos;
-                    max_pos = LEDS_CNT - 1;
+                    max_pos = LedMatrix.size() - 1;
                 }
 
                 min_pos = random16() % (max_pos - min_pos + 1) + min_pos; // подумать как сделать вероятность близкой к центру
@@ -74,19 +74,18 @@ class SlowPoints : public Effect
     void draw_point(int16_t pos, CRGB color, uint16_t radius) {
         int16_t start_pos = pos - radius;
         int16_t end_pos = pos + radius;
-        CRGB *leds = getLeds();
+        CRGB *leds = LedMatrix.leds();
         for (uint16_t i = 0; i < radius; ++i) {
-            if (start_pos + i >= 0 && start_pos + i< LEDS_CNT) {
+            if (start_pos + i >= 0 && start_pos + i < (int32_t)LedMatrix.size()) {
                 leds[start_pos + i] += color.scale8(((int32_t)255 * i / radius));
             }
         }
         for (uint16_t i = radius; i > 0; --i) {
-            if (end_pos - i >= 0 && end_pos - i < LEDS_CNT) {
+            if (end_pos - i >= 0 && end_pos - i < (int32_t)LedMatrix.size()) {
                 leds[end_pos - i] += color.scale8(((int32_t)255 * i / radius));
             }
         }
     }
-
 
 public:
     SlowPoints() {}
@@ -97,7 +96,7 @@ public:
     }
 
     void on_update() {
-        for (int i = 0; i < max_point_num; i++) {
+        for (uint8_t i = 0; i < max_point_num; i++) {
             if (points[i].bright > 0) { // bright 0 .. 255
                 points[i].bright += step;
                 if (points[i].bright >= 255) {
@@ -118,7 +117,7 @@ public:
 
     void on_render() {
         FastLED.clear();
-        for (int i = 0; i < max_point_num; i++) {
+        for (uint8_t i = 0; i < max_point_num; i++) {
             if (points[i].bright != 0) {
                 CRGB color = points[i].color.scale8(abs(points[i].bright));
                 draw_point(points[i].pos, color, point_height);

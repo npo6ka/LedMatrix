@@ -3,19 +3,20 @@
 #include "automode.h"
 #include <Arduino.h>
 
-AutoChangeMode::AutoChangeMode(bool isEnable, unsigned long delay) : _isEnable(false), _delay(delay) {
-    setIsEnable(isEnable);
+AutoChangeMode::AutoChangeMode(bool isEnableState, bool isPowerOn, unsigned long delay) : _delay(delay) {
+    setIsEnable(isEnableState);
+    setPowerState(isPowerOn);
     Observable::subscribe(EventType::ChangeMode, this);
     Observable::subscribe(EventType::ChangeAutoMod, this);
-    Observable::subscribe(EventType::ChangePowerState, this);
 }
 
 AutoChangeMode::~AutoChangeMode() {
     Observable::unsubscribe(EventType::ChangeMode, this);
+    Observable::unsubscribe(EventType::ChangeAutoMod, this);
 }
 
 void AutoChangeMode::onTick() {
-    if (_isEnable) {
+    if (isEnable()) {
         if (millis() - _savedTime > _delay /*&& EffectsList::getInstance().effectIsEnd()*/) {
             auto ev = ChangeModEvent({EventType::ChangeMode, ChangeModEvent::Type::Next, 0});
             Observable::notify(&ev);
@@ -24,11 +25,25 @@ void AutoChangeMode::onTick() {
     }
 }
 
-void AutoChangeMode::setIsEnable(bool isEnable) {
-    if (isEnable && !_isEnable) { // если переключит с false -> true, сохраняем время
+bool AutoChangeMode::isEnable() {
+    return _isEnable && _isPowerOn;
+}
+
+void AutoChangeMode::beforeChangeStates(bool isEnableState, bool isPowerOn) {
+    // если оба новых состояния true и какое то состояние переключили с false -> true, сохраняем время
+    if (isEnableState && isPowerOn && !isEnable()) {
         _savedTime = millis();
     }
-    _isEnable = isEnable;
+}
+
+void AutoChangeMode::setIsEnable(bool isEnableState) {
+    beforeChangeStates(isEnableState, _isPowerOn);
+    _isEnable = isEnableState;
+}
+
+void AutoChangeMode::setPowerState(bool isPowerOn) {
+    beforeChangeStates(_isEnable, isPowerOn);
+    _isPowerOn = isPowerOn;
 }
 
 void AutoChangeMode::setDelay(unsigned long delay) {
@@ -38,11 +53,10 @@ void AutoChangeMode::setDelay(unsigned long delay) {
 void AutoChangeMode::handleEvent(Event *event) {
     if (event->type == EventType::ChangeMode) {
         // сменился мод, сбрасываем таймер
-        _savedTime = millis();
+        if (isEnable()) {
+            _savedTime = millis();
+        }
     } else if (event->type == EventType::ChangeAutoMod) {
         setIsEnable(!_isEnable);
-    } else if (event->type == EventType::ChangePowerState) {
-        ChangeBoolEvent *ev = static_cast<ChangeBoolEvent *>(event);
-        setIsEnable(ev->new_val);
     }
 }

@@ -19,12 +19,11 @@ public:
 
     void on_update()
     {
-        uint16_t x, y;
         tick = tick % (256);
 
-        for (x = 0; x < HEIGHT; x++) {
-            for (y = 0; y < WIDTH; y++) {
-                getPix(x, y) = CHSV((tick + x + y * phaseShift / 2) % (256), 255, 255);
+        for (auto x : LedMatrix.rangeX()) {
+            for (auto y : LedMatrix.rangeY()) {
+                LedMatrix.at(x, y) = CHSV((tick + x + y * phaseShift / 2) % (256), 255, 255);
             }
         }
 
