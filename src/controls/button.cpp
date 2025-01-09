@@ -1,7 +1,7 @@
 #include "configs/constants.h"
 #include "button.h"
 #include "events/observer.h"
-// GButton(BTN_PIN, LOW_PULL, NORM_OPEN)
+
 Button::Button(int8_t pin, bool type, bool dir) : touch(GButton(pin, type, dir)) {
     touch.setStepTimeout(BUTTON_STEP_TIMEOUT);
     touch.setClickTimeout(BUTTON_CLICK_TIMEOUT);
@@ -18,6 +18,11 @@ void Button::onTick() {
             break;
         }
         case 2U: {
+            auto ev = Event({EventType::ChangePowerState});
+            Observable::notify(&ev);
+            break;
+        }
+        case 3U: {
             auto ev = Event({EventType::ChangeAutoMod});
             Observable::notify(&ev);
             break;

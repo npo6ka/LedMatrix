@@ -2,12 +2,13 @@
 
 enum class EventType {
   ChangeAutoMod = 0,
-  ChangeMode,
-  ChangePowerState,
-  ChangeBrightness,
-  ChangeSpeed,
-  ChangeModVar,
-  EventAmount // используется, чтобы знать сколько всего ивентов
+  ChangePowerState, // Event
+  SetPowerState,    // ChangeBoolEvent
+  ChangeBrightness, // ChangeIntEvent
+  ChangeSpeed,      // ChangeIntEvent
+  ChangeMode,       // ChangeModEvent
+  ChangeModVar,     // ChangeModVarEvent
+  EventAmount       // Используется, чтобы знать сколько всего ивентов
 };
 
 struct Event {
