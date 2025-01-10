@@ -76,12 +76,12 @@ class SlowPoints : public Effect
         int16_t end_pos = pos + radius;
         CRGB *leds = LedMatrix.leds();
         for (uint16_t i = 0; i < radius; ++i) {
-            if (start_pos + i >= 0 && start_pos + i < (int32_t)LedMatrix.size()) {
+            if (start_pos + i >= 0 && start_pos + i < LedMatrix.size()) {
                 leds[start_pos + i] += color.scale8(((int32_t)255 * i / radius));
             }
         }
         for (uint16_t i = radius; i > 0; --i) {
-            if (end_pos - i >= 0 && end_pos - i < (int32_t)LedMatrix.size()) {
+            if (end_pos - i >= 0 && end_pos - i < LedMatrix.size()) {
                 leds[end_pos - i] += color.scale8(((int32_t)255 * i / radius));
             }
         }
