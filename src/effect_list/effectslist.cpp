@@ -27,6 +27,9 @@
 #include "effects/ny2020.h"
 #include "effects/dribs_all_side.h"
 #include "effects/snake/snake.h"
+#include "effects/radial_fire.h"
+#include "effects/radial_pattern.h"
+#include "effects/crazy_bees.h"
 
 using EffectFactory = Effect* (*)();
 
@@ -41,6 +44,9 @@ constexpr EffectFactory effectFactory() {
 }
 
 auto effectsFactories = {
+    effectFactory<RadialPattern>(),
+    effectFactory<RadialFire>(),
+    effectFactory<CrazyBees>(),
     effectFactory<Snake>(),
     effectFactory<DynamicSquare>(),
     effectFactory<TheMatrix>(),

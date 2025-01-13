@@ -159,3 +159,7 @@ void CLedMatrix::drawRectBorder(index_t x1, index_t y1, index_t x2, index_t y2, 
     drawRect(x1 + 0, y1 + s, x1 + s, y2 - s, color);
     drawRect(x2 - s, y1 + s, x2 + 0, y2 - s, color);
 }
+
+uint16_t XY(uint8_t x, uint8_t y) {
+  return get_pix_num(x, y);
+}

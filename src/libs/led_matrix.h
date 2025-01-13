@@ -8,6 +8,8 @@
 #include "libs/debug_lib.h"
 #include "libs/range.h"
 
+uint16_t XY(uint8_t x, uint8_t y);
+
 class CLedMatrix {
 public:
     CLedMatrix();
