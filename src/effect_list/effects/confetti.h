@@ -15,13 +15,14 @@ public:
 
     void on_update() {
         for (uint8_t i = 0; i < density; i++) {
-            uint8_t x = random(HEIGHT);
-            uint8_t y = random(WIDTH);
-            if (!getPix(x, y)) {
-                getPix(x, y) = CHSV(random(0, 255), 255, 255);
+            index_t x = random(LedMatrix.width());
+            index_t y = random(LedMatrix.height());
+            auto& pix = LedMatrix.at(x, y);
+            if (!pix) {
+                pix = CHSV(random8(255), 255, 255);
             }
 
-            fader(brightness_step);
+            LedMatrix.fader(brightness_step);
         }
     }
 };

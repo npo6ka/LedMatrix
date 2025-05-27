@@ -1,15 +1,5 @@
 #include "mouse.h"
 
-Mouse::Mouse()
-{
-}
-
-void Mouse::on_init()
-{
-    set_fps(30);
-    x = 0;
-}
-
 #define W 12
 #define H 10
 
@@ -39,24 +29,17 @@ static uint32_t mouse2[W*H] PROGMEM = {
     0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0xffffff, 0x000000, 0x000000, 0xffffff, 0x000000, 0x000000, 0x000000,
 };
 
-static void drawSprite(int x, int y, uint32_t *spr)
-{
-    for (int i = 0 ; i < W ; ++i)
-    {
-        for (int j = 0 ; j < H ; ++j)
-        {
-            int v = pgm_read_dword(spr + i + j * W);
-            if (y + j >= 0 && y + j < HEIGHT && x + i >= 0 && x + i < WIDTH) {
-                getPix(y + j, x + i) = CRGB(v);
-            }
-        }
-    }
+Mouse::Mouse() {}
+
+void Mouse::on_init() {
+    set_fps(15);
+    x = 0;
 }
 
-void Mouse::on_update()
-{
-    fader(255);
-    x = (x + 1) % WIDTH;
-    drawSprite(x, 0, x % 2 ? mouse1 : mouse2);
-    drawSprite(x - WIDTH, 0, x % 2 ? mouse1 : mouse2);
+void Mouse::on_update() {
+    LedMatrix.clear();
+    x = (x + 1) % LedMatrix.width();
+
+    LedMatrix.drawSprite<W, H>(x, 0, x % 2 ? mouse1 : mouse2);
+    LedMatrix.drawSprite<W, H>(x - LedMatrix.width(), 0, x % 2 ? mouse1 : mouse2);
 }

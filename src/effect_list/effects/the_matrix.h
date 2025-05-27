@@ -15,19 +15,21 @@ public:
 
     void on_update() {
         // сдвигаем всё вниз
-        for (uint8_t x = HEIGHT - 1; x > 0 ; --x) {
-            for (uint8_t y = 0; y < WIDTH; ++y) {
-                getPix(x, y) = getPix(x - 1, y);
+        for (auto x : LedMatrix.rangeX()) {
+            for (auto y : LedMatrix.rangeY(1).reverse()) {
+                LedMatrix.at(x, y) = LedMatrix.at(x, y - 1);
             }
         }
 
-        for (uint8_t y = 0; y < WIDTH; y++) {
-            if (!getPix(0, y))
+        for (auto x : LedMatrix.rangeX()) {
+            auto& pix = LedMatrix.at(x, 0);
+            if (!pix) {
                 // заполняем случайно верхнюю строку
-                getPix(0, y) = 0x00FF00 * (random(0, 10) == 0);
-            else
+                pix = 0x00FF00 * (random8(0, 100) == 0);
+            } else {
                 // или просто делайем фейд пикеля
-                fadePix(0, y, fade);
+                pix.fadeToBlackBy(fade);
+            }
         }
     }
 };

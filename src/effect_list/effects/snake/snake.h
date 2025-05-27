@@ -31,10 +31,9 @@ class Snake : public Effect
     void snakeRoutine() {
         // проверяем на наличие яблока
         genApple();
-        getPix(apple.x, apple.y) = COLOR_APPLE;
+        LedMatrix.at(apple.x, apple.y) = COLOR_APPLE;
 
         // Тут мозг змеки
-
         if (ai) {
             button = ai->getTrend(head, apple, vector);
         }
@@ -51,7 +50,7 @@ class Snake : public Effect
             end_game = true;
         } else if (snake.size() >= MAX_SNAKE_LENGTH) { // проверяем что змейка не прывисила максимальную длину
             end_game = true;
-        } else if (getPix(head.x, head.y) && head != apple) { // проверяем что змейка врезалась во что то, но не в яблоко
+        } else if (LedMatrix.at(head.x, head.y) && head != apple) { // проверяем что змейка врезалась во что то, но не в яблоко
             end_game = true;
         }
 
@@ -68,20 +67,19 @@ class Snake : public Effect
 
             // если змея не в процессе роста, закрасить бывший хвост чёрным
             if (!is_feeding) {
-                getPix(butt.x, butt.y) = 0x000000;
+                LedMatrix.at(butt.x, butt.y) = 0x000000;
                 butt.move(snake.front());
                 snake.popFront();
             }
 
             // рисуем голову змеи в новом положении
-            getPix(head.x, head.y) = COLOR_SNAKE;
+            LedMatrix.at(head.x, head.y) = COLOR_SNAKE;
         } else { // end_game == true
             // ну в общем плавно моргнуть, типо змейке "больно"
-            CRGB *leds = getLeds();
 
             for (uint8_t bright = 0; bright < 16; ++bright) {
-                for (int i = 0; i < LEDS_CNT; i++) {
-                    leds[i] = CRGB::Red / 15 * bright;
+                for (size_t i = 0; i < LedMatrix.size(); ++i) {
+                    LedMatrix.at(i) = CRGB::Red / 15 * bright;
                 }
 
                 FastLED.show();
@@ -110,7 +108,7 @@ class Snake : public Effect
     void setApple(uint8_t x, uint8_t y) {
         apple = {x, y};
         apple_flag = true;
-        getPix(apple.x, apple.y) = COLOR_APPLE;
+        LedMatrix.at(apple.x, apple.y) = COLOR_APPLE;
     }
 
     // Генерация яблока, если его нету на поле
@@ -119,14 +117,14 @@ class Snake : public Effect
             return;
         }
 
-        uint16_t cnt = 0, pos = random16(LEDS_CNT - snake.size() - 1);
+        uint16_t cnt = 0, pos = random16(LedMatrix.size() - snake.size() - 1);
         // считаем пустые клетки и заодно проверяем равна ли
         // клетка тому что зарандомили
-        for (uint8_t i = 0; i < HEIGHT; i++) {
-            for (uint8_t j = 0; j < WIDTH; j++) {
-                if (!getPix(i, j)) {
+        for (auto x : LedMatrix.rangeX()) {
+            for (auto y : LedMatrix.rangeY()) {
+                if (!LedMatrix.at(x, y)) {
                     if (cnt == pos) {
-                        setApple(i, j);
+                        setApple(x, y);
                         return;
                     }
                     cnt++;
@@ -144,37 +142,36 @@ class Snake : public Effect
         button = Trend::none;
 
         // длина из настроек, начинаем в середине экрана, бла-бла-бла
-        head = {HEIGHT / 2 - 1, WIDTH / 2 - 1};
+        head = {LEDS_WIDTH / 2 - 1, LEDS_HEIGHT / 2 - 1};
         butt = head;
-        getPix(head.x, head.y) = COLOR_SNAKE; // устанавливаем первый пиксель без добавления в очередь
+        LedMatrix.at(head.x, head.y) = COLOR_SNAKE; // устанавливаем первый пиксель без добавления в очередь
         snake.clear();
 
         apple_flag = false;
         end_game = false;
     }
 
-    void initAi() {
+    SnakeAI* make_ai() {
         switch (aiType) {
         case 1:
-            ai = new SimpleSnakeAI();
-            break;
+            return new SimpleSnakeAI();
         case 2:
-            ai = new AStarSnakeAI();
-            break;
+            return new AStarSnakeAI();
         case 3:
-            ai = new WithFallbackAI(new AStarSnakeAI(), new SimpleSnakeAI());
-            break;
+            return new WithFallbackAI(new AStarSnakeAI(), new SimpleSnakeAI());
+        default:
+            return nullptr;
         }
     }
 
 public:
     void on_init() override {
-        set_fps(20);
+        set_fps(40);
         tick = 0;
         button = Trend::none;
+        ai = make_ai();
 
         newGameSnake();
-        initAi();
     }
 
     ~Snake() {

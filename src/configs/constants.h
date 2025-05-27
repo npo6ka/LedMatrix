@@ -1,13 +1,22 @@
-//#include "window.h"
+#pragma once
+// #include "window.h"
 #include "matrix.h"
 
-// ============= Настройки Сохранения в память ================
+#include "stdint.h"
 
-#define MOD_LIST_OFFSET         64      // начальная точка записи адресов на режимы в ПЗУ
-#define MOD_LIST_MAX_SIZE       128     // максимальное количество режимов, которое можно записать в ПЗУ
-#define MOD_DATA_OFFSET         MOD_LIST_OFFSET + MOD_LIST_MAX_SIZE * 2     // 2 байта для хранения адреса на данные режима
-#define MOD_DATA_SIZE           448    // размер буфера под данные режимов
+using index_t = uint16_t;
 
-// =================== Настройки Режимов ======================
+#ifndef LEDS_HW_WIDTH
+// Реальная ширина матрицы сетодиодов.
+// Можно переопределить для эмуляции ширины меньше действительной.
+#define LEDS_HW_WIDTH LEDS_WIDTH
+#endif
 
-#define STARTING_MOD            0
+#ifndef LEDS_HW_HEIGHT
+// Реальная высота матрицы сетодиодов.
+// Можно переопределить для эмуляции высоты меньше действительной.
+#define LEDS_HW_HEIGHT LEDS_HEIGHT
+#endif
+
+#define LEDS_HW_SIZE (LEDS_HW_WIDTH * LEDS_HW_HEIGHT)
+#define LEDS_SIZE (LEDS_WIDTH * LEDS_HEIGHT)

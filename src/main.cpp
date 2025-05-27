@@ -1,33 +1,16 @@
-#include "LittleFS.h"
-#include "button_control/button.h"
-#include "ir_control/ir.h"
-#include "effect_list/effectslist.h"
-#include "libs/lib_led.h"
+#include "myapplication.h"
 
-// все настройки матрицы находятся в lib_led.h
-// инициализация светодиодов
-/*CRGB leds[LEDS_CNT];
+MyApplication app;
 
 void setup() {
-    randomSeed(millis() + analogRead(A0));
-    random16_set_seed(millis() + analogRead(A0));
-    debug_setup();
-    led_setup();
-    setup_buttons();
-    ir_setup();
+    app.onInit();
 }
 
 void loop() {
-    EffectsList::getInstance().onTick();
+    app.onTick();
+}
 
-    tick_buttons();
-    ir_tick();
-}*/
-
-
-
-void setup() {
-    Serial.begin(115200);
+//#include "LittleFS.h"
 
     // if (!LittleFS.begin()) {
     //     Serial.println("An Error has occurred while mounting LittleFS");
@@ -106,8 +89,3 @@ void setup() {
     // Serial.printf("time diff2: %lu\n", myTime2 - myTime1);
 
     // fp.close();
-}
-
-void loop() {
-
-}
