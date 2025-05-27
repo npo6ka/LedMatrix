@@ -1,46 +1,35 @@
+#include "property_storage.h"
 #include "property.h"
 
-void PropertyStorage::set_offset(uint16_t offset) {
-    addr_offset = offset;
-}
-uint16_t PropertyStorage::get_offset() {
-    return addr_offset;
-}
-
-uint8_t PropertyStorage::get_mod_size() {
-    uint32_t size = 0;
-
-    for (auto it : items) {
-        size += it->size();
+void PropertyStorage::add_property(IProperty *prop) {
+    if (props.size()) {
+        prop->set_offset(size());
+    } else {
+        prop->set_offset(0);
     }
 
-    if (size > 0xff) {
-        out("ERROR: Mod size is very big. More then 255\n");
-        return 0;
-    }
-    return size;
+    props.push_back(prop);
 }
 
-void PropertyStorage::add(IProperty* item)
-{ items.push_back(item); }
-
-void PropertyStorage::clear(IProperty* item)
-{
-    if (items.size() > 0) {
-        items.clear();
-    }
-}
-
-void PropertyStorage::load()
-{
-    for (auto it : items) {
+void PropertyStorage::load_all_propertyes() {
+    for (auto &it: props) {
         it->load();
     }
 }
 
-void PropertyStorage::save() const
-{
-    for (auto it : items) {
+void PropertyStorage::save_all_propertyes() {
+    for (auto &it: props) {
         it->save();
     }
+}
+
+void PropertyStorage::clear() {
+    if (props.size()) {
+        props.clear();
+    }
+}
+
+uint16_t PropertyStorage::size() {
+    IProperty* prop = props.back();
+    return prop->get_offset() + prop->size();
 }

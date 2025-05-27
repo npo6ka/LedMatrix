@@ -1,36 +1,27 @@
 #pragma once
 
-#include <Vector.h>
+#include "vector"
+#include "stdint.h"
 
 class IProperty;
 
 class PropertyStorage {
-    std::vector<IProperty*> items;
-    uint16_t addr_offset = -1;
+    std::vector<IProperty *> props;
 
-    PropertyStorage() = default;
-    ~PropertyStorage() = default;
-
-    PropertyStorage(const PropertyStorage&) = delete;
-    PropertyStorage(PropertyStorage&&) = delete;
-
-    PropertyStorage& operator=(const PropertyStorage&) = delete;
-    PropertyStorage& operator=(PropertyStorage&&) = delete;
-
+    // singlton property
+    // Конструктор копирования и оператор присваивания копированием недоступны
+    PropertyStorage() {};
+    PropertyStorage(const PropertyStorage& )  = delete;
+    PropertyStorage& operator=(const PropertyStorage& ) = delete;
 public:
-    static PropertyStorage& instance()
-    {
-        static PropertyStorage obj;
-        return obj;
+    static PropertyStorage& instance() {
+        static PropertyStorage instance;
+        return instance;
     }
 
-    void set_offset(uint16_t offset);
-    uint16_t get_offset();
-    uint8_t get_mod_size();
-
-    void add(IProperty* item);
-    void clear(IProperty* item);
-
-    void save() const;
-    void load();
+    void add_property(IProperty *prop);
+    void load_all_propertyes();
+    void save_all_propertyes();
+    void clear();
+    uint16_t size();
 };
