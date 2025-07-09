@@ -8,26 +8,22 @@
 #define MAX_FILE_SIZE 65536
 #define STEP
 
-class MemoryHandler {
+class FileHandler {
     FILE *_fp = nullptr;
 
-    MemoryHandler(const MemoryHandler&) = delete;
-    MemoryHandler& operator= (const MemoryHandler&) = delete;
+    FileHandler(const FileHandler&) = delete;
+    FileHandler& operator= (const FileHandler&) = delete;
 
 public:
-    MemoryHandler() {}
+    FileHandler() = default;
 
-    ~MemoryHandler() {
-        if (_fp) {
-            fclose(_fp);
-        }
-    }
+    ~FileHandler() = default;
 
-    MemoryHandler(MemoryHandler&& other){
+    FileHandler(FileHandler&& other){
         _fp = other._fp;
         other._fp = nullptr;
     };
-    MemoryHandler& operator= (MemoryHandler&& other) {
+    FileHandler& operator= (FileHandler&& other) {
         _fp = other._fp;
         other._fp = nullptr;
         return *this;
@@ -39,7 +35,7 @@ public:
             return;
         }
         if (!_fp) {
-            if (_fp = fopen(filename, "w")) {
+            if ((_fp = fopen(filename, "w")) != nullptr) {
                 fclose(_fp);
             }
             _fp = fopen(filename, "r+");

@@ -1,35 +1,40 @@
 #include "property_storage.h"
 #include "property.h"
 
-void PropertyStorage::add_property(IProperty *prop) {
-    if (props.size()) {
-        prop->set_offset(size());
-    } else {
-        prop->set_offset(0);
+uint16_t PropertyStorage::add_property(IProperty *prop) {
+    uint16_t offset = 0;
+    if (_props.size()) {
+        offset = size();
     }
 
-    props.push_back(prop);
+    _props.push_back(prop);
+
+    return offset;
+}
+
+std::vector<IProperty *> PropertyStorage::get_props() const {
+    return _props;
 }
 
 void PropertyStorage::load_all_propertyes() {
-    for (auto &it: props) {
+    for (auto &it: _props) {
         it->load();
     }
 }
 
 void PropertyStorage::save_all_propertyes() {
-    for (auto &it: props) {
+    for (auto &it: _props) {
         it->save();
     }
 }
 
 void PropertyStorage::clear() {
-    if (props.size()) {
-        props.clear();
+    if (_props.size()) {
+        _props.clear();
     }
 }
 
 uint16_t PropertyStorage::size() {
-    IProperty* prop = props.back();
+    IProperty* prop = _props.back();
     return prop->get_offset() + prop->size();
 }

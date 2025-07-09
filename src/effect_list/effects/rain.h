@@ -1,10 +1,9 @@
 #pragma once
 
 #include "effect_list/effect.h"
-
 class Rain : public Effect
 {
-    uint8_t step = 2;
+    Property<uint8_t> step{2};
 
 public:
     Rain() {}
@@ -20,8 +19,8 @@ public:
             if (random8(255) == 0) {
                 led = CRGB(0, 0, 255);
             } else if (led.b > 0) {
-                if (led.b > step) {
-                    led = CRGB(0, 0, led.b - step);
+                if (led.b > step.get()) {
+                    led = CRGB(0, 0, led.b - step.get());
                 } else {
                     led = CRGB(0, 0, 0);
                 }

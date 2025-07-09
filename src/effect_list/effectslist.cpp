@@ -1,4 +1,4 @@
-#include "effectslist.h"
+/*#include "effectslist.h"
 #include "erroreffect.h"
 
 #include "effects/slow_random.h"
@@ -212,4 +212,4 @@ void EffectsList::handleEvent(Event *event) {
             setEffect(ev->id);
         }
     }
-}
+}*/

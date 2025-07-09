@@ -38,9 +38,9 @@ void MyApplication::onInit() {
     _relay.onInit();
 #endif
 
-    EffectsList::getInstance(); // инициализируем EffectsList, чтобы сработало уведомление о новом режиме
-    auto ev = ChangeModEvent({EventType::ChangeMode, ChangeModEvent::Type::Set, 0});
-    Observable::notify(&ev);
+    //EffectsList::getInstance(); // инициализируем EffectsList, чтобы сработало уведомление о новом режиме
+    //auto ev = ChangeModEvent({EventType::ChangeMode, ChangeModEvent::Type::Set, 0});
+    //Observable::notify(&ev);
 }
 
 void MyApplication::onTick() {
@@ -49,7 +49,7 @@ void MyApplication::onTick() {
 #endif
     {
         if (_isPowerOn) {
-            EffectsList::getInstance().onTick();
+            //EffectsList::getInstance().onTick();
             _autoMod.onTick();
         }
 #if BTN_ENABLE

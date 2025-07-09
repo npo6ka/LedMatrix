@@ -7,6 +7,7 @@ enum class EventType {
   ChangeBrightness, // ChangeIntEvent
   ChangeSpeed,      // ChangeIntEvent
   ChangeMode,       // ChangeModEvent
+  ModChanged,       // ModChangedEvent
   ChangeModVar,     // ChangeModVarEvent
   EventAmount       // Используется, чтобы знать сколько всего ивентов
 };
@@ -35,9 +36,15 @@ struct ChangeModEvent : public Event {
   };
   Type type;
   uint8_t id;
-  ChangeModEvent(EventType et, Type t, uint8_t i = 0) : Event(et), type(t), id(i) {}
+  bool hardReset;
+  ChangeModEvent(EventType et, Type t, uint8_t i = 0, bool h = true) : Event(et), type(t), id(i), hardReset(h) {}
 };
 
+struct ModChangedEvent : public Event {
+  uint8_t id;
+  uint8_t num;
+  ModChangedEvent(EventType et, uint8_t i = 0, uint8_t n = 0) : Event(et), id(i), num(n) {}
+};
 struct ChangeModVarEvent : public Event {
   int val;
   int offset;

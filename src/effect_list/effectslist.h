@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 #include <stdint.h>
 #include "events/observer.h"
 
@@ -33,4 +33,4 @@ public:
     float getCurFPS();
     bool effectIsEnd();
     virtual void handleEvent(Event *event) override;
-};
+};*/

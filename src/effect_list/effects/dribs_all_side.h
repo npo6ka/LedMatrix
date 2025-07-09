@@ -51,6 +51,8 @@ public:
             snake.pos.x = 0;
             snake.pos.y = random16(LEDS_HEIGHT);
             break;
+        default:
+            break;
         }
     }
 

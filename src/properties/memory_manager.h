@@ -1,10 +1,6 @@
 #pragma once
 
-// #include "LittleFS.h"
-#include <vector>
-#include "memory_handler.h"
-#include "string.h"
-#include "math.h"
+#include "libs/file_handler.h"
 #include <memory>
 
 #define MAX_MODS_SIZE 256
@@ -21,9 +17,6 @@ class MemoryManager {
         uint16_t cur_mod;
         uint16_t first_mod_addr;
     };
-
-    uint16_t cur_mod_addr; // инициализируется при создании. 0, если режимов нет.
-    MemoryHandler memory;
 
     MemoryManager(const char* filename);
     MemoryManager(const MemoryManager&) = delete;
@@ -46,9 +39,11 @@ class MemoryManager {
     bool remove_mode_by_addr(uint16_t addr);
 
 public:
-    ~MemoryManager();
+    ~MemoryManager() = default;
     static MemoryManager& instance();
-    void clear_meёmory();
+
+    // Занулить всю память
+    void clear_memory();
 
     // ----------------- Функции изменения списка модов -----------------
 
@@ -99,8 +94,8 @@ public:
 
     // --------------- Функции работы с текущим режимом ----------------
 
-    void load_mod_id(uint8_t &val);
-    void load_mod_size(uint16_t &val);
+    uint8_t load_mod_id();
+    uint16_t load_mod_size();
 
     template <class T>
     bool load_mod_var(uint8_t offset, T &val);
@@ -111,4 +106,8 @@ public:
     // offset = sizeof(first_var) это второй аргумент и т.д.
     template <class T>
     bool save_mod_var(uint16_t offset, T &val);
+
+private:
+    uint16_t _cur_mod_addr; // инициализируется при создании. 0, если режимов нет.
+    FileHandler _file;
 };

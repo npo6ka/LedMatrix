@@ -6,11 +6,10 @@
 class IProperty;
 
 class PropertyStorage {
-    std::vector<IProperty *> props;
-
     // singlton property
     // Конструктор копирования и оператор присваивания копированием недоступны
-    PropertyStorage() {};
+    PropertyStorage() = default;
+    ~PropertyStorage() = default;
     PropertyStorage(const PropertyStorage& )  = delete;
     PropertyStorage& operator=(const PropertyStorage& ) = delete;
 public:
@@ -19,9 +18,13 @@ public:
         return instance;
     }
 
-    void add_property(IProperty *prop);
+    uint16_t add_property(IProperty *prop);
+    std::vector<IProperty *> get_props() const;
+
     void load_all_propertyes();
     void save_all_propertyes();
     void clear();
     uint16_t size();
+private:
+    std::vector<IProperty *> _props;
 };

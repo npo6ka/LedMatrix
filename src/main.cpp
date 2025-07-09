@@ -1,21 +1,20 @@
 #include "myapplication.h"
+#include "properties/memory_manager.h"
+#include <LITTLEFS.h> 
 
 MyApplication app;
 
 void setup() {
+    if (!LittleFS.begin()) {
+        Serial.println("An Error has occurred while mounting LittleFS");
+    }
     app.onInit();
 }
 
 void loop() {
-    app.onTick();
+    //app.onTick();
+
 }
-
-//#include "LittleFS.h"
-
-    // if (!LittleFS.begin()) {
-    //     Serial.println("An Error has occurred while mounting LittleFS");
-    //     return;
-    // }
 
     /*FSInfo fsi;
     LittleFS.info(fsi);
