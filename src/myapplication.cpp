@@ -29,7 +29,7 @@ MyApplication::~MyApplication() {
 void MyApplication::onInit() {
     randomSeed(millis() + analogRead(A0));
     random16_set_seed(millis() + analogRead(A0));
-    debug_setup();
+    debugSetup();
     LedMatrix.setup();
 #if IR_ENABLE
     _ir.onInit(IR_RECEIVE_PIN);
