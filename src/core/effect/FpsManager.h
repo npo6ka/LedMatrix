@@ -3,10 +3,10 @@
 #include <stdint.h>
 #include <Arduino.h>
 
-class FPSManager {
+class FpsManager {
     public:
-        FPSManager() = default;
-        ~FPSManager() = default;
+        FpsManager() = default;
+        ~FpsManager() = default;
 
         float getRealFPS() const {
             return (float)_real_fps / 10;
