@@ -14,7 +14,7 @@ void IR::onTick() {
     if (IrReceiver.decode()) {
         switch (IrReceiver.decodedIRData.command) {
             case 0x45: { // <<
-                auto ev = ChangeModEvent({EventType::ChangeMode, ChangeModEvent::Type::Previous});
+                ChangeModeEvent ev(EventType::ChangeMode, true, ChangeModeEventRequest::Type::Previous);
                 Observable::notify(&ev);
                 break;
             }
@@ -29,7 +29,7 @@ void IR::onTick() {
                 break;
             }
             case 0x48: { // >>
-                auto ev = ChangeModEvent({EventType::ChangeMode, ChangeModEvent::Type::Next});
+                ChangeModeEvent ev(EventType::ChangeMode, true, ChangeModeEventRequest::Type::Next);
                 Observable::notify(&ev);
                 break;
             }

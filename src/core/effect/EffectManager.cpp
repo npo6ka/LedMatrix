@@ -1,0 +1,63 @@
+#include "EffectManager.h"
+#include "libs/debug_lib.h"
+
+EffectManager::EffectManager(IEffectStorage& storage)
+    : _storage(storage)
+{
+    Observable::subscribe(EventType::ChangeMode, this);
+
+    this->updateEffect();
+}
+
+void EffectManager::onTick() {
+    // Обработка отложенного запроса на смену эффекта
+    if (_pendingRequest.type != ChangeModeEventRequest::Type::None && (_currentEffect->is_end() || _pendingRequest.hardReset)) {
+        uint16_t requestedModIndex = 0;
+        if (_pendingRequest.type == ChangeModeEventRequest::Type::Set) {
+            requestedModIndex = _pendingRequest.modNum;
+        } else if (_pendingRequest.type == ChangeModeEventRequest::Type::Next) {
+            requestedModIndex = (_pendingRequest.modNumOffset + _storage.getCurrentIndex()) % _storage.size();
+        } else if (_pendingRequest.type == ChangeModeEventRequest::Type::Previous) {
+            requestedModIndex = (_storage.size() + _storage.getCurrentIndex() - (_pendingRequest.modNumOffset % _storage.size())) % _storage.size();
+        }
+
+        if (requestedModIndex != _storage.getCurrentIndex()) {
+            _storage.setCurrentIndex(requestedModIndex);
+            this->updateEffect();
+        }
+
+        _pendingRequest = ChangeModeEventRequest();
+    }
+}
+
+void EffectManager::updateEffect() {
+    const EffectInfo& effectInfo = _storage.getEffectInfo(_storage.getCurrentIndex());
+    if (_currentEffect) {
+        _currentEffect->on_clear();
+    }
+    _currentEffect = EffectFactory::createEffect(effectInfo.id);
+    _currentEffect->on_init();
+    _fpsManager.setTargetFPS(_currentEffect->get_fps());
+
+    ModChangedEvent modChangedEvent(EventType::ModChanged, effectInfo.id, _storage.getCurrentIndex());
+    Observable::notify(&modChangedEvent);
+}
+
+void EffectManager::setEffect(uint32_t index) {
+    if (index != _storage.getCurrentIndex()) {
+        _storage.setCurrentIndex(index);
+        this->updateEffect();
+    }
+}
+
+float EffectManager::getCurrentFPS() const {
+    return _fpsManager.getRealFPS();
+}
+
+void EffectManager::handleEvent(Event* event) {
+    if (event->type == EventType::ChangeMode) {
+        ChangeModeEvent* changeEvent = static_cast<ChangeModeEvent*>(event);
+        _pendingRequest = _pendingRequest + changeEvent->request;
+        this->onTick();
+    }
+}

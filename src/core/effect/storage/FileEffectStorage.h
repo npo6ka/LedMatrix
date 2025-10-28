@@ -8,16 +8,17 @@
 
 #include <stdint.h>
 #include "vector"
+#include <memory>
 
 class FileEffectStorage : public IEffectStorage
 {
 private:
-    IFileHandler *_fileHandler;
+    std::unique_ptr<IFileHandler> _fileHandler;
     FileSavableVariable<uint32_t> _currentEffectIndex;
     std::vector<FileSavableVariable<EffectInfo>> _effects;
     uint32_t _offset;
 public:
-    FileEffectStorage(IFileHandler *fileHandler) : _fileHandler(fileHandler), _currentEffectIndex(fileHandler, 0, 0) {
+    FileEffectStorage(std::unique_ptr<IFileHandler>&& fileHandler) : _fileHandler(std::move(fileHandler)), _currentEffectIndex(_fileHandler.get(), 0, 0) {
         _offset = _currentEffectIndex.size();
 
         size_t savedEffectAmount = (_fileHandler->size() - _currentEffectIndex.size()) / EffectInfo::typeSize();
@@ -42,10 +43,10 @@ public:
     }
     virtual ~FileEffectStorage() {};
 
-    virtual EffectInfo getEffectInfo(uint32_t index) const override {
+    virtual const EffectInfo& getEffectInfo(uint32_t index) const override {
         if (index >= _effects.size()) {
             logError("Cannot get effect info: index is out of range\n");
-            return EffectInfo();
+            return EffectInfo::getErrorEffectInfo();
         }
         return _effects[index].get();
     }
@@ -158,7 +159,7 @@ private:
     }
 
     void internalAddEffect(const EffectInfo& effectInfo, bool loadOnCreate) {
-        _effects.emplace_back(_fileHandler, _offset, std::move(effectInfo), loadOnCreate);
+        _effects.emplace_back(_fileHandler.get(), _offset, std::move(effectInfo), loadOnCreate);
         _offset += EffectInfo::typeSize();
     }
 

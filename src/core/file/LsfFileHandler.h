@@ -18,10 +18,15 @@ public:
         if (!isMounted && LittleFS.begin()) {
             isMounted = true;
         }
-    };
+    }
+
+    LsfFileHandler(const char* path) : LsfFileHandler() {
+        open(path);
+    }
+
     virtual ~LsfFileHandler() {
         close();
-    };
+    }
 
     virtual void open(const char* path) override {
         if (strlen(path) > 32) {

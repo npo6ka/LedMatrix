@@ -32,4 +32,9 @@ public:
     bool operator!=(const EffectInfo& other) const {
         return !(*this == other);
     }
+
+    static const EffectInfo& getErrorEffectInfo() {
+        static const EffectInfo errorEffectInfo(0, 0);
+        return errorEffectInfo;
+    }
 };

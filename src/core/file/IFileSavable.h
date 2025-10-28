@@ -2,6 +2,7 @@
 
 #include "core/file/IFileHandler.h"
 #include "core/common_interfaces/IStream.h"
+#include "libs/debug_lib.h"
 
 #include <cstdint>
 #include <cstddef>
@@ -16,17 +17,17 @@ public:
 
     virtual bool write(const void* data, size_t size, size_t seekOffset = 0) override {
         if (_fileHandler == nullptr) {
-            printf("Error writing file: file handler is not set\n");
+            logError("Error writing file: file handler is not set\n");
             return false;
         }
 
         if (!_fileHandler->seek(_offset + seekOffset)) {
-            printf("Error writing file: failed to seek to offset %u\n", _offset + seekOffset);
+            logError("Error writing file: failed to seek to offset %u\n", _offset + seekOffset);
             return false;
         }
 
         if (!_fileHandler->write(data, size)) {
-            printf("Error writing file: failed to write data\n");
+            logError("Error writing file: failed to write data\n");
             return false;
         }
 
@@ -35,12 +36,12 @@ public:
 
     virtual bool read(void* data, size_t size, size_t seekOffset = 0) const override {
         if (_fileHandler == nullptr) {
-            printf("Error reading file: file handler is not set\n");
+            logError("Error reading file: file handler is not set\n");
             return false;
         }
 
         if (!_fileHandler->seek(_offset + seekOffset)) {
-            printf("Error reading file: failed to seek to offset %u\n", _offset + seekOffset);
+            logError("Error reading file: failed to seek to offset %u\n", _offset + seekOffset);
             return false;
         }
 

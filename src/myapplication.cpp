@@ -2,6 +2,15 @@
 
 #include "libs/led_matrix.h"
 #include "effect_list/effectslist.h"
+#include "core/effect/EffectManager.h"
+#include "libs/StdFeatures.h"
+
+#if SAVE_TO_EEPROM
+#   include "core/file/LsfFileHandler.h"
+#   include "core/effect/storage/FileEffectStorage.h"
+#else
+#   include "core/effect/storage/StaticEffectStorage.h"
+#endif
 
 MyApplication::MyApplication() :
         _isPowerOn(true),
@@ -37,6 +46,15 @@ void MyApplication::onInit() {
 #if RELAY_ENABLE
     _relay.onInit();
 #endif
+#if SAVE_TO_EEPROM
+    _effectStorage = std::make_unique<FileEffectStorage>(std::make_unique<LsfFileHandler>("mods.txt"));
+#else
+    _effectStorage = std::make_unique<StaticEffectStorage>();
+#endif
+    _effectManager = std::make_unique<EffectManager>(*_effectStorage.get());
+
+    ChangeModeEvent evt(EventType::ModChanged, true, ChangeModeEventRequest::Type::Set, 2, 0);
+    Observable::notify(&evt);
 
     //EffectsList::getInstance(); // инициализируем EffectsList, чтобы сработало уведомление о новом режиме
     //auto ev = ChangeModEvent({EventType::ChangeMode, ChangeModEvent::Type::Set, 0});
@@ -49,6 +67,7 @@ void MyApplication::onTick() {
 #endif
     {
         if (_isPowerOn) {
+            _effectManager->onTick();
             //EffectsList::getInstance().onTick();
             _autoMod.onTick();
         }

@@ -1,10 +1,9 @@
-#pragma once
+/*#pragma once
 
 #include "LittleFS.h"
 #include <stdlib.h>
 #include <stdint.h>
 
-#define out printf
 #define MAX_FILE_SIZE 65536
 #define STEP
 
@@ -94,4 +93,4 @@ public:
             fwrite(&val, sizeof(val), 1, _fp);
         }
     }
-};
+};*/

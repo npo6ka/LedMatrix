@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 
 #include "vector"
 #include "stdint.h"
@@ -27,4 +27,4 @@ public:
     uint16_t size();
 private:
     std::vector<IProperty *> _props;
-};
+};*/

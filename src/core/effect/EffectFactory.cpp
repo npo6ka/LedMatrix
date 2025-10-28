@@ -31,11 +31,13 @@
 #include "effect_list/effects/radial_pattern.h"
 #include "effect_list/effects/crazy_bees.h"
 
-using EffectCreator = Effect* (*)();
+#include "libs/StdFeatures.h"
+
+using EffectCreator = std::unique_ptr<Effect> (*)();
 
 template <class T>
-static Effect *makeEffect() {
-    return new T();
+static std::unique_ptr<Effect> makeEffect() {
+    return std::make_unique<T>();
 }
 
 template <class T>
@@ -43,15 +45,15 @@ static constexpr EffectCreator effectCreator() {
     return makeEffect<T>;
 }
 
-struct EffectInfo {
+struct EffectCreationInfo {
     const char* effect_name;
     EffectCreator effect_creator;
 };
 
-#define EFFECT_CASE(id, name, type) case id: return EffectInfo{name, effectCreator<type>()};
+#define EFFECT_CASE(id, name, type) case id: return EffectCreationInfo{name, effectCreator<type>()};
 #define EFFECT_COUNT 29 // при добавлении нового эффекта, не забудь обновить EFFECT_COUNT
 
-static EffectInfo getEffectInfo(uint32_t effect_id) {
+static EffectCreationInfo getEffectInfo(uint32_t effect_id) {
     switch (effect_id) {
         EFFECT_CASE(0, "Error", ErrorEffect);
         EFFECT_CASE(1, "SlowRandom", SlowRandom);
@@ -86,7 +88,7 @@ static EffectInfo getEffectInfo(uint32_t effect_id) {
         // при добавлении нового эффекта, не забудь обновить EFFECT_COUNT
 
         default:
-            return EffectInfo{"Error", effectCreator<ErrorEffect>()};
+            return EffectCreationInfo{"Error", effectCreator<ErrorEffect>()};
     }
 }
 
@@ -94,7 +96,7 @@ uint32_t EffectFactory::getEffectCount() {
     return EFFECT_COUNT;
 }
 
-Effect* EffectFactory::createEffect(uint32_t effect_id) {
+std::unique_ptr<Effect> EffectFactory::createEffect(uint32_t effect_id) {
     return getEffectInfo(effect_id).effect_creator();
 }
 

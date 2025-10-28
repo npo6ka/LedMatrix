@@ -30,11 +30,11 @@ public:
         }
     }
 
-    virtual bool save() {
+    virtual bool save() override {
         return Serializer<T>::serialize(this->_value, *this);
     }
 
-    virtual bool load() {
+    virtual bool load() override {
         return Serializer<T>::deserialize(this->_value, *this);
     }
 };

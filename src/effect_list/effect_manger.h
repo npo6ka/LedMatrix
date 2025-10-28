@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 
 #include <stdint.h>
 #include "events/observer.h"
@@ -43,5 +43,6 @@ public:
 private:
     Request _reqEffect = { Request::Type::None, 0, false };
     Effect* _effect = nullptr;
-    FPSManager _fpsManager;
+    FpsManager _fpsManager;
 };
+*/

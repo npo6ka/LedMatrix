@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/common_interfaces/IStream.h"
+
 #include <cstdint>
 #include <cstddef>
 

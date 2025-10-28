@@ -1,4 +1,4 @@
-#include "property_storage.h"
+/*#include "property_storage.h"
 #include "property.h"
 
 uint16_t PropertyStorage::add_property(IProperty *prop) {
@@ -37,4 +37,4 @@ void PropertyStorage::clear() {
 uint16_t PropertyStorage::size() {
     IProperty* prop = _props.back();
     return prop->get_offset() + prop->size();
-}
+}*/

@@ -1,4 +1,4 @@
-#include "memory_manager.h"
+/*#include "memory_manager.h"
 
 MemoryManager::MemoryManager(const char* filename) {
     _file = FileHandler{};
@@ -335,3 +335,4 @@ bool MemoryManager::save_mod_var(uint16_t offset, T &val) {
     }
     return false;
 }
+*/

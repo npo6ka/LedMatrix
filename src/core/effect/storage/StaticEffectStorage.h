@@ -1,7 +1,9 @@
 # pragma once
 
-#include "core/effect/EffectInfo.h"
 #include "IEffectStorage.h"
+
+#include "core/effect/EffectInfo.h"
+#include "libs/debug_lib.h"
 
 #include "vector"
 
@@ -17,9 +19,10 @@ public:
 
     virtual ~StaticEffectStorage() {};
 
-    virtual EffectInfo getEffectInfo(uint32_t index) const override{
+    virtual const EffectInfo& getEffectInfo(uint32_t index) const override{
         if (index >= _effects.size()) {
-            return EffectInfo();
+            logError("Cannot get effect info: index is out of range\n");
+            return EffectInfo::getErrorEffectInfo();
         }
         return _effects[index];
     }
@@ -30,6 +33,7 @@ public:
 
     virtual void setCurrentIndex(uint32_t index) override{
         if (index >= _effects.size()) {
+            logError("Cannot set current index: index is out of range\n");
             return;
         }
         _currentEffectIndex = index;
@@ -41,6 +45,7 @@ public:
 
     virtual void addEffect(uint32_t effectId, uint32_t position) override{
         if (position > _effects.size()) {
+            logError("Cannot add effect: position is out of range\n");
             return;
         }
 
@@ -53,6 +58,7 @@ public:
 
     virtual void removeEffect(uint32_t position) override {
         if (position >= _effects.size()) {
+            logError("Cannot remove effect: position is out of range\n");
             return;
         }
 
@@ -118,6 +124,7 @@ private:
 
     void internalRemoveEffect() {
         if (_effects.empty()) {
+            logError("Cannot remove effect: effects list is empty\n");
             return;
         }
 

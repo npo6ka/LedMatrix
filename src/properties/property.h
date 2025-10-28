@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 
 #include "property_storage.h"
 #include "memory_manager.h"
@@ -123,4 +123,4 @@ private:
     T _value;
     T _min_value;
     T _max_value;
-};
+};*/

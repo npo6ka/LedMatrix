@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 
 #include "libs/file_handler.h"
 #include <memory>
@@ -110,4 +110,4 @@ public:
 private:
     uint16_t _cur_mod_addr; // инициализируется при создании. 0, если режимов нет.
     FileHandler _file;
-};
+};*/

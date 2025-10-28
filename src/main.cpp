@@ -1,90 +1,80 @@
 #include "myapplication.h"
-#include "properties/memory_manager.h"
-#include <LITTLEFS.h> 
 
 MyApplication app;
 
+// void listFiles(const char* dirname = "/") {
+//     Dir dir = LittleFS.openDir(dirname);
+
+//     Serial.println("Listing files:");
+//     while (dir.next()) {
+//         Serial.printf("FILE: %s\tSIZE: %d bytes\n",
+//                       dir.fileName().c_str(),
+//                       dir.fileSize());
+//     }
+// }
+
+// void printFileIfExists(const char* path) {
+//     if (!LittleFS.exists(path)) {
+//         Serial.printf("File '%s' does not exist.\n", path);
+//         return;
+//     }
+
+//     File file = LittleFS.open(path, "r");
+//     if (!file) {
+//         Serial.printf("Failed to open file '%s'\n", path);
+//         return;
+//     }
+
+//     Serial.printf("Contents of '%s':\n", path);
+//     while (file.available()) {
+//         Serial.write(file.read());
+//     }
+
+//     file.close();
+//     Serial.println(); // перенос строки после вывода
+// }
+
+// void printFileByByte(const char* path) {
+//     if (!LittleFS.exists(path)) {
+//         Serial.printf("File '%s' does not exist.\n", path);
+//         return;
+//     }
+
+//     File file = LittleFS.open(path, "r");
+//     if (!file) {
+//         Serial.printf("Failed to open file '%s'\n", path);
+//         return;
+//     }
+
+//     Serial.printf("Contents of '%s' by byte:\n'", path);
+//     int byteCount = 1;
+//     while (file.available()) {
+//         uint8_t byte = 0;
+//         file.read(reinterpret_cast<uint8_t*>(&byte), 1);
+//         Serial.printf("%02X", byte);
+//         if (byteCount % 4 == 0) {
+//             Serial.printf(" ");
+//         }
+//         byteCount++;
+//     }
+//     Serial.printf("'");
+
+//     file.close();
+//     Serial.println(); // перенос строки после вывода
+// }
+
+// void printAllMods(FileEffectStorage &storage) {
+//     logInfo("Current effects:\n");
+//     for (size_t i = 0; i < storage.size(); i++) {
+//         EffectInfo info = storage.getEffectInfo(i);
+//         logInfo("Effect %zu: ID=%u, SavedIndex=%u\n", i, info.id, info.savedIndex);
+//     }
+// }
+
 void setup() {
-    if (!LittleFS.begin()) {
-        Serial.println("An Error has occurred while mounting LittleFS");
-    }
     app.onInit();
 }
 
 void loop() {
-    //app.onTick();
-
+    app.onTick();
 }
-
-    /*FSInfo fsi;
-    LittleFS.info(fsi);
-    printf("\ttotalBytes: %d\n\t usedBytes: %d\n\t blockSize: %d\n\t pageSize: \
-    %d\n\t maxOpenFiles: %d\n\t maxPathLength: %d\n", fsi.totalBytes,
-    fsi.usedBytes, fsi.blockSize, fsi.pageSize, fsi.maxOpenFiles, fsi.maxPathLength);*/
-
-    // Dir dir = LittleFS.openDir("/");
-    // while (dir.next()) {
-    //     Serial.println(dir.fileName());
-    //     if(dir.fileSize()) {
-    //         File f = dir.openFile("r");
-    //         Serial.println(f.size());
-    //     }
-    // }
-
-
-
-    // File fp = LittleFS.open("/2.txt", "r+");
-    // if (!fp) {
-    //     Serial.println("Failed to open file for reading");
-    //     return;
-    // }
-
-    // fp.seek(0, SeekSet);
-    // uint16_t vals[] = {0x12, 0x15, 0x22, 0x34, 0x38, 0x55, 0x5b, 0x60, 0x65, 0x68, 0x70, 0x72, 0x74, 0x76, 0x78, 0x80, 0x82, 0x84, 0x86, 0x88, 0x90, 0x92, 0x94, 0x96, 0x98, 0x100};
-    // uint8_t size = sizeof(vals) / sizeof(vals[0]);
-    // Serial.printf("size: %d\n", size);
-
-    // fp.seek(0, SeekSet);
-    // for (uint16_t i = 0; i < vals[size - 1]; ++i) {
-    //     fp.write(0);
-    // }
-
-    // fp.seek(0, SeekSet);
-    // for (uint16_t i = 0; i < size; ++i) {
-    //     fp.write(vals[i]);
-    //     fp.seek(vals[i], SeekSet);
-    // }
-    // fp.write("e");
-
-    // fp.seek(0, SeekSet);
-    // Serial.println("File Content:");
-    // while (fp.available()) {
-    //     Serial.printf("%d ", fp.read());
-    // }
-
-    // unsigned long myTime1, myTime2;
-    // myTime1 = micros();
-
-    // fp.seek(0, SeekSet);
-    // uint8_t val;
-    // for (int i = 0; i < 26; ++i) {
-    //     val = fp.read();
-    //     // Serial.printf("%x ", val);
-    //     fp.seek(val, SeekSet);
-    // }
-    // myTime2 = micros();
-    // Serial.printf("time diff1: %lu\n", myTime2 - myTime1);
-
-
-    // uint16_t vals[] = {0x12, 0x15, 0x22, 0x34, 0x38, 0x55, 0x5b, 0x60, 0x65, 0x68, 0x70, 0x72, 0x74, 0x76, 0x78, 0x80, 0x82, 0x84, 0x86, 0x88, 0x90, 0x92, 0x94, 0x96, 0x98, 0x100};
-    // uint16_t vals2[] = {0x12, 0x15, 0x22, 0x34, 0x38, 0x55, 0x5b, 0x60, 0x65, 0x68, 0x70, 0x72, 0x74, 0x76, 0x78, 0x80, 0x82, 0x84, 0x86, 0x88, 0x90, 0x92, 0x94, 0x96, 0x98, 0x100};
-    // myTime1 = micros();
-    // for (int i = 0; i < 26; ++i) {
-    //     val = vals[i];
-    //     vals2[i] = val;
-    // }
-    // vals2[0]++;
-    // myTime2 = micros();
-    // Serial.printf("time diff2: %lu\n", myTime2 - myTime1);
-
-    // fp.close();

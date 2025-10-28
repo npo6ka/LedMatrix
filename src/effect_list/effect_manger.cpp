@@ -1,4 +1,4 @@
-#include "effect_manger.h"
+/*#include "effect_manger.h"
 
 #include "fps_manager.h"
 #include "effect_factory.h"
@@ -129,4 +129,4 @@ void EffectsManager::handleEvent(Event *event) {
             _reqEffect = { Request::Type::Set, ev->id, ev->hardReset };
         }
     }
-}
+}*/
