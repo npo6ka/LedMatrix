@@ -27,7 +27,7 @@ public:
     float getCurrentFPS() const;
 
     // Обработка событий (реализация IObserver)
-    void handleEvent(Event* event) override;
+    void handleEvent(const Event* event) override;
 
 private:
 

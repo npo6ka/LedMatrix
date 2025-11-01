@@ -18,9 +18,8 @@ AutoChangeMode::~AutoChangeMode() {
 void AutoChangeMode::onTick() {
     if (isEnable()) {
         if (millis() - _savedTime > _delay) {
-            ChangeModeEvent ev(EventType::ChangeMode, false, ChangeModeEventRequest::Type::Next);
-            Observable::notify(&ev);
-            out("AutoControl: next mode\n");
+            Observable::notify<ChangeModeEvent>(EventType::ChangeMode, false, ChangeModeEventRequest::Type::Next);
+            logInfo("AutoControl: next mode\n");
         }
     }
 }
@@ -50,7 +49,7 @@ void AutoChangeMode::setDelay(unsigned long delay) {
     _delay = delay;
 }
 
-void AutoChangeMode::handleEvent(Event *event) {
+void AutoChangeMode::handleEvent(const Event *event) {
     if (event->type == EventType::ChangeMode) {
         // сменился мод, сбрасываем таймер
         if (isEnable()) {

@@ -12,19 +12,15 @@ void Button::onTick() {
     uint8_t clickCount = touch.hasClicks() ? touch.getClicks() : 0U;
     switch (clickCount) {
         case 1U: {
-            ChangeModeEvent ev(EventType::ChangeMode, true, ChangeModeEventRequest::Type::Next);
-            // auto ev = ChangeBoolEvent({EventType::ChangePowerState, true});
-            Observable::notify(&ev);
+            Observable::notify<ChangeModeEvent>(EventType::ChangeMode, true, ChangeModeEventRequest::Type::Next);
             break;
         }
         case 2U: {
-            auto ev = Event(EventType::ChangePowerState);
-            Observable::notify(&ev);
+            Observable::notify<Event>(EventType::ChangePowerState);
             break;
         }
         case 3U: {
-            auto ev = Event(EventType::ChangeAutoMod);
-            Observable::notify(&ev);
+            Observable::notify<Event>(EventType::ChangeAutoMod);
             break;
         }
         default:

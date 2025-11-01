@@ -46,5 +46,5 @@ public:
     ~MyApplication();
     void onTick();
     void onInit();
-    virtual void handleEvent(Event *event) override;
+    virtual void handleEvent(const Event *event) override;
 };

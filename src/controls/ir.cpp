@@ -14,23 +14,19 @@ void IR::onTick() {
     if (IrReceiver.decode()) {
         switch (IrReceiver.decodedIRData.command) {
             case 0x45: { // <<
-                ChangeModeEvent ev(EventType::ChangeMode, true, ChangeModeEventRequest::Type::Previous);
-                Observable::notify(&ev);
+                Observable::notify<ChangeModeEvent>(EventType::ChangeMode, true, ChangeModeEventRequest::Type::Previous);
                 break;
             }
             case 0x47: { // play
-                auto ev = ChangeBoolEvent(EventType::SetPowerState, true);
-                Observable::notify(&ev);
+                Observable::notify<ChangeBoolEvent>(EventType::SetPowerState, true);
                 break;
             }
             case 0x4a: { // ||
-                auto ev = ChangeBoolEvent(EventType::SetPowerState, false);
-                Observable::notify(&ev);
+                Observable::notify<ChangeBoolEvent>(EventType::SetPowerState, false);
                 break;
             }
             case 0x48: { // >>
-                ChangeModeEvent ev(EventType::ChangeMode, true, ChangeModeEventRequest::Type::Next);
-                Observable::notify(&ev);
+                Observable::notify<ChangeModeEvent>(EventType::ChangeMode, true, ChangeModeEventRequest::Type::Next);
                 break;
             }
         }

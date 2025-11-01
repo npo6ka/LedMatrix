@@ -87,14 +87,14 @@ void MyApplication::setPowerState(bool newState) {
     }
 }
 
-void MyApplication::handleEvent(Event *event) {
+void MyApplication::handleEvent(const Event *event) {
     if (event->type == EventType::ChangePowerState) {
         setPowerState(!_isPowerOn);
     } else if (event->type == EventType::SetPowerState) {
-        ChangeBoolEvent *ev = static_cast<ChangeBoolEvent *>(event);
+        const ChangeBoolEvent *ev = static_cast<const ChangeBoolEvent *>(event);
         setPowerState(ev->new_val);
     } else if (event->type == EventType::ChangeAutoMod) {
-        ChangeBoolEvent *ev = static_cast<ChangeBoolEvent *>(event);
+        const ChangeBoolEvent *ev = static_cast<const ChangeBoolEvent *>(event);
         _autoMod.setIsEnable(ev->new_val);
     } else if (event->type == EventType::ChangeMode) { // включить питание при попытках сменить режима
         if (!_isPowerOn) {

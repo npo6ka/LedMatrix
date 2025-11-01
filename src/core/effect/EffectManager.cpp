@@ -52,8 +52,7 @@ void EffectManager::updateEffect() {
     _currentEffect->on_init();
     _fpsManager.setTargetFPS(_currentEffect->get_fps());
 
-    ModChangedEvent modChangedEvent(EventType::ModChanged, effectInfo.id, _storage.getCurrentIndex());
-    Observable::notify(&modChangedEvent);
+    Observable::notify<ModChangedEvent>(EventType::ModChanged, effectInfo.id, _storage.getCurrentIndex());
 }
 
 void EffectManager::setEffect(uint32_t index) {
@@ -67,9 +66,9 @@ float EffectManager::getCurrentFPS() const {
     return _fpsManager.getRealFPS();
 }
 
-void EffectManager::handleEvent(Event* event) {
+void EffectManager::handleEvent(const Event* event) {
     if (event->type == EventType::ChangeMode) {
-        ChangeModeEvent* changeEvent = static_cast<ChangeModeEvent*>(event);
+        const ChangeModeEvent* changeEvent = static_cast<const ChangeModeEvent*>(event);
         _pendingRequest = _pendingRequest + changeEvent->request;
         this->onTick();
     }
