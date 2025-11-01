@@ -80,7 +80,7 @@ class AStarSnakeAI : public SnakeAI {
 
     template <class Action>
     void printMas(Action &&action, const char *text) const {
-        out("------------------- %s -----------------\n", text);
+        logInfo("------------------- %s -----------------\n", text);
         for (uint8_t i = 0; i < LEDS_WIDTH; ++i) {
             for (uint8_t j = 0; j < LEDS_HEIGHT; ++j) {
                 action(nodes[i][j]);
@@ -91,7 +91,7 @@ class AStarSnakeAI : public SnakeAI {
     }
 
     void debug(Coord head, Coord apple) const {
-        out("head x: %d y: %d apple x: %d y: %d\n", head.x, head.y, apple.x, apple.y);
+        logInfo("head x: %d y: %d apple x: %d y: %d\n", head.x, head.y, apple.x, apple.y);
 
         printMas([](const Node &node) { out("%03d", node.cost); }, "cost");
         //printMas([](const Node &node) { out("%03d", node.dist); }, "dist");

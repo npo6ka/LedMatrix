@@ -44,7 +44,7 @@ class TextMode : public Effect {
       if (convert_char_utf8_to_cp1251(str, pos)) {
         size++;
       } else {
-        out("Unknown symbol: pos %d: '%c' %d\n", pos, str[pos], str[pos]);
+        logError("Unknown symbol: pos %d: '%c' %d\n", pos, str[pos], str[pos]);
         return nullptr;
       }
       pos++;
@@ -74,7 +74,7 @@ class TextMode : public Effect {
     } else if (ch >= 192) {
       return ch - 97;
     }
-    out("Undefined symbols: %c\n", ch);
+    logError("Undefined symbols: %c\n", ch);
 
     return 0;
   }

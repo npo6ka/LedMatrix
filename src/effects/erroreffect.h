@@ -9,6 +9,6 @@ public:
 
     void on_update() {
         FastLED.showColor(CRGB::Red);
-        out("ERROR state");
+        logError("ERROR state");
     }
 };

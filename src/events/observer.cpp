@@ -6,7 +6,7 @@ int Observable::type_to_int(EventType etype) {
   if (etype >= EventType::ChangeAutoMod && etype < EventType::EventAmount) {
     return static_cast<int>(etype);
   } else {
-    out("Error check EventType: out of range\n");
+    logError("Check EventType: out of range\n");
     return 0;
   }
 }
@@ -51,7 +51,7 @@ void Observable::instanceAddObserver(EventType etype, IObserver *observer) {
     }
   }
   if (observer_location > -1) {
-    out("Error addObserver: observer exists on list %d, 0x%lx", (int)etype, (uint64_t)observer);
+    logError("addObserver: observer exists on list %d, 0x%lx", (int)etype, (uint64_t)observer);
     return;
   }
   // если не нашли пустую ячейку расширяем память
@@ -81,7 +81,7 @@ void Observable::instanceRemoveObserver(EventType etype, IObserver *observer) {
   if (observer_location != -1) {
     _observerList[type].second[observer_location] = nullptr;
   } else {
-    out("Error removeObserver: EventType not found\n");
+    logError("removeObserver: EventType not found\n");
   }
 }
 

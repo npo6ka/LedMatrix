@@ -20,12 +20,12 @@ class Snake : public Effect
 
         // Если нужно, можно вызвать этот метод. Выводит отладочную информацию в терминал
     void debug() {
-        out("vector %d\n", vector);
-        out("head.x = %d head.y = %d\n", head.x, head.y);
-        out("butt.x = %d butt.y = %d\n", butt.x, butt.y);
-        out("apple.x = %d apple.y = %d\n\n", apple.x, apple.y);
+        logInfo("vector %d\n", vector);
+        logInfo("head.x = %d head.y = %d\n", head.x, head.y);
+        logInfo("butt.x = %d butt.y = %d\n", butt.x, butt.y);
+        logInfo("apple.x = %d apple.y = %d\n\n", apple.x, apple.y);
         snake.debug();
-        out("---\n");
+        logInfo("---\n");
     }
 
     // Метод выполняется каждый тик. Тут вся логика
@@ -87,7 +87,7 @@ class Snake : public Effect
                 delay(100);
             }
 
-            out("End game: Score: %d\n", snake.size());
+            logInfo("End game: Score: %d\n", snake.size());
 
             //delay(100);
             //FastLED.clear();
