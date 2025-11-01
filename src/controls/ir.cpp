@@ -19,12 +19,12 @@ void IR::onTick() {
                 break;
             }
             case 0x47: { // play
-                auto ev = ChangeBoolEvent({EventType::SetPowerState, true});
+                auto ev = ChangeBoolEvent(EventType::SetPowerState, true);
                 Observable::notify(&ev);
                 break;
             }
             case 0x4a: { // ||
-                auto ev = ChangeBoolEvent({EventType::SetPowerState, false});
+                auto ev = ChangeBoolEvent(EventType::SetPowerState, false);
                 Observable::notify(&ev);
                 break;
             }

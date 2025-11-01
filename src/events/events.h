@@ -3,12 +3,13 @@
 #include "ChangeModeEventRequest.h"
 
 enum class EventType {
-    ChangeAutoMod = 0,
-    ChangePowerState,       // ChangePowerStateEvent
-    SetPowerState,          // SetPowerStateEvent
-    ChangeBrightness,       // ChangeBrightnessEvent
-    ChangeSpeed,            // ChangeSpeedEvent
-    ChangeMode,             // ChangeModeEvent
+//  Тип ивена               // Структура данных ивента
+    ChangeAutoMod = 0,      // ChangeBoolEvent
+    ChangePowerState,       // Event
+    SetPowerState,          // ChangeBoolEvent
+    ChangeBrightness,       // ChangeIntEvent
+    ChangeSpeed,            // ChangeIntEvent
+    ChangeMode,             // ChangeModeEventRequest
     ModChanged,             // ModChangedEvent
     ChangeModVar,           // ChangeModVarEvent
     EventAmount             // Используется, чтобы знать сколько всего ивентов

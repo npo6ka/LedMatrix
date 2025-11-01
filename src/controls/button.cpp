@@ -18,12 +18,12 @@ void Button::onTick() {
             break;
         }
         case 2U: {
-            auto ev = Event({EventType::ChangePowerState});
+            auto ev = Event(EventType::ChangePowerState);
             Observable::notify(&ev);
             break;
         }
         case 3U: {
-            auto ev = Event({EventType::ChangeAutoMod});
+            auto ev = Event(EventType::ChangeAutoMod);
             Observable::notify(&ev);
             break;
         }

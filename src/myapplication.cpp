@@ -1,7 +1,5 @@
 #include "myapplication.h"
 
-#include "libs/led_matrix.h"
-#include "effect_list/effectslist.h"
 #include "core/effect/EffectManager.h"
 #include "libs/StdFeatures.h"
 
@@ -27,11 +25,13 @@ MyApplication::MyApplication() :
 {
     Observable::subscribe(EventType::ChangePowerState, this);
     Observable::subscribe(EventType::SetPowerState, this);
+    Observable::subscribe(EventType::ChangeMode, this);
 };
 
 MyApplication::~MyApplication() {
     Observable::unsubscribe(EventType::ChangePowerState, this);
     Observable::unsubscribe(EventType::SetPowerState, this);
+    Observable::unsubscribe(EventType::ChangeMode, this);
 }
 
 // лучше всё по максимому инициализировать тут
@@ -47,15 +47,11 @@ void MyApplication::onInit() {
     _relay.onInit();
 #endif
 #if SAVE_TO_EEPROM
-    _effectStorage = std::make_unique<FileEffectStorage>(std::make_unique<LsfFileHandler>("mods.txt"));
+    _effectStorage = std::make_unique<FileEffectStorage>(std::make_unique<LsfFileHandler>(SAVE_TO_EEPROM_FILE));
 #else
     _effectStorage = std::make_unique<StaticEffectStorage>();
 #endif
     _effectManager = std::make_unique<EffectManager>(*_effectStorage.get());
-
-    //EffectsList::getInstance(); // инициализируем EffectsList, чтобы сработало уведомление о новом режиме
-    //auto ev = ChangeModEvent({EventType::ChangeMode, ChangeModEvent::Type::Set, 0});
-    //Observable::notify(&ev);
 }
 
 void MyApplication::onTick() {
@@ -65,7 +61,6 @@ void MyApplication::onTick() {
     {
         if (_isPowerOn) {
             _effectManager->onTick();
-            //EffectsList::getInstance().onTick();
             _autoMod.onTick();
         }
 #if BTN_ENABLE
@@ -98,5 +93,12 @@ void MyApplication::handleEvent(Event *event) {
     } else if (event->type == EventType::SetPowerState) {
         ChangeBoolEvent *ev = static_cast<ChangeBoolEvent *>(event);
         setPowerState(ev->new_val);
+    } else if (event->type == EventType::ChangeAutoMod) {
+        ChangeBoolEvent *ev = static_cast<ChangeBoolEvent *>(event);
+        _autoMod.setIsEnable(ev->new_val);
+    } else if (event->type == EventType::ChangeMode) { // включить питание при попытках сменить режима
+        if (!_isPowerOn) {
+            setPowerState(true);
+        }
     }
 }
