@@ -5,7 +5,7 @@
 #include "EffectInfo.h"
 #include "EffectFactory.h"
 #include "FpsManager.h"
-#include "effect_list/effect.h"
+#include "effects/effect.h"
 #include "events/events.h"
 
 #include <stdint.h>
