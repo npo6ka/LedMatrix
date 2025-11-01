@@ -14,6 +14,7 @@ class Snake : public Effect
     bool apple_flag, end_game;
     uint8_t aiType = 3;
     SnakeAI *ai;
+    uint64_t startTime;
 
     uint8_t tick, step = 3;
 
@@ -149,6 +150,8 @@ class Snake : public Effect
 
         apple_flag = false;
         end_game = false;
+
+        startTime = millis();
     }
 
     SnakeAI* make_ai() {
@@ -165,7 +168,7 @@ class Snake : public Effect
     }
 
 public:
-    void on_init() override {
+    virtual void on_init() override {
         set_fps(40);
         tick = 0;
         button = Trend::none;
@@ -180,10 +183,14 @@ public:
         }
     }
 
-    void on_update() override {
+    virtual void on_update() override {
         tick = (tick + 1) % step;
         if (!tick) {
             snakeRoutine();
         }
+    }
+
+    virtual bool is_end() const override {
+        return millis() - startTime < 5000; // если с момента старта прошло меньше 5 секунд, то режим не переключится
     }
 };
