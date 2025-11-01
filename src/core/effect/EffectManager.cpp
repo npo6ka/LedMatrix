@@ -10,8 +10,13 @@ EffectManager::EffectManager(IEffectStorage& storage)
 }
 
 void EffectManager::onTick() {
+    this->onCheckRequestedEffectChange();
+    this->onTickEffect();
+}
+
+void EffectManager::onCheckRequestedEffectChange() {
     // Обработка отложенного запроса на смену эффекта
-    if (_pendingRequest.type != ChangeModeEventRequest::Type::None && (_currentEffect->is_end() || _pendingRequest.hardReset)) {
+    if (_pendingRequest.type != ChangeModeEventRequest::Type::None && (!_currentEffect || _currentEffect->is_end() || _pendingRequest.hardReset)) {
         uint16_t requestedModIndex = 0;
         if (_pendingRequest.type == ChangeModeEventRequest::Type::Set) {
             requestedModIndex = _pendingRequest.modNum;
@@ -27,6 +32,14 @@ void EffectManager::onTick() {
         }
 
         _pendingRequest = ChangeModeEventRequest();
+    }
+}
+
+void EffectManager::onTickEffect() {
+    if (_currentEffect && _fpsManager.needUpdate()) {
+        _currentEffect->on_update();
+        _currentEffect->on_render();
+        FastLED.show();
     }
 }
 

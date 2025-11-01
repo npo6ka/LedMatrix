@@ -8,6 +8,9 @@
 template<typename T>
 class FileSavableVariable: public Variable<T>, public ISaveable, public IFileSaveable
 {
+    // delete copy constructor and assignment operator
+    FileSavableVariable(const FileSavableVariable&) = delete;
+    FileSavableVariable& operator=(const FileSavableVariable&) = delete;
 public:
     FileSavableVariable() = delete;
     FileSavableVariable(IFileHandler* fileHandler,
@@ -21,6 +24,24 @@ public:
             this->_value = defaultValue;
             save();
         }
+    }
+
+    // move constructor and assignment operator
+    FileSavableVariable(FileSavableVariable&& other) {
+        this->_fileHandler = other._fileHandler;
+        this->_offset = other._offset;
+        this->_value = other._value;
+
+        other._fileHandler = nullptr;
+    }
+
+    FileSavableVariable& operator=(FileSavableVariable&& other) {
+        this->_fileHandler = other._fileHandler;
+        this->_offset = other._offset;
+        this->_value = other._value;
+
+        other._fileHandler = nullptr;
+        return *this;
     }
 
     virtual void set(const T& value) override {

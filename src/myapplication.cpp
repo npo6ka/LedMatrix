@@ -53,9 +53,6 @@ void MyApplication::onInit() {
 #endif
     _effectManager = std::make_unique<EffectManager>(*_effectStorage.get());
 
-    ChangeModeEvent evt(EventType::ModChanged, true, ChangeModeEventRequest::Type::Set, 2, 0);
-    Observable::notify(&evt);
-
     //EffectsList::getInstance(); // инициализируем EffectsList, чтобы сработало уведомление о новом режиме
     //auto ev = ChangeModEvent({EventType::ChangeMode, ChangeModEvent::Type::Set, 0});
     //Observable::notify(&ev);

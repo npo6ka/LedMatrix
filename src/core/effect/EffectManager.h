@@ -30,6 +30,10 @@ public:
     void handleEvent(Event* event) override;
 
 private:
+
+    void onCheckRequestedEffectChange();
+    void onTickEffect();
+
     IEffectStorage& _storage;                   // Ссылка на хранилище эффектов
     std::unique_ptr<Effect> _currentEffect;     // Указатель на текущий активный эффект
     ChangeModeEventRequest _pendingRequest;     // Ожидающий запрос на смену эффекта

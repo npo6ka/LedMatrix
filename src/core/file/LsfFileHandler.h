@@ -69,6 +69,8 @@ public:
             return false;
         }
 
+        _file.flush();
+
         return true;
     }
 

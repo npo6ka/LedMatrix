@@ -4,11 +4,11 @@
 
 enum class EventType {
     ChangeAutoMod = 0,
-    ChangePowerState,       // Event
-    SetPowerState,          // ChangeBoolEvent
-    ChangeBrightness,       // ChangeIntEvent
-    ChangeSpeed,            // ChangeIntEvent
-    ChangeMode,             // ChangeModEvent
+    ChangePowerState,       // ChangePowerStateEvent
+    SetPowerState,          // SetPowerStateEvent
+    ChangeBrightness,       // ChangeBrightnessEvent
+    ChangeSpeed,            // ChangeSpeedEvent
+    ChangeMode,             // ChangeModeEvent
     ModChanged,             // ModChangedEvent
     ChangeModVar,           // ChangeModVarEvent
     EventAmount             // Используется, чтобы знать сколько всего ивентов
