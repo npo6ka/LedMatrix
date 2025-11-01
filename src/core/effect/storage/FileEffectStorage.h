@@ -188,7 +188,7 @@ private:
 };
 
 // Test code:
-//         LsfFileHandler fileHandler;
+//         Lsf12eFileHandler fileHandler;
 //         //LittleFS.remove("/mods.txt");
 //         listFiles();
 

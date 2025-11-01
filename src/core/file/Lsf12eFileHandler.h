@@ -5,26 +5,26 @@
 
 #include "LittleFS.h"
 
-class LsfFileHandler : public IFileHandler {
+class Lsf12eFileHandler : public IFileHandler {
     File _file;
 
-    LsfFileHandler(const LsfFileHandler&) = delete;
-    LsfFileHandler& operator= (const LsfFileHandler&) = delete;
-    LsfFileHandler(LsfFileHandler&& other) = delete;
-    LsfFileHandler& operator= (LsfFileHandler&& other) = delete;
+    Lsf12eFileHandler(const Lsf12eFileHandler&) = delete;
+    Lsf12eFileHandler& operator= (const Lsf12eFileHandler&) = delete;
+    Lsf12eFileHandler(Lsf12eFileHandler&& other) = delete;
+    Lsf12eFileHandler& operator= (Lsf12eFileHandler&& other) = delete;
 public:
-    LsfFileHandler() {
+    Lsf12eFileHandler() {
         static bool isMounted = false;
         if (!isMounted && LittleFS.begin()) {
             isMounted = true;
         }
     }
 
-    LsfFileHandler(const char* path) : LsfFileHandler() {
+    Lsf12eFileHandler(const char* path) : Lsf12eFileHandler() {
         open(path);
     }
 
-    virtual ~LsfFileHandler() {
+    virtual ~Lsf12eFileHandler() {
         close();
     }
 
