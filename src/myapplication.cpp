@@ -4,7 +4,7 @@
 #include "libs/StdFeatures.h"
 
 #if SAVE_TO_EEPROM
-#   include "core/file/Lsf12eFileHandler.h"
+#   include "core/file/LsfFileHandler.h"
 #   include "core/effect/storage/FileEffectStorage.h"
 #else
 #   include "core/effect/storage/StaticEffectStorage.h"
@@ -47,7 +47,7 @@ void MyApplication::onInit() {
     _relay.onInit();
 #endif
 #if SAVE_TO_EEPROM
-    _effectStorage = std::make_unique<FileEffectStorage>(std::make_unique<Lsf12eFileHandler>(SAVE_TO_EEPROM_FILE));
+    _effectStorage = std::make_unique<FileEffectStorage>(std::make_unique<LsfFileHandler>(SAVE_TO_EEPROM_FILE));
 #else
     _effectStorage = std::make_unique<StaticEffectStorage>();
 #endif
