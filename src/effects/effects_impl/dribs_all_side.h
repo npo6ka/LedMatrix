@@ -16,7 +16,8 @@ class DribsAllSide : public Effect
     Snake snakes[MAX_SNAKE];
     uint8_t chsv;
 public:
-    DribsAllSide() {}
+    DribsAllSide(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
 
     void on_init() {
         set_fps(60);

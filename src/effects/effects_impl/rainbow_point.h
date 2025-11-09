@@ -63,7 +63,8 @@ class RainbowPoint : public Effect
     }
 
 public:
-    RainbowPoint() {}
+    RainbowPoint(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
 
     void on_init()
     {

@@ -14,7 +14,8 @@ class SimpleBalls : public Effect
     CRGB wall_color = 0x00ff00;
 
 public:
-    SimpleBalls() {}
+    SimpleBalls(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
 
     void on_init() {
         for (uint8_t j = 0; j < balls_amount; j++) {

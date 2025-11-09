@@ -6,7 +6,8 @@ class Rain : public Effect
     uint8_t step{2};
 
 public:
-    Rain() {}
+    Rain(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
 
     void on_init() {
         set_fps(60);

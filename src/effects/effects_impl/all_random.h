@@ -6,7 +6,8 @@ class AllRandom : public Effect
 {
 
 public:
-    AllRandom() {}
+    AllRandom(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
 
     void on_init() {
         set_fps(15);

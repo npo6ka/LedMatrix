@@ -7,7 +7,8 @@ class RandomRain : public Effect
     uint8_t step;
 
 public:
-    RandomRain() {}
+    RandomRain(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
 
     void on_init()
     {

@@ -10,7 +10,8 @@ class DynamicSquare : public Effect
     uint8_t cur_ring = 0;
 
 public:
-    DynamicSquare() {}
+    DynamicSquare(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
 
     void on_init() {
         set_fps(12);

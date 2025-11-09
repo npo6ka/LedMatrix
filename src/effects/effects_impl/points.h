@@ -88,7 +88,8 @@ class Points : public Effect
     }
 
 public:
-    Points() {}
+    Points(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
 
     void on_init()
     {

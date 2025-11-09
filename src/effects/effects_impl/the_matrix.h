@@ -7,7 +7,8 @@ class TheMatrix : public Effect
     uint8_t fade = 0x30;
 
 public:
-    TheMatrix() {}
+    TheMatrix(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
 
     void on_init() {
         set_fps(30);

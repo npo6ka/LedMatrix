@@ -54,7 +54,8 @@ class CrazyBees : public Effect
     Bee bee[beesCnt];
 
 public:
-    CrazyBees() {}
+    CrazyBees(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
 
     void on_init() {
         for (byte i = 0; i < beesCnt; i++) {

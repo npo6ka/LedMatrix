@@ -53,7 +53,8 @@ private:
     }
 
 public:
-    CircularPoint() {}
+    CircularPoint(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
 
     void on_init() {
         tick = 0;

@@ -33,11 +33,11 @@
 
 #include "libs/StdFeatures.h"
 
-using EffectCreator = std::unique_ptr<Effect> (*)();
+using EffectCreator = std::unique_ptr<Effect> (*)(const std::string& variableStoragePath);
 
 template <class T>
-static std::unique_ptr<Effect> makeEffect() {
-    return std::make_unique<T>();
+static std::unique_ptr<Effect> makeEffect(const std::string& variableStoragePath) {
+    return std::make_unique<T>(variableStoragePath);
 }
 
 template <class T>
@@ -96,8 +96,8 @@ uint32_t EffectFactory::getEffectCount() {
     return EFFECT_COUNT;
 }
 
-std::unique_ptr<Effect> EffectFactory::createEffect(uint32_t effect_id) {
-    return getEffectInfo(effect_id).effect_creator();
+std::unique_ptr<Effect> EffectFactory::createEffect(uint32_t effect_id, const std::string& variableStoragePath) {
+    return getEffectInfo(effect_id).effect_creator(variableStoragePath);
 }
 
 const char* EffectFactory::getEffectName(uint32_t effect_id) {

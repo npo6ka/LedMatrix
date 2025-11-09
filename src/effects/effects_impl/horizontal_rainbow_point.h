@@ -46,7 +46,7 @@ private:
         } else if (y >= ACCURACY * LEDS_HEIGHT) {
             y = ACCURACY * LEDS_HEIGHT - 1;
             rainbow_point_gen_vector(false);
-        }  
+        }
     }
 
     int32_t point_distance(int32_t x1, int32_t y1, int32_t x2, int32_t y2) {
@@ -73,7 +73,8 @@ private:
         }
     }
 public:
-    HorizontalRainbowPoint() {}
+    HorizontalRainbowPoint(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
 
     void on_init() {
         tick = 0;

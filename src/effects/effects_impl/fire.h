@@ -40,7 +40,8 @@ class Fire : public Effect
     bool align_center = true;     // выравнивание костра по центру
 
 public:
-    Fire() {}
+    Fire(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
 
     void on_init() {
         generateLine();

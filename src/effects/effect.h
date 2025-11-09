@@ -1,14 +1,39 @@
 #pragma once
 
 #include "libs/led_matrix.h"
+#include "core/Variable/Variable.h"
+#include "core/effect/storageVariable/IEffectVariableStorage.h"
+#include "libs/StdFeatures.h"
+
+#ifdef SAVE_TO_EEPROM
+#   include "core/effect/storageVariable/FileEffectVariableStorage.h"
+#   include "core/Variable/FileSavableVariable.h"
+#else
+#   include "core/effect/storageVariable/StaticEffectVariableStorage.h"
+#   include "core/Variable/Variable.h"
+#endif
+
+#include <memory>
+#include <string>
 
 class Effect
 {
+private:
     uint8_t _fps = 60;
     bool _is_end = true;
+protected:
+    std::unique_ptr<IEffectVariableStorage> _variableStorage;
 
 public:
-    Effect() = default;
+    Effect(const std::string& variableStoragePath)
+    {
+#ifdef SAVE_TO_EEPROM
+        _variableStorage = std::make_unique<FileEffectVariableStorage>(variableStoragePath);
+#else
+        _variableStorage = std::make_unique<StaticEffectVariableStorage>();
+#endif
+    }
+
     virtual ~Effect() = default;
 
     /* Инициализация режима, установка начальный значений.
@@ -60,5 +85,20 @@ public:
     */
     virtual bool is_end() const {
         return _is_end;
+    }
+
+protected:
+    // Добавление сохраняемых переменных для эффекта
+    template<typename T>
+    Variable<T>& createVariable(const T& defaultValue) {
+#ifdef SAVE_TO_EEPROM
+        std::unique_ptr<IVariable> var = std::make_unique<FileSavableVariable<T>>(
+            _variableStorage->getFileHandler(),
+            _variableStorage->getCurrentOffset(),
+            defaultValue);
+#else
+        std::unique_ptr<IVariable> var = std::make_unique<Variable<T>>(defaultValue);
+#endif
+        return static_cast<Variable<T>&>(_variableStorage->addVariable(std::move(var)));
     }
 };

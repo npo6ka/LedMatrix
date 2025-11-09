@@ -12,7 +12,8 @@ class ZigZag : public Effect
     uint8_t tick;
 
 public:
-    ZigZag() {
+    ZigZag(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {
         set_fps(20);
     }
 

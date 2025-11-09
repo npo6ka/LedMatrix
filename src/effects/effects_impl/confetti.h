@@ -7,7 +7,8 @@ class Confetti : public Effect
     uint8_t brightness_step = 30;
     uint8_t density = 3;
 public:
-    Confetti() {}
+    Confetti(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
 
     void on_init() {
         set_fps(30);

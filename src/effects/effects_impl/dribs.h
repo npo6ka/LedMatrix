@@ -7,6 +7,9 @@ class Dribs : public Effect
     uint8_t cur_drib[LEDS_WIDTH];
     uint8_t lenght;
 public:
+    Dribs(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
+
     void on_init()
     {
         lenght = 12;

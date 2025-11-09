@@ -5,7 +5,8 @@
 class Mouse : public Effect
 {
 public:
-    Mouse();
+    Mouse(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
     void on_init();
     void on_update();
 private:

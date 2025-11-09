@@ -17,7 +17,8 @@ class RadialFire : public Effect
     const uint8_t speed = 24;
 
 public:
-    RadialFire() {}
+    RadialFire(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
 
     void on_init() {
         float coef = 1 - (LedMatrix.height() > LedMatrix.width() ? 0 : float(abs(LedMatrix.width() - LedMatrix.height())) / max(LedMatrix.width(), LedMatrix.height()) * 0.5);

@@ -15,7 +15,8 @@ class RadialPattern : public Effect
     const byte speed = 1;
 
 public:
-    RadialPattern() {}
+    RadialPattern(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
 
     void on_init() {
         for (int8_t x = -C_X; x < C_X + (LEDS_WIDTH % 2); x++) {

@@ -8,7 +8,8 @@ class SlowRandom : public Effect
     int step;
 
 public:
-    SlowRandom() {}
+    SlowRandom(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) { }
 
     uint8_t gen_led(uint8_t &color_val)
     {

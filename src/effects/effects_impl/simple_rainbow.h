@@ -7,7 +7,8 @@ class SimpleRainbow : public Effect
     int tick;
     int phaseShift;
 public:
-    SimpleRainbow() {}
+    SimpleRainbow(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
 
     void on_init()
     {

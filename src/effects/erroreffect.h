@@ -5,7 +5,7 @@
 class ErrorEffect : public Effect
 {
 public:
-    ErrorEffect() {}
+    ErrorEffect(const std::string& variableStoragePath) : Effect("") {}
 
     void on_update() {
         FastLED.showColor(CRGB::Red);

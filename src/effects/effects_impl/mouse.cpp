@@ -29,8 +29,6 @@ static uint32_t mouse2[W*H] PROGMEM = {
     0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0xffffff, 0x000000, 0x000000, 0xffffff, 0x000000, 0x000000, 0x000000,
 };
 
-Mouse::Mouse() {}
-
 void Mouse::on_init() {
     set_fps(15);
     x = 0;

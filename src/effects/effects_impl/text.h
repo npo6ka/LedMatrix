@@ -123,7 +123,9 @@ class TextMode : public Effect {
   }
 
  public:
-  TextMode() {}
+  TextMode(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
+
   ~TextMode() {
     if (current_text) {
       delete current_text;

@@ -9,7 +9,8 @@ class RainbowRain : public Effect
     int tick;
 
 public:
-    RainbowRain() {}
+    RainbowRain(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
 
     void on_init()
     {

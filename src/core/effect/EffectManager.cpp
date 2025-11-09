@@ -1,5 +1,9 @@
 #include "EffectManager.h"
+
 #include "libs/debug_lib.h"
+
+#include "Arduino.h"
+#include <string>
 
 EffectManager::EffectManager(IEffectStorage& storage)
     : _storage(storage)
@@ -48,7 +52,7 @@ void EffectManager::updateEffect() {
     if (_currentEffect) {
         _currentEffect->on_clear();
     }
-    _currentEffect = EffectFactory::createEffect(effectInfo.id);
+    _currentEffect = EffectFactory::createEffect(effectInfo.id, String(effectInfo.savedIndex).c_str());
     _currentEffect->on_init();
     _fpsManager.setTargetFPS(_currentEffect->get_fps());
 

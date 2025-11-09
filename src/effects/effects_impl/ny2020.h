@@ -10,7 +10,8 @@
 class NY2020 : public Effect
 {
 public:
-    NY2020() {}
+    NY2020(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
 
     void on_init();
     void on_update();

@@ -34,7 +34,8 @@ static const uint32_t pacman2[PACMAN_W*PACMAN_H] PROGMEM = {
 class Pacman : public Effect
 {
 public:
-    Pacman() {}
+    Pacman(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
 
     void on_init()
     {

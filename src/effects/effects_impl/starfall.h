@@ -9,7 +9,8 @@ class Starfall : public Effect
     uint8_t tail_step = 100;
     uint8_t border = 2;
 public:
-    Starfall () {}
+    Starfall (const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
 
     void on_init() {
         set_fps(20);

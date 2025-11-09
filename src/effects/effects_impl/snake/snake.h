@@ -168,6 +168,9 @@ class Snake : public Effect
     }
 
 public:
+    Snake(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
+
     virtual void on_init() override {
         set_fps(40);
         tick = 0;

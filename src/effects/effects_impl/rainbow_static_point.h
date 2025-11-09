@@ -28,7 +28,8 @@ class RainbowStaticPoint : public Effect
     }
 
 public:
-    RainbowStaticPoint() {}
+    RainbowStaticPoint(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
 
     void on_init()
     {

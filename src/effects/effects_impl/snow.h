@@ -10,7 +10,8 @@ class Snow : public Effect
     uint8_t density;
     bool direction;
 public:
-    Snow() {}
+    Snow(const std::string& variableStoragePath) :
+        Effect(variableStoragePath) {}
 
     void on_init()
     {
