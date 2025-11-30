@@ -141,7 +141,7 @@ class TextMode : public Effect {
 
   void on_init() {
     current_text = nullptr;
-    set_text("Улыбнись этому прекрасному дню))");
+    set_text("Новый год к нам мчится!");
     set_fps(60);
   }
 
