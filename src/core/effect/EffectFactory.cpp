@@ -51,40 +51,40 @@ struct EffectCreationInfo {
 };
 
 #define EFFECT_CASE(id, name, type) case id: return EffectCreationInfo{name, effectCreator<type>()};
-#define EFFECT_COUNT 19 // при добавлении нового эффекта, не забудь обновить EFFECT_COUNT
+#define EFFECT_COUNT 29 // при добавлении нового эффекта, не забудь обновить EFFECT_COUNT
 
 static EffectCreationInfo getEffectInfo(uint32_t effect_id) {
     switch (effect_id) {
-        EFFECT_CASE(0, "Error", ErrorEffect);
-        //EFFECT_CASE(1, "SlowRandom", SlowRandom);
-        //EFFECT_CASE(2, "SimpleRainbow", SimpleRainbow);
-        //EFFECT_CASE(3, "Dribs", Dribs);
-        EFFECT_CASE(1, "Rain", Rain);
-        //EFFECT_CASE(5, "AllRandom", AllRandom);
-        //EFFECT_CASE(6, "Snow", Snow);
-        //EFFECT_CASE(7, "Fire", Fire);
-        EFFECT_CASE(2, "TheMatrix", TheMatrix);
-        EFFECT_CASE(3, "SimpleBalls", SimpleBalls);
-        EFFECT_CASE(4, "Confetti", Confetti);
-        //EFFECT_CASE(11, "Starfall", Starfall);
-        //EFFECT_CASE(12, "DynamicSquare", DynamicSquare);
-        EFFECT_CASE(5, "RandomRain", RandomRain);
-        EFFECT_CASE(6, "RainbowRain", RainbowRain);
-        EFFECT_CASE(7, "Points", Points);
-        EFFECT_CASE(8, "RainbowPoint", RainbowPoint);
-        //EFFECT_CASE(17, "RainbowStaticPoint", RainbowStaticPoint);
-        EFFECT_CASE(9, "Text", TextMode);
-        EFFECT_CASE(10, "Mouse", Mouse);
-        EFFECT_CASE(11, "Pacman", Pacman);
-        EFFECT_CASE(12, "CircularPoint", CircularPoint);
-        EFFECT_CASE(13, "Zigzag", ZigZag);
-        //EFFECT_CASE(23, "HorizontalRainbowPoint", HorizontalRainbowPoint);
-        EFFECT_CASE(14, "Ny2020", NY2020);
-        EFFECT_CASE(15, "DribsAllSide", DribsAllSide);
-        EFFECT_CASE(16, "Snake", Snake);
-        EFFECT_CASE(17, "RadialFire", RadialFire);
-        EFFECT_CASE(18, "RadialPattern", RadialPattern);
-        EFFECT_CASE(19, "CrazyBees", CrazyBees);
+         EFFECT_CASE(0, "Error", ErrorEffect);
+        EFFECT_CASE(1, "SlowRandom", SlowRandom);
+        EFFECT_CASE(2, "SimpleRainbow", SimpleRainbow);
+        EFFECT_CASE(3, "Dribs", Dribs);
+        EFFECT_CASE(4, "Rain", Rain);
+        EFFECT_CASE(5, "AllRandom", AllRandom);
+        EFFECT_CASE(6, "Snow", Snow);
+        EFFECT_CASE(7, "Fire", Fire);
+        EFFECT_CASE(8, "TheMatrix", TheMatrix);
+        EFFECT_CASE(9, "SimpleBalls", SimpleBalls);
+        EFFECT_CASE(10, "Confetti", Confetti);
+        EFFECT_CASE(11, "Starfall", Starfall);
+        EFFECT_CASE(12, "DynamicSquare", DynamicSquare);
+        EFFECT_CASE(13, "RandomRain", RandomRain);
+        EFFECT_CASE(14, "RainbowRain", RainbowRain);
+        EFFECT_CASE(15, "Points", Points);
+        EFFECT_CASE(16, "RainbowPoint", RainbowPoint);
+        EFFECT_CASE(17, "RainbowStaticPoint", RainbowStaticPoint);
+        EFFECT_CASE(18, "Text", TextMode);
+        EFFECT_CASE(19, "Mouse", Mouse);
+        EFFECT_CASE(20, "Pacman", Pacman);
+        EFFECT_CASE(21, "CircularPoint", CircularPoint);
+        EFFECT_CASE(22, "Zigzag", ZigZag);
+        EFFECT_CASE(23, "HorizontalRainbowPoint", HorizontalRainbowPoint);
+        EFFECT_CASE(24, "Ny2020", NY2020);
+        EFFECT_CASE(25, "DribsAllSide", DribsAllSide);
+        EFFECT_CASE(26, "Snake", Snake);
+        EFFECT_CASE(27, "RadialFire", RadialFire);
+        EFFECT_CASE(28, "RadialPattern", RadialPattern);
+        EFFECT_CASE(29, "CrazyBees", CrazyBees);
         // при добавлении нового эффекта, не забудь обновить EFFECT_COUNT
 
         default:
