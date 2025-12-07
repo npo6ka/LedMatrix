@@ -1,7 +1,6 @@
 #pragma once
 
-#include "snake_lib.h"
-
+#include "snake_ai.h"
 
 class WithFallbackAI : public SnakeAI {
     SnakeAI *primary;

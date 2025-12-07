@@ -1,7 +1,7 @@
 #pragma once
 
 #include "effect_list/effect.h"
-#include "effect_list/effects/snake/snake_lib.h"
+#include "libs/coord.h"
 
 #define MAX_SNAKE 10
 
@@ -50,6 +50,11 @@ public:
         case Trend::right:
             snake.pos.x = 0;
             snake.pos.y = random16(LEDS_HEIGHT);
+            break;
+        default: // include Trend::none
+            out("Error trend is none in create_snake\n");
+            snake.pos.x = 0;
+            snake.pos.y = 0;
             break;
         }
     }

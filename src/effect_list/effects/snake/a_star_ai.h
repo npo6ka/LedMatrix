@@ -1,6 +1,7 @@
 #pragma once
 
-#include "snake_lib.h"
+#include "snake_ai.h"
+#include "snake_constants.h"
 
 class AStarSnakeAI : public SnakeAI {
     struct Node {

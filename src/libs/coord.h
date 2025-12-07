@@ -1,13 +1,7 @@
 #pragma once
 
 #include "stdint.h"
-
-#define START_LENGTH 4                      // начальная длина змейки
-#define MAX_SNAKE_LENGTH LEDS_HEIGHT * LEDS_WIDTH     // максимальная длина змейки
-static_assert(LEDS_HEIGHT / 2 >= START_LENGTH, "Low LEDS_HEIGHT size for starting snake mode");
-
-#define COLOR_SNAKE CRGB(CRGB::Green)       // Цвет змейки
-#define COLOR_APPLE CRGB(CRGB::Orange)      // Цвет яблока на поле
+#include "configs/constants.h"
 
 enum class Trend : uint8_t {
     none = 0,
@@ -73,12 +67,4 @@ struct Coord {
     bool operator!=(Coord a) const {
         return !(*this == a);
     }
-
-};
-
-class SnakeAI {
-public:
-    virtual ~SnakeAI() = default;
-    virtual Trend getTrend(Coord head, Coord apple, Trend vector) = 0;
-    virtual void clear() {};
 };
