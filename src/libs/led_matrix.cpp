@@ -29,11 +29,11 @@ static_assert(LEDS_HW_HEIGHT < std::numeric_limits<index_t>::max(), "invalid LED
 #if (LEDS_STRIP_DIRECTION == 0)
     #define THIS_X POS_X
     #define THIS_Y POS_Y
-    #define THIS_H LEDS_HW_HEIGHT
+    #define THIS_H LEDS_HW_WIDTH
 #else
     #define THIS_X POS_Y
     #define THIS_Y POS_X
-    #define THIS_H LEDS_HW_WIDTH
+    #define THIS_H LEDS_HW_HEIGHT
 #endif
 
 CLedMatrix LedMatrix;
@@ -53,11 +53,17 @@ static index_t get_pix_num(index_t x, index_t y) {
     // 10 11 12
     // 20 21 22
 
+    index_t index;
     if (LEDS_MATRIX_TYPE || THIS_Y % 2 == 0) {
-        return THIS_Y * THIS_H + THIS_X;
+        index = THIS_Y * THIS_H + THIS_X;
     } else {
-        return THIS_Y * THIS_H + THIS_H - THIS_X - 1;
+        index = THIS_Y * THIS_H + THIS_H - THIS_X - 1;
     }
+    if (index >= LEDS_HW_SIZE) {
+        out("Index out of range: get_pix_num(): x=%u, y=%u, index=%u\n", x, y, index);
+        return 0;
+    }
+    return index;
 }
 
 CLedMatrix::CLedMatrix() {}

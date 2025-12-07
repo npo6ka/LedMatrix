@@ -86,7 +86,7 @@ public:
     // range по ширине матрицы для range-based-циклов
     // left - левая граница (включительно)
     // right - правая граница (невключительно)
-    // right (отрицательное) - отступ от ширины 
+    // right (отрицательное) - отступ от ширины
     Range<index_t> rangeX(index_t left = 0, int right = -1) const {
         return rangeImpl(left, right, width());
     }
@@ -94,7 +94,7 @@ public:
     // range по высоте матрицы для range-based-циклов
     // left - левая граница (включительно)
     // right - правая граница (невключительно)
-    // right (отрицательное) - отступ от высоты 
+    // right (отрицательное) - отступ от высоты
     Range<index_t> rangeY(index_t left = 0, int right = -1) const {
         return rangeImpl(left, right, height());
     }
