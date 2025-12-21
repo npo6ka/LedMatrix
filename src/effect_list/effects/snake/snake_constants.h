@@ -9,4 +9,4 @@
 #define COLOR_SNAKE CRGB(CRGB::Green)       // Цвет змейки
 #define COLOR_APPLE CRGB(CRGB::Orange)      // Цвет яблока на поле
 
-static_assert(LEDS_HEIGHT / 2 >= START_LENGTH, "Low LEDS_HEIGHT size for starting snake mode");
+// static_assert(LEDS_HEIGHT / 2 >= START_LENGTH, "Low LEDS_HEIGHT size for starting snake mode");
