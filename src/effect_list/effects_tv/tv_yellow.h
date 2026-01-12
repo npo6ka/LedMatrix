@@ -10,7 +10,7 @@ public:
     void on_init()
     {
         lenght = 0;
-        set_fps(1);
+        set_fps(10);
     }
 
     void on_update()
