@@ -1,6 +1,7 @@
 #pragma once
 
-#include "snake_lib.h"
+#include "snake_ai.h"
+#include "snake_constants.h"
 
 class SimpleSnakeAI : public SnakeAI {
     bool canTrand(Coord coord, Trend tr) {
@@ -9,7 +10,7 @@ class SimpleSnakeAI : public SnakeAI {
         return moved_coord
             && LedMatrix.at(moved_coord.x, moved_coord.y) != COLOR_SNAKE;
     }
-    
+
 public:
     Trend getTrend(Coord head, Coord apple, Trend vector) override {
         // инициализируем кнопку. Сначала ничего не знаем, поэтому -1
