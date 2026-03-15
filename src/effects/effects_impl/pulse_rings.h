@@ -5,7 +5,7 @@
 // Расходящиеся от центра кольца, которые затухают
 class PulseRings : public Effect
 {
-    static constexpr uint8_t maxRings = 4;
+    static constexpr uint8_t maxRings = 3;
     static constexpr float expandSpeed = 0.35f;
     static constexpr float fadeStart = 3.0f;  // радиус, с которого начинается затухание
 
@@ -50,7 +50,7 @@ public:
                 _rings[i].active = true;
                 _rings[i].radius = 0.5f;
                 _rings[i].hue = _hueOffset;
-                _hueOffset += 42;
+                _hueOffset += 30;
                 break;
             }
         }
@@ -67,7 +67,7 @@ public:
                     if (diff < 0.8f) {
                         uint8_t bright = 200;
                         if (r > fadeStart) {
-                            bright = (uint8_t)(200.0f * (maxR - r) / (maxR - fadeStart));
+                            bright = (uint8_t)(bright * (maxR - r) / (maxR - fadeStart));
                         }
                         auto& pix = LedMatrix.at(x, y);
                         CRGB add = CHSV(_rings[i].hue, 255, bright);
