@@ -27,10 +27,12 @@ public:
 
 
     void run() {
-        LedMatrix.at(aimX + 1, aimY) += CHSV(hue, 255, 255);
-        LedMatrix.at(aimX, aimY + 1) += CHSV(hue, 255, 255);
-        LedMatrix.at(aimX - 1, aimY) += CHSV(hue, 255, 255);
-        LedMatrix.at(aimX, aimY - 1) += CHSV(hue, 255, 255);
+        const index_t w = LedMatrix.width();
+        const index_t h = LedMatrix.height();
+        if (aimX + 1 < w) LedMatrix.at(aimX + 1, aimY) += CHSV(hue, 255, 255);
+        if (aimY + 1 < h) LedMatrix.at(aimX, aimY + 1) += CHSV(hue, 255, 255);
+        if (aimX > 0) LedMatrix.at(aimX - 1, aimY) += CHSV(hue, 255, 255);
+        if (aimY > 0) LedMatrix.at(aimX, aimY - 1) += CHSV(hue, 255, 255);
         if (posX != aimX || posY != aimY) {
             LedMatrix.at(posX, posY) = CHSV(hue, 60, 255);
             int8_t error2 = error * 2;

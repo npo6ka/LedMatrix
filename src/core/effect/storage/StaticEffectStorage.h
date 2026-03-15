@@ -15,6 +15,7 @@ private:
 public:
     StaticEffectStorage() {
         createDefaultEffectsList();
+        _currentEffectIndex = _effects.size() - 1;
     }
 
     virtual ~StaticEffectStorage() {};
@@ -114,6 +115,8 @@ private:
         internalAddEffect(27); // RadialFire
         internalAddEffect(28); // RadialPattern
         internalAddEffect(29); // CrazyBees
+        internalAddEffect(30); // Spiral
+        internalAddEffect(31); // PulseRings
     }
 
     void internalAddEffect(uint32_t effectId) {

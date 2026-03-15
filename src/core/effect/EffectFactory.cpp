@@ -30,6 +30,8 @@
 #include "effects/effects_impl/radial_fire.h"
 #include "effects/effects_impl/radial_pattern.h"
 #include "effects/effects_impl/crazy_bees.h"
+#include "effects/effects_impl/spiral.h"
+#include "effects/effects_impl/pulse_rings.h"
 
 #include "libs/StdFeatures.h"
 
@@ -51,7 +53,7 @@ struct EffectCreationInfo {
 };
 
 #define EFFECT_CASE(id, name, type) case id: return EffectCreationInfo{name, effectCreator<type>()};
-#define EFFECT_COUNT 29 // при добавлении нового эффекта, не забудь обновить EFFECT_COUNT
+#define EFFECT_COUNT 32 // при добавлении нового эффекта, не забудь обновить EFFECT_COUNT
 
 static EffectCreationInfo getEffectInfo(uint32_t effect_id) {
     switch (effect_id) {
@@ -85,6 +87,8 @@ static EffectCreationInfo getEffectInfo(uint32_t effect_id) {
         EFFECT_CASE(27, "RadialFire", RadialFire);
         EFFECT_CASE(28, "RadialPattern", RadialPattern);
         EFFECT_CASE(29, "CrazyBees", CrazyBees);
+        EFFECT_CASE(30, "Spiral", Spiral);
+        EFFECT_CASE(31, "PulseRings", PulseRings);
         // при добавлении нового эффекта, не забудь обновить EFFECT_COUNT
 
         default:
