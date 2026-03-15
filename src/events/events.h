@@ -12,6 +12,7 @@ enum class EventType {
     ChangeMode,             // ChangeModeEventRequest
     ModChanged,             // ModChangedEvent
     ChangeModVar,           // ChangeModVarEvent
+    ResetModesList,         // Event — сброс списка режимов на заводской
     EventAmount             // Используется, чтобы знать сколько всего ивентов
 };
 

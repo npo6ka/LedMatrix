@@ -5,10 +5,15 @@
 Button::Button(int8_t pin, bool type, bool dir) : touch(GButton(pin, type, dir)) {
     touch.setStepTimeout(BUTTON_STEP_TIMEOUT);
     touch.setClickTimeout(BUTTON_CLICK_TIMEOUT);
+    touch.setTimeout(BUTTON_HOLD_RESET_MS);  // удержание дольше — сброс списка режимов (isHold)
 }
 
 void Button::onTick() {
     touch.tick();
+    if (touch.isHolded()) {
+        Observable::notify<Event>(EventType::ResetModesList);
+        return;
+    }
     uint8_t clickCount = touch.hasClicks() ? touch.getClicks() : 0U;
     switch (clickCount) {
         case 1U: {

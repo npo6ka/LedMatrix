@@ -136,6 +136,7 @@ public:
     virtual void reset() override {
         clear();
         createDefaultEffectsList();
+        logInfo("Effects list resetted\n");
     }
 
     virtual void clear() override {

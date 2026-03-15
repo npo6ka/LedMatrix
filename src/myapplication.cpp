@@ -26,12 +26,14 @@ MyApplication::MyApplication() :
     Observable::subscribe(EventType::ChangePowerState, this);
     Observable::subscribe(EventType::SetPowerState, this);
     Observable::subscribe(EventType::ChangeMode, this);
+    Observable::subscribe(EventType::ResetModesList, this);
 };
 
 MyApplication::~MyApplication() {
     Observable::unsubscribe(EventType::ChangePowerState, this);
     Observable::unsubscribe(EventType::SetPowerState, this);
     Observable::unsubscribe(EventType::ChangeMode, this);
+    Observable::unsubscribe(EventType::ResetModesList, this);
 }
 
 // лучше всё по максимому инициализировать тут
@@ -100,5 +102,8 @@ void MyApplication::handleEvent(const Event *event) {
         if (!_isPowerOn) {
             setPowerState(true);
         }
+    } else if (event->type == EventType::ResetModesList) {
+        _effectStorage->reset();
+        _effectManager->setEffect(_effectStorage->size() - 1);
     }
 }
