@@ -4,7 +4,7 @@
 #include "core/Variable/FileSavableVariable.h"
 #include "libs/debug_lib.h"
 #include "IEffectStorage.h"
-#include "StaticEffectStorage.h"
+#include "configs/DefaultEffectList.h"
 
 #include <stdint.h>
 #include "vector"
@@ -180,9 +180,8 @@ private:
 
     void createDefaultEffectsList() {
         logInfo("Creating default effects list\n");
-        StaticEffectStorage defaultStorage;
-        for (size_t i = 0; i < defaultStorage.size(); i++) {
-            internalAddEffect(EffectInfo(defaultStorage.getEffectInfo(i).id, generateSavedIndex()), false);
+        for (EffectId id : DefaultEffects::effectIds) {
+            internalAddEffect(EffectInfo(static_cast<uint32_t>(id), generateSavedIndex()), false);
         }
         _currentEffectIndex.set(0);
     }

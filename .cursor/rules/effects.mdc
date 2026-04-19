@@ -33,38 +33,39 @@ globs: src/effects/**/*.h, src/core/effect/**/*
 
 ## 3. Регистрация в фабрике
 
-Файл: **`src/core/effect/EffectFactory.cpp`**.
+Файлы: **`src/core/effect/EffectFactory.h`** (enum), **`src/core/effect/EffectFactory.cpp`** (switch).
 
-1. **Include** (в блоке с остальными эффектами):
+1. **`EffectFactory.h`** — в `enum class EffectId` перед `Count` добавить новый идентификатор со следующим свободным числом (сейчас последний режим — `PulseRings = 31`, следующий будет `32`):
+   ```cpp
+   NewEffect = 32,
+   Count
+   ```
+   Значение `Count` пересчитается автоматически (сентинел «после последнего id»).
+
+2. **`EffectFactory.cpp`** — **include** класса эффекта (в блоке с остальными):
    ```cpp
    #include "effects/effects_impl/имя_файла.h"
    ```
 
-2. **Новый id**: следующий свободный номер (сейчас последний — 31, следующий будет 32).
-
-3. **Switch**: добавить строку перед `default`:
+3. В **`switch`** в `getEffectInfo()` добавить строку **до** `default`:
    ```cpp
-   EFFECT_CASE(32, "ИмяВСписке", ClassName);
+   EFFECT_CASE(NewEffect);
    ```
-   - Первый аргумент — уникальный `effect_id`.
-   - Второй — строковое имя режима (отображается в списке).
-   - Третий — имя класса эффекта.
-
-4. **Счётчик**: увеличить константу:
-   ```cpp
-   #define EFFECT_COUNT 33  // было 32
-   ```
+   Макрос ожидает, что **имя класса совпадает с именем варианта enum** (как у существующих `EFFECT_CASE(SlowRandom);` → класс `SlowRandom`).
 
 ## 4. Добавление в список по умолчанию
 
-Файл: **`src/core/effect/storage/StaticEffectStorage.h`**.
+Файл: **`src/configs/DefaultEffectList.h`**.
 
-В методе `createDefaultEffectsList()` добавить (с нужным id и комментарием):
+В массив **`DefaultEffects::effectIds`** добавить элемент `EffectId::…` в нужном порядке (порядок в списке = порядок переключения при старте и после сброса):
+
 ```cpp
-internalAddEffect(32); // ClassName или краткое имя
+EffectId::NewEffect,
 ```
 
-Так режим попадёт в стартовый список при сбросе настроек и будет доступен при переключении кнопкой/автомодом.
+Размер массива задаётся списком инициализаторов — **вручную считать элементы не нужно**. Убрать режим из стартового списка — удалить или закомментировать соответствующую строку.
+
+Список используется в **`StaticEffectStorage`** и при построении дефолтов в **`FileEffectStorage`** (без дублирования через временное хранилище).
 
 ## 5. API матрицы и цвета
 
@@ -111,4 +112,4 @@ public:
 };
 ```
 
-После добавления класса не забыть: **EffectFactory.cpp** (include + EFFECT_CASE + EFFECT_COUNT) и **StaticEffectStorage.h** (internalAddEffect).
+После добавления класса не забыть: **`EffectFactory.h`** (новый `EffectId`), **`EffectFactory.cpp`** (include + `EFFECT_CASE`), **`DefaultEffectList.h`** (при необходимости — `EffectId::…` в `DefaultEffects::effectIds`).

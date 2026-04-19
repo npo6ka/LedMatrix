@@ -2,6 +2,7 @@
 
 #include "IEffectStorage.h"
 
+#include "configs/DefaultEffectList.h"
 #include "core/effect/EffectInfo.h"
 #include "libs/debug_lib.h"
 
@@ -85,38 +86,9 @@ public:
     }
 private:
     void createDefaultEffectsList() {
-        // Тут можно комментить не нужные эффекты, чтобы они не попадали в начальный список эффектов
-        internalAddEffect(1); // SlowRandom
-        internalAddEffect(2); // SimpleRainbow
-        internalAddEffect(3); // Dribs
-        internalAddEffect(4); // Rain
-        internalAddEffect(5); // AllRandom
-        internalAddEffect(6); // Snow
-        internalAddEffect(7); // Fire
-        internalAddEffect(8); // TheMatrix
-        internalAddEffect(9); // SimpleBalls
-        internalAddEffect(10); // Confetti
-        internalAddEffect(11); // Starfall
-        internalAddEffect(12); // DynamicSquare
-        internalAddEffect(13); // RandomRain
-        internalAddEffect(14); // RainbowRain
-        internalAddEffect(15); // Points
-        internalAddEffect(16); // RainbowPoint
-        internalAddEffect(17); // RainbowStaticPoint
-        internalAddEffect(18); // Text
-        internalAddEffect(19); // Mouse
-        internalAddEffect(20); // Pacman
-        internalAddEffect(21); // CircularPoint
-        internalAddEffect(22); // Zigzag
-        internalAddEffect(23); // HorizontalRainbowPoint
-        internalAddEffect(24); // Ny2020
-        internalAddEffect(25); // DribsAllSide
-        internalAddEffect(26); // Snake
-        internalAddEffect(27); // RadialFire
-        internalAddEffect(28); // RadialPattern
-        internalAddEffect(29); // CrazyBees
-        internalAddEffect(30); // Spiral
-        internalAddEffect(31); // PulseRings
+        for (EffectId id : DefaultEffects::effectIds) {
+            internalAddEffect(static_cast<uint32_t>(id));
+        }
     }
 
     void internalAddEffect(uint32_t effectId) {

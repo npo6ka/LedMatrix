@@ -52,52 +52,52 @@ struct EffectCreationInfo {
     EffectCreator effect_creator;
 };
 
-#define EFFECT_CASE(id, name, type) case id: return EffectCreationInfo{name, effectCreator<type>()};
-#define EFFECT_COUNT 32 // при добавлении нового эффекта, не забудь обновить EFFECT_COUNT
+#define EFFECT_CASE(type) \
+    case static_cast<uint32_t>(EffectId::type): \
+        return EffectCreationInfo{#type, effectCreator<type>()};
 
 static EffectCreationInfo getEffectInfo(uint32_t effect_id) {
     switch (effect_id) {
-        EFFECT_CASE(0, "Error", ErrorEffect);
-        EFFECT_CASE(1, "SlowRandom", SlowRandom);
-        EFFECT_CASE(2, "SimpleRainbow", SimpleRainbow);
-        EFFECT_CASE(3, "Dribs", Dribs);
-        EFFECT_CASE(4, "Rain", Rain);
-        EFFECT_CASE(5, "AllRandom", AllRandom);
-        EFFECT_CASE(6, "Snow", Snow);
-        EFFECT_CASE(7, "Fire", Fire);
-        EFFECT_CASE(8, "TheMatrix", TheMatrix);
-        EFFECT_CASE(9, "SimpleBalls", SimpleBalls);
-        EFFECT_CASE(10, "Confetti", Confetti);
-        EFFECT_CASE(11, "Starfall", Starfall);
-        EFFECT_CASE(12, "DynamicSquare", DynamicSquare);
-        EFFECT_CASE(13, "RandomRain", RandomRain);
-        EFFECT_CASE(14, "RainbowRain", RainbowRain);
-        EFFECT_CASE(15, "Points", Points);
-        EFFECT_CASE(16, "RainbowPoint", RainbowPoint);
-        EFFECT_CASE(17, "RainbowStaticPoint", RainbowStaticPoint);
-        EFFECT_CASE(18, "Text", TextMode);
-        EFFECT_CASE(19, "Mouse", Mouse);
-        EFFECT_CASE(20, "Pacman", Pacman);
-        EFFECT_CASE(21, "CircularPoint", CircularPoint);
-        EFFECT_CASE(22, "Zigzag", ZigZag);
-        EFFECT_CASE(23, "HorizontalRainbowPoint", HorizontalRainbowPoint);
-        EFFECT_CASE(24, "Ny2020", NY2020);
-        EFFECT_CASE(25, "DribsAllSide", DribsAllSide);
-        EFFECT_CASE(26, "Snake", Snake);
-        EFFECT_CASE(27, "RadialFire", RadialFire);
-        EFFECT_CASE(28, "RadialPattern", RadialPattern);
-        EFFECT_CASE(29, "CrazyBees", CrazyBees);
-        EFFECT_CASE(30, "Spiral", Spiral);
-        EFFECT_CASE(31, "PulseRings", PulseRings);
-        // при добавлении нового эффекта, не забудь обновить EFFECT_COUNT
+        EFFECT_CASE(ErrorEffect);
+        EFFECT_CASE(SlowRandom);
+        EFFECT_CASE(SimpleRainbow);
+        EFFECT_CASE(Dribs);
+        EFFECT_CASE(Rain);
+        EFFECT_CASE(AllRandom);
+        EFFECT_CASE(Snow);
+        EFFECT_CASE(Fire);
+        EFFECT_CASE(TheMatrix);
+        EFFECT_CASE(SimpleBalls);
+        EFFECT_CASE(Confetti);
+        EFFECT_CASE(Starfall);
+        EFFECT_CASE(DynamicSquare);
+        EFFECT_CASE(RandomRain);
+        EFFECT_CASE(RainbowRain);
+        EFFECT_CASE(Points);
+        EFFECT_CASE(RainbowPoint);
+        EFFECT_CASE(RainbowStaticPoint);
+        EFFECT_CASE(TextMode);
+        EFFECT_CASE(Mouse);
+        EFFECT_CASE(Pacman);
+        EFFECT_CASE(CircularPoint);
+        EFFECT_CASE(ZigZag);
+        EFFECT_CASE(HorizontalRainbowPoint);
+        EFFECT_CASE(NY2020);
+        EFFECT_CASE(DribsAllSide);
+        EFFECT_CASE(Snake);
+        EFFECT_CASE(RadialFire);
+        EFFECT_CASE(RadialPattern);
+        EFFECT_CASE(CrazyBees);
+        EFFECT_CASE(Spiral);
+        EFFECT_CASE(PulseRings);
 
         default:
-            return EffectCreationInfo{"Error", effectCreator<ErrorEffect>()};
+            return EffectCreationInfo{"ErrorEffect", effectCreator<ErrorEffect>()};
     }
 }
 
 uint32_t EffectFactory::getEffectCount() {
-    return EFFECT_COUNT;
+    return static_cast<uint32_t>(EffectId::Count);
 }
 
 std::unique_ptr<Effect> EffectFactory::createEffect(uint32_t effect_id) {
@@ -107,3 +107,5 @@ std::unique_ptr<Effect> EffectFactory::createEffect(uint32_t effect_id) {
 const char* EffectFactory::getEffectName(uint32_t effect_id) {
     return getEffectInfo(effect_id).effect_name;
 }
+
+#undef EFFECT_CASE
