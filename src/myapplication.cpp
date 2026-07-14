@@ -1,7 +1,14 @@
 #include "myapplication.h"
 
-#include "libs/led_matrix.h"
-#include "effect_list/effectslist.h"
+#include "core/effect/EffectManager.h"
+#include "libs/StdFeatures.h"
+
+#if SAVE_TO_EEPROM
+#   include "core/file/LsfFileHandler.h"
+#   include "core/effect/storage/FileEffectStorage.h"
+#else
+#   include "core/effect/storage/StaticEffectStorage.h"
+#endif
 
 MyApplication::MyApplication() :
         _isPowerOn(true),
@@ -18,18 +25,22 @@ MyApplication::MyApplication() :
 {
     Observable::subscribe(EventType::ChangePowerState, this);
     Observable::subscribe(EventType::SetPowerState, this);
+    Observable::subscribe(EventType::ChangeMode, this);
+    Observable::subscribe(EventType::ResetModesList, this);
 };
 
 MyApplication::~MyApplication() {
     Observable::unsubscribe(EventType::ChangePowerState, this);
     Observable::unsubscribe(EventType::SetPowerState, this);
+    Observable::unsubscribe(EventType::ChangeMode, this);
+    Observable::unsubscribe(EventType::ResetModesList, this);
 }
 
 // лучше всё по максимому инициализировать тут
 void MyApplication::onInit() {
     randomSeed(millis() + analogRead(A0));
     random16_set_seed(millis() + analogRead(A0));
-    debug_setup();
+    debugSetup();
     LedMatrix.setup();
 #if IR_ENABLE
     _ir.onInit(IR_RECEIVE_PIN);
@@ -37,10 +48,12 @@ void MyApplication::onInit() {
 #if RELAY_ENABLE
     _relay.onInit();
 #endif
-
-    EffectsList::getInstance(); // инициализируем EffectsList, чтобы сработало уведомление о новом режиме
-    auto ev = ChangeModEvent({EventType::ChangeMode, ChangeModEvent::Type::Set, 0});
-    Observable::notify(&ev);
+#if SAVE_TO_EEPROM
+    _effectStorage = std::make_unique<FileEffectStorage>(std::make_unique<LsfFileHandler>(SAVE_TO_EEPROM_FILE));
+#else
+    _effectStorage = std::make_unique<StaticEffectStorage>();
+#endif
+    _effectManager = std::make_unique<EffectManager>(*_effectStorage.get());
 }
 
 void MyApplication::onTick() {
@@ -49,7 +62,7 @@ void MyApplication::onTick() {
 #endif
     {
         if (_isPowerOn) {
-            EffectsList::getInstance().onTick();
+            _effectManager->onTick();
             _autoMod.onTick();
         }
 #if BTN_ENABLE
@@ -76,11 +89,21 @@ void MyApplication::setPowerState(bool newState) {
     }
 }
 
-void MyApplication::handleEvent(Event *event) {
+void MyApplication::handleEvent(const Event *event) {
     if (event->type == EventType::ChangePowerState) {
         setPowerState(!_isPowerOn);
     } else if (event->type == EventType::SetPowerState) {
-        ChangeBoolEvent *ev = static_cast<ChangeBoolEvent *>(event);
+        const ChangeBoolEvent *ev = static_cast<const ChangeBoolEvent *>(event);
         setPowerState(ev->new_val);
+    } else if (event->type == EventType::ChangeAutoMod) {
+        const ChangeBoolEvent *ev = static_cast<const ChangeBoolEvent *>(event);
+        _autoMod.setIsEnable(ev->new_val);
+    } else if (event->type == EventType::ChangeMode) { // включить питание при попытках сменить режима
+        if (!_isPowerOn) {
+            setPowerState(true);
+        }
+    } else if (event->type == EventType::ResetModesList) {
+        _effectStorage->reset();
+        _effectManager->setEffect(_effectStorage->size() - 1);
     }
 }

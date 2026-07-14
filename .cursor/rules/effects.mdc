@@ -1,0 +1,115 @@
+---
+description: Правила создания и подключения новых режимов (эффектов) в LedMatrix
+globs: src/effects/**/*.h, src/core/effect/**/*
+---
+
+# Создание нового режима (эффекта)
+
+## 1. Класс эффекта
+
+- Базовый класс: `Effect` (`src/effects/effect.h`).
+- Подключать: `#include "effects/effect.h"`.
+
+### Методы
+
+| Метод | Обязательный | Описание |
+|-------|----------------|----------|
+| `on_update()` | **Да** | Вызывается каждый кадр. Вся логика и отрисовка эффекта. |
+| `on_init()` | Нет | Один раз при включении режима. Задать `set_fps()`, начальное состояние. |
+| `on_clear()` | Нет | Один раз при смене режима, до `on_init()`. По умолчанию — `FastLED.clear()`. |
+| `on_render()` | Нет | Отдельный шаг отрисовки (если нужен). |
+| `is_end()` | Нет | По умолчанию `true`. Вернуть `false`, чтобы автомод не переключал режим (держать не более 2+ секунд). |
+
+### FPS и очистка
+
+- В `on_init()` вызвать `set_fps(20..60)` — лимит кадров в секунду.
+- Скорость анимации лучше задавать своими счётчиками/шагами внутри `on_update()`, а не только FPS.
+
+## 2. Размещение файла
+
+- Путь: **`src/effects/effects_impl/<имя>.h`** (например `spiral.h`, `pulse_rings.h`).
+- Имя класса — в PascalCase, совпадает с именем файла без расширения (например класс `Spiral` в `spiral.h`).
+- Эффект можно сделать только в заголовке (header-only) или добавить `.cpp` по необходимости.
+
+## 3. Регистрация в фабрике
+
+Файлы: **`src/core/effect/EffectFactory.h`** (enum), **`src/core/effect/EffectFactory.cpp`** (switch).
+
+1. **`EffectFactory.h`** — в `enum class EffectId` перед `Count` добавить новый идентификатор со следующим свободным числом (сейчас последний режим — `PulseRings = 31`, следующий будет `32`):
+   ```cpp
+   NewEffect = 32,
+   Count
+   ```
+   Значение `Count` пересчитается автоматически (сентинел «после последнего id»).
+
+2. **`EffectFactory.cpp`** — **include** класса эффекта (в блоке с остальными):
+   ```cpp
+   #include "effects/effects_impl/имя_файла.h"
+   ```
+
+3. В **`switch`** в `getEffectInfo()` добавить строку **до** `default`:
+   ```cpp
+   EFFECT_CASE(NewEffect);
+   ```
+   Макрос ожидает, что **имя класса совпадает с именем варианта enum** (как у существующих `EFFECT_CASE(SlowRandom);` → класс `SlowRandom`).
+
+## 4. Добавление в список по умолчанию
+
+Файл: **`src/configs/DefaultEffectList.h`**.
+
+В массив **`DefaultEffects::effectIds`** добавить элемент `EffectId::…` в нужном порядке (порядок в списке = порядок переключения при старте и после сброса):
+
+```cpp
+EffectId::NewEffect,
+```
+
+Размер массива задаётся списком инициализаторов — **вручную считать элементы не нужно**. Убрать режим из стартового списка — удалить или закомментировать соответствующую строку.
+
+Список используется в **`StaticEffectStorage`** и при построении дефолтов в **`FileEffectStorage`** (без дублирования через временное хранилище).
+
+## 5. API матрицы и цвета
+
+- **Матрица** — глобальный объект `LedMatrix` (`libs/led_matrix.h`):
+  - `LedMatrix.width()`, `LedMatrix.height()` — размеры.
+  - `LedMatrix.at(x, y)` — ссылка на пиксель `CRGB&`.
+  - `LedMatrix.clear()` — очистка.
+  - `LedMatrix.fader(step)` — затемнение всех пикселей (для шлейфа/следов).
+  - `LedMatrix.rangeX()`, `LedMatrix.rangeY()` — диапазоны для циклов по x/y.
+  - `LedMatrix.drawLine()`, `LedMatrix.drawRect()` — примитивы при необходимости.
+
+- **Размеры матрицы (обязательно учитывать):**
+  - Матрица может быть **разных размеров** и в том числе **прямоугольной** (ширина ≠ высота).
+  - Не закладываться на квадрат или фиксированные значения. Все расчёты позиций, радиусов и масштабов делать **в рантайме** по `LedMatrix.width()` и `LedMatrix.height()`.
+  - Использовать `std::min(LedMatrix.width(), LedMatrix.height())` или отдельно ширину/высоту, когда форма эффекта зависит от размера (круги, надписи, фигуры).
+
+- **Константы** из `configs/matrix.h`: `LEDS_WIDTH`, `LEDS_HEIGHT` — только если действительно нужны на этапе компиляции; для переносимости между разными матрицами предпочтительны `width()`/`height()`.
+
+- **Цвета** (FastLED):
+  - `CRGB(r, g, b)`, `CRGB(0xRRGGBB)`.
+  - `CHSV(hue, saturation, value)` — hue 0–255, sat 0–255, value 0–255.
+  - `qadd8(a, b)` — сложение с насыщением (чтобы не уходить в белый при наложении).
+
+## 6. Минимальный пример
+
+(Используются `LedMatrix.width()` и `LedMatrix.height()` — эффект корректен при любых размерах и форме матрицы.)
+
+```cpp
+// src/effects/effects_impl/my_effect.h
+#pragma once
+#include "effects/effect.h"
+
+class MyEffect : public Effect {
+public:
+    void on_init() override {
+        set_fps(30);
+    }
+    void on_update() override {
+        LedMatrix.fader(40);
+        index_t x = random(LedMatrix.width());
+        index_t y = random(LedMatrix.height());
+        LedMatrix.at(x, y) = CHSV(random8(), 255, 255);
+    }
+};
+```
+
+После добавления класса не забыть: **`EffectFactory.h`** (новый `EffectId`), **`EffectFactory.cpp`** (include + `EFFECT_CASE`), **`DefaultEffectList.h`** (при необходимости — `EffectId::…` в `DefaultEffects::effectIds`).

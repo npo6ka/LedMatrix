@@ -33,5 +33,5 @@ public:
     // Получение текущего состояния автоматического переключения режимов
     bool isEnable();
 
-    virtual void handleEvent(Event *event) override;
+    virtual void handleEvent(const Event *event) override;
 };

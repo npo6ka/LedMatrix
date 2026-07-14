@@ -1,0 +1,52 @@
+---
+description: Правила компиляции и загрузки прошивки (PlatformIO)
+alwaysApply: true
+---
+
+# Правила компиляции проекта LedMatrix
+
+Проект собирается через **PlatformIO**. Конфигурация — `platformio.ini`.
+
+## Окружения (environments)
+
+| Окружение   | Плата           | Платформа   |
+|------------|-----------------|-------------|
+| `esp12e`   | ESP8266 ESP-12E | espressif8266 |
+| `esp32dev` | ESP32 Dev Module | espressif32   |
+
+## Команды
+
+- **Сборка всего:**  
+  `pio run`  
+  или (если `pio` не в PATH):  
+  `& "$env:USERPROFILE\.platformio\penv\Scripts\platformio.exe" run`
+
+- **Сборка одного окружения:**  
+  `pio run -e esp12e`  
+  `pio run -e esp32dev`
+
+- **Загрузка прошивки:**  
+  `pio run -e esp32dev -t upload`  
+  Порт задаётся в `platformio.ini` (`upload_port`) или через флаг:  
+  `pio run -e esp32dev -t upload --upload-port COM4`
+
+- **Монитор порта:**  
+  `pio device monitor -e esp32dev`  
+  (скорость в `platformio.ini`: `monitor_speed`)
+
+## Где лежат прошивки
+
+- ESP8266: `.pio/build/esp12e/firmware.bin`
+- ESP32: `.pio/build/esp32dev/firmware.bin`
+
+## Зависимости
+
+- Общие библиотеки заданы в `[common]` в `platformio.ini`.
+- Для ESP32 дополнительно: EspSoftwareSerial. LittleFS встроен в ядро (LittleFS.h).
+- При ошибке `ModuleNotFoundError: intelhex` — установить в окружение PlatformIO:  
+  `& "$env:USERPROFILE\.platformio\penv\Scripts\pip.exe" install intelhex`
+
+## PowerShell
+
+В PowerShell не использовать `&&`. Разделитель команд — `;`, например:  
+`cd d:\project\LedMatrix; pio run`

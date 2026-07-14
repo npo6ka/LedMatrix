@@ -26,7 +26,7 @@ public:
             buf[end_pos] = tr;
             end_pos = (end_pos + 1) % max_size;
         } else {
-            out("Queue error: overflow buffer\n");
+            logError("Queue error: overflow buffer\n");
         }
     }
 
@@ -57,7 +57,7 @@ public:
     }
 
     void debug() const {
-        out("bgn: %d end %d size %d\n", start_pos, end_pos, size());
+        logInfo("bgn: %d end %d size %d\n", start_pos, end_pos, size());
         for (int i = 0; i < max_size; ++i) {
             out("%d ", int(buf[i]));
         }

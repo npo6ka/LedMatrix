@@ -5,26 +5,27 @@
 Button::Button(int8_t pin, bool type, bool dir) : touch(GButton(pin, type, dir)) {
     touch.setStepTimeout(BUTTON_STEP_TIMEOUT);
     touch.setClickTimeout(BUTTON_CLICK_TIMEOUT);
+    touch.setTimeout(BUTTON_HOLD_RESET_MS);  // удержание дольше — сброс списка режимов (isHold)
 }
 
 void Button::onTick() {
     touch.tick();
+    if (touch.isHolded()) {
+        Observable::notify<Event>(EventType::ResetModesList);
+        return;
+    }
     uint8_t clickCount = touch.hasClicks() ? touch.getClicks() : 0U;
     switch (clickCount) {
         case 1U: {
-            auto ev = ChangeModEvent({EventType::ChangeMode, ChangeModEvent::Type::Next});
-            // auto ev = ChangeBoolEvent({EventType::ChangePowerState, true});
-            Observable::notify(&ev);
+            Observable::notify<ChangeModeEvent>(EventType::ChangeMode, true, ChangeModeEventRequest::Type::Next);
             break;
         }
         case 2U: {
-            auto ev = Event({EventType::ChangePowerState});
-            Observable::notify(&ev);
+            Observable::notify<Event>(EventType::ChangePowerState);
             break;
         }
         case 3U: {
-            auto ev = Event({EventType::ChangeAutoMod});
-            Observable::notify(&ev);
+            Observable::notify<Event>(EventType::ChangeAutoMod);
             break;
         }
         default:
