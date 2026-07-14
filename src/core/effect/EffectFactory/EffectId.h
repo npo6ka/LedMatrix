@@ -1,9 +1,6 @@
 #pragma once
 
-#include "effects/effect.h"
-
 #include <stdint.h>
-#include <memory>
 
 enum class EffectId : uint32_t {
     ErrorEffect = 0,
@@ -40,12 +37,3 @@ enum class EffectId : uint32_t {
     PulseRings = 31,
     Count
 };
-
-class EffectFactory {
-public:
-    static std::unique_ptr<Effect> createEffect(uint32_t effect_id);
-    static const char* getEffectName(uint32_t effect_id);
-    static uint32_t getEffectCount();
-};
-
-

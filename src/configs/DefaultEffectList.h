@@ -1,14 +1,10 @@
 #pragma once
 
-#include "core/effect/EffectFactory.h"
-
-#include <cstddef>
+#include "core/effect/EffectFactory/EffectId.h"
 
 // Список id эффектов по умолчанию (начальный список при инициализации / сбросе памяти).
 // Можно удалять, добавлять, менять порядок, дублировать эффекты — размер kIds выводится автоматически.
-//
-// Данные constexpr обычно лежат во flash (.rodata), а не в оперативной памяти; в RAM — только копия
-// в векторе хранилища эффектов во время работы.
+
 namespace DefaultEffects {
     static constexpr EffectId effectIds[] = {
         EffectId::SlowRandom,

@@ -3,7 +3,7 @@
 #include "events/observer.h"
 #include "storage/IEffectStorage.h"
 #include "EffectInfo.h"
-#include "EffectFactory.h"
+#include "EffectFactory/EffectFactory.h"
 #include "FpsManager.h"
 #include "effects/effect.h"
 #include "events/events.h"
