@@ -7,14 +7,6 @@
 
 namespace {
 
-void logStaticFileStatus(const char* path) {
-    if (LittleFS.exists(path)) {
-        logInfo("LittleFS: %s OK\n", path);
-    } else {
-        logError("LittleFS: %s missing (run: pio run -e esp32dev -t uploadfs)\n", path);
-    }
-}
-
 void registerStaticFiles(AsyncWebServer& server) {
     server.on("/", HTTP_GET, [](AsyncWebServerRequest* request) {
         request->send(LittleFS, "/index.html", "text/html");
@@ -41,10 +33,6 @@ bool MatrixWebServer::begin(AppStatus& status) {
             return false;
         }
     }
-
-    logStaticFileStatus("/index.html");
-    logStaticFileStatus("/app.js");
-    logStaticFileStatus("/style.css");
 
     _api.registerRoutes(_server, status);
     registerStaticFiles(_server);
