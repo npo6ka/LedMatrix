@@ -47,16 +47,29 @@
 #define RELAY_ENABLE            false                       // подключить урпавление через ИК приёмник
 #define RELAY_DELAY             100
 
+// ===================== Настройки WiFi (ESP32) =====================
+
+#ifdef ESP32DEV
+#define WIFI_ENABLE             true                        // веб-управление по WiFi
+#define WIFI_AP_SSID            "LedMatrix"                 // префикс SSID (добавляется суффикс MAC)
+#define WIFI_AP_PASSWORD        ""                  // пароль AP (мин. 8 символов)
+#define WIFI_AP_CHANNEL         1
+#define WIFI_AP_MAX_CLIENTS     2
+#define WIFI_MDNS_HOST          "ledmatrix"                 // http://ledmatrix.local
+#else
+#define WIFI_ENABLE             false
+#endif
+
 // =============== Настройки Сохранения в память ==================
 
-#define SAVE_TO_EEPROM          false                        // сохранять настройки в EEPROM
+#define SAVE_TO_EEPROM          true                        // сохранять настройки в EEPROM
 #define SAVE_TO_EEPROM_FILE     "mods.txt"                  // имя файла для сохранения настроек, если используется файловая система
 
 // ===================== Платформозависимые настройки =====================
 #ifdef ESP32DEV
 
-#define LEDS_PIN                (22)                        // пин к которому подключены светодиоды
-#define BTN_PIN                 (5)                         // пин кнопки
+#define LEDS_PIN                (21)                        // пин к которому подключены светодиоды
+#define BTN_PIN                 (16)                        // пин кнопки
 #define IR_RECEIVE_PIN          (24)                        // пин к которому подключен ИК приёмник
 #define RELAY_PIN               (25)                        // пин управления реле
 

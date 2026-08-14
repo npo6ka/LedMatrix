@@ -44,6 +44,42 @@ pio run -e esp32dev -t uploadfs
 
 Подробнее — в [.cursor/rules/build.mdc](.cursor/rules/build.mdc).
 
+## WiFi-управление (ESP32)
+
+При `WIFI_ENABLE = true` в `src/configs/matrix.h` плата поднимает точку доступа при старте.
+
+1. Подключитесь к WiFi `LedMatrix-XXXX` (пароль по умолчанию `12345678`).
+2. Откройте в браузере `http://192.168.4.1` или `http://ledmatrix.local`.
+3. Для веб-интерфейса загрузите файловую систему:
+
+```bash
+pio run -e esp32dev -t uploadfs
+```
+
+### REST API
+
+| Метод | Путь | Тело |
+|-------|------|------|
+| GET | `/api/status` | — |
+| GET | `/api/effects` | — |
+| POST | `/api/power` | `{"on": true}` |
+| POST | `/api/mode/next` | — |
+| POST | `/api/mode/prev` | — |
+| POST | `/api/mode` | `{"index": 3}` |
+| POST | `/api/automode` | `{"enabled": true}` |
+| POST | `/api/brightness` | `{"value": 128}` |
+| POST | `/api/reset` | — |
+
+Примеры:
+
+```bash
+curl http://192.168.4.1/api/status
+curl -X POST http://192.168.4.1/api/power -H "Content-Type: application/json" -d "{\"on\":true}"
+curl -X POST http://192.168.4.1/api/mode/next
+```
+
+Настройки WiFi в `src/configs/matrix.h`: `WIFI_AP_SSID`, `WIFI_AP_PASSWORD`, `WIFI_MDNS_HOST`.
+
 ## Настройка
 
 Основные параметры задаются в `**src/configs/matrix.h**`:
