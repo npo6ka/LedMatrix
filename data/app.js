@@ -14,11 +14,33 @@ const brightnessValue = document.getElementById('brightness-value');
 let status = null;
 let effectsLoaded = false;
 let brightnessTimer = null;
+let modeBusy = false;
+
+async function postMode(path) {
+  if (modeBusy) {
+    return;
+  }
+  modeBusy = true;
+  btnPrev.disabled = true;
+  btnNext.disabled = true;
+  try {
+    await api(path, { method: 'POST' });
+    await refreshStatus();
+  } finally {
+    modeBusy = false;
+    btnPrev.disabled = false;
+    btnNext.disabled = false;
+  }
+}
 
 async function api(path, options = {}) {
+  const headers = { ...options.headers };
+  if (options.body !== undefined) {
+    headers['Content-Type'] = 'application/json';
+  }
   const response = await fetch(path, {
-    headers: { 'Content-Type': 'application/json' },
     ...options,
+    headers,
   });
   if (!response.ok) {
     throw new Error(`${path} failed: ${response.status}`);
@@ -83,14 +105,12 @@ btnAutomode.addEventListener('click', async () => {
   await refreshStatus();
 });
 
-btnPrev.addEventListener('click', async () => {
-  await api('/api/mode/prev', { method: 'POST', body: '{}' });
-  await refreshStatus();
+btnPrev.addEventListener('click', () => {
+  postMode('/api/mode/prev');
 });
 
-btnNext.addEventListener('click', async () => {
-  await api('/api/mode/next', { method: 'POST', body: '{}' });
-  await refreshStatus();
+btnNext.addEventListener('click', () => {
+  postMode('/api/mode/next');
 });
 
 effectSelect.addEventListener('change', async () => {
@@ -117,7 +137,7 @@ btnReset.addEventListener('click', async () => {
   if (!confirm('Сбросить список эффектов на заводской?')) {
     return;
   }
-  await api('/api/reset', { method: 'POST', body: '{}' });
+  await api('/api/reset', { method: 'POST' });
   await loadEffects();
   await refreshStatus();
 });

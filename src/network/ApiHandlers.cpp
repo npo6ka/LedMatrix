@@ -8,6 +8,8 @@
 #include <ArduinoJson.h>
 
 namespace {
+    portMUX_TYPE rateLimitMux = portMUX_INITIALIZER_UNLOCKED;
+
     void sendJson(AsyncWebServerRequest* request, int code, const JsonDocument& doc) {
         String body;
         serializeJson(doc, body);
@@ -28,11 +30,13 @@ namespace {
 
 bool ApiHandlers::checkRateLimit() {
     const unsigned long now = millis();
-    if (now - _lastPostMs < 200UL) {
-        return false;
+    portENTER_CRITICAL(&rateLimitMux);
+    const bool allowed = (now - _lastPostMs >= 200UL);
+    if (allowed) {
+        _lastPostMs = now;
     }
-    _lastPostMs = now;
-    return true;
+    portEXIT_CRITICAL(&rateLimitMux);
+    return allowed;
 }
 
 void ApiHandlers::registerCaptivePortal(AsyncWebServer& server) {

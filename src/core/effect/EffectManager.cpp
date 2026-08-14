@@ -70,6 +70,5 @@ void EffectManager::handleEvent(const Event* event) {
     if (event->type == EventType::ChangeMode) {
         const ChangeModeEvent* changeEvent = static_cast<const ChangeModeEvent*>(event);
         _pendingRequest = _pendingRequest + changeEvent->request;
-        this->onTick();
     }
 }
