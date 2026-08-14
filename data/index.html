@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LedMatrix</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="container">
+    <header>
+      <h1>LedMatrix</h1>
+      <p id="network-info" class="muted">Подключение...</p>
+    </header>
+
+    <section class="status card">
+      <div><span class="label">Эффект</span> <strong id="effect-name">—</strong></div>
+      <div><span class="label">FPS</span> <strong id="fps">—</strong></div>
+      <div><span class="label">Питание</span> <strong id="power-state">—</strong></div>
+    </section>
+
+    <section class="controls card">
+      <div class="row">
+        <button id="btn-power" class="btn primary">Питание</button>
+        <button id="btn-automode" class="btn">Автомод</button>
+      </div>
+      <div class="row">
+        <button id="btn-prev" class="btn">←</button>
+        <button id="btn-next" class="btn">→</button>
+      </div>
+      <label class="field">
+        <span>Эффект</span>
+        <select id="effect-select"></select>
+      </label>
+      <label class="field">
+        <span>Яркость <strong id="brightness-value">0</strong></span>
+        <input id="brightness-slider" type="range" min="0" max="255" value="128">
+      </label>
+      <button id="btn-reset" class="btn danger">Сброс списка эффектов</button>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>

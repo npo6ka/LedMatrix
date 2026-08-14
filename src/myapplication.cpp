@@ -2,6 +2,7 @@
 
 #include "core/effect/EffectManager.h"
 #include "libs/StdFeatures.h"
+#include "libs/led_matrix.h"
 
 #if SAVE_TO_EEPROM
 #   include "core/file/LsfFileHandler.h"
@@ -27,6 +28,8 @@ MyApplication::MyApplication() :
     Observable::subscribe(EventType::SetPowerState, this);
     Observable::subscribe(EventType::ChangeMode, this);
     Observable::subscribe(EventType::ResetModesList, this);
+    Observable::subscribe(EventType::SetAutoMod, this);
+    Observable::subscribe(EventType::SetBrightness, this);
 };
 
 MyApplication::~MyApplication() {
@@ -34,6 +37,8 @@ MyApplication::~MyApplication() {
     Observable::unsubscribe(EventType::SetPowerState, this);
     Observable::unsubscribe(EventType::ChangeMode, this);
     Observable::unsubscribe(EventType::ResetModesList, this);
+    Observable::unsubscribe(EventType::SetAutoMod, this);
+    Observable::unsubscribe(EventType::SetBrightness, this);
 }
 
 // лучше всё по максимому инициализировать тут
@@ -54,9 +59,15 @@ void MyApplication::onInit() {
     _effectStorage = std::make_unique<StaticEffectStorage>();
 #endif
     _effectManager = std::make_unique<EffectManager>(*_effectStorage.get());
+#if WIFI_ENABLE && defined(ESP32DEV)
+    _webControl.onInit(_effectStorage.get(), _effectManager.get(), &_isPowerOn, &_autoMod);
+#endif
 }
 
 void MyApplication::onTick() {
+#if WIFI_ENABLE && defined(ESP32DEV)
+    _webControl.onTick();
+#endif
 #if IR_ENABLE
     if (_ir.isIdle())
 #endif
@@ -95,9 +106,15 @@ void MyApplication::handleEvent(const Event *event) {
     } else if (event->type == EventType::SetPowerState) {
         const ChangeBoolEvent *ev = static_cast<const ChangeBoolEvent *>(event);
         setPowerState(ev->new_val);
-    } else if (event->type == EventType::ChangeAutoMod) {
+    } else if (event->type == EventType::SetAutoMod) {
         const ChangeBoolEvent *ev = static_cast<const ChangeBoolEvent *>(event);
         _autoMod.setIsEnable(ev->new_val);
+    } else if (event->type == EventType::SetBrightness) {
+        const ChangeIntEvent *ev = static_cast<const ChangeIntEvent *>(event);
+        int value = ev->new_val;
+        if (value < 0) value = 0;
+        if (value > 255) value = 255;
+        LedMatrix.setBrightness(static_cast<uint8_t>(value));
     } else if (event->type == EventType::ChangeMode) { // включить питание при попытках сменить режима
         if (!_isPowerOn) {
             setPowerState(true);

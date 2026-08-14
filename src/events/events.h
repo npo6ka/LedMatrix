@@ -13,6 +13,8 @@ enum class EventType {
     ModChanged,             // ModChangedEvent
     ChangeModVar,           // ChangeModVarEvent
     ResetModesList,         // Event — сброс списка режимов на заводской
+    SetAutoMod,             // ChangeBoolEvent — явная установка автомода
+    SetBrightness,          // ChangeIntEvent — яркость 0..255
     EventAmount             // Используется, чтобы знать сколько всего ивентов
 };
 

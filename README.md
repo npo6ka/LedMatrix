@@ -10,6 +10,7 @@
 - Сохранение текущего режима и списка в файл (LittleFS) или статический список
 - Ограничение потребления по току (опционально)
 - Поддержка разных типов матриц (зигзаг/параллельная), угла подключения и направления ленты
+- **WiFi-управление через браузер** (ESP32, точка доступа + веб-интерфейс)
 
 ## Поддерживаемые платы
 
@@ -53,7 +54,7 @@ pio run -e esp32dev -t uploadfs
 - **LEDS_COLOR_ORDER** — порядок цветов (GRB/RGB и т.д.)
 - **LEDS_MATRIX_TYPE**, **LEDS_CONNECTION_ANGLE**, **LEDS_STRIP_DIRECTION** — тип матрицы и подключение
 - **BTN_PIN** — пин кнопки
-- **BTN_ENABLE**, **IR_ENABLE**, **RELAY_ENABLE** — включение кнопки, ИК, реле
+- **BTN_ENABLE**, **IR_ENABLE**, **RELAY_ENABLE**, **WIFI_ENABLE** — включение кнопки, ИК, реле, WiFi (ESP32)
 - **SAVE_TO_EEPROM** — `true` для сохранения в файл (LittleFS), `false` — только статический список режимов
 - **AUTOMOD_INTERVAL**, **AUTOMOD_DEF_STATE** — интервал и состояние автомода
 
@@ -171,7 +172,8 @@ LedMatrix/
 │   ├── effects/
 │   │   ├── effect.h        # Базовый класс Effect
 │   │   └── effects_impl/   # Реализации режимов (*.h, при необходимости *.cpp)
-│   ├── controls/           # Кнопка, ИК, автомод
+│   ├── controls/           # Кнопка, ИК, автомод, WiFi
+│   ├── network/            # WiFi AP, HTTP API, статус
 │   ├── events/             # События, наблюдатель
 │   ├── libs/               # LedMatrix, отладка, диапазоны
 │   └── modules/            # Реле и др.
@@ -195,4 +197,5 @@ LedMatrix/
 - **IRremote** — ИК-приём (опционально)
 - **Vector** — список эффектов
 - **EspSoftwareSerial** — только для ESP32 (если используется)
+- **ESP Async WebServer**, **AsyncTCP**, **ArduinoJson** — WiFi-управление (ESP32)
 

@@ -71,9 +71,19 @@ CLedMatrix::CLedMatrix() {}
 void CLedMatrix::setup() {
     FastLED.addLeds<WS2812B, LEDS_PIN, LEDS_COLOR_ORDER>(_leds, LEDS_HW_SIZE);
     FastLED.setCorrection(TypicalLEDStrip);
+    _brightness = LEDS_BRIGHTNRSS;
     FastLED.setMaxPowerInVoltsAndMilliamps(5, LEDS_MAX_POWER);
-    FastLED.setBrightness(LEDS_BRIGHTNRSS);
+    FastLED.setBrightness(_brightness);
     FastLED.clear();
+}
+
+uint8_t CLedMatrix::getBrightness() const {
+    return _brightness;
+}
+
+void CLedMatrix::setBrightness(uint8_t val) {
+    _brightness = val;
+    FastLED.setBrightness(_brightness);
 }
 
 CRGB& CLedMatrix::atUnsafe(size_t index) {

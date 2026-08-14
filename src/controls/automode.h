@@ -31,7 +31,7 @@ public:
     void setDelay(unsigned long delay);
 
     // Получение текущего состояния автоматического переключения режимов
-    bool isEnable();
+    bool isEnable() const;
 
     virtual void handleEvent(const Event *event) override;
 };

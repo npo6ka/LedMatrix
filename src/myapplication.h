@@ -15,6 +15,9 @@
 #if RELAY_ENABLE
 #   include "modules/relay.h"
 #endif
+#if WIFI_ENABLE && defined(ESP32DEV)
+#   include "controls/webcontrol.h"
+#endif
 
 #include <Arduino.h>
 #include <memory>
@@ -34,6 +37,9 @@ private:
 #if RELAY_ENABLE
     Relay _relay;
 #endif
+#if WIFI_ENABLE && defined(ESP32DEV)
+    WebControl _webControl;
+#endif
 
     MyApplication(const MyApplication &) = delete;
     MyApplication& operator=(const MyApplication& other) = delete;
@@ -47,4 +53,7 @@ public:
     void onTick();
     void onInit();
     virtual void handleEvent(const Event *event) override;
+
+    bool isPowerOn() const { return _isPowerOn; }
+    bool isAutoMode() const { return _autoMod.isEnable(); }
 };

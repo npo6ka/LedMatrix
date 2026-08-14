@@ -24,7 +24,7 @@ void AutoChangeMode::onTick() {
     }
 }
 
-bool AutoChangeMode::isEnable() {
+bool AutoChangeMode::isEnable() const {
     return _isEnable && _isPowerOn;
 }
 

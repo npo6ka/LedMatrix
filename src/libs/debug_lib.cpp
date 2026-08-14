@@ -3,7 +3,9 @@
 #include "configs/constants.h"
 
 #if DEBUG
-    #include <SoftwareSerial.h>
+    #include <Arduino.h>
+    #include <stdarg.h>
+    #include <stdio.h>
 
     void debugSetup()
     {
@@ -12,17 +14,16 @@
 
     const size_t out(const char *szFormat, ...)
     {
+        char buffer[256];
         va_list argptr;
         va_start(argptr, szFormat);
-        char *szBuffer = 0;
-        const size_t nBufferLength = vsnprintf(szBuffer, 0, szFormat, argptr) + 1;
-        if (nBufferLength == 1) return 0;
-        szBuffer = (char *) malloc(nBufferLength);
-        if (! szBuffer) return - nBufferLength;
-        vsnprintf(szBuffer, nBufferLength, szFormat, argptr);
-        Serial.print(szBuffer);
-        free(szBuffer);
-        return nBufferLength - 1;
+        const int written = vsnprintf(buffer, sizeof(buffer), szFormat, argptr);
+        va_end(argptr);
+        if (written <= 0) {
+            return 0;
+        }
+        Serial.print(buffer);
+        return static_cast<size_t>(written);
     }
 #else
     void debugSetup() {};

@@ -16,6 +16,9 @@ public:
 
     void setup();
 
+    uint8_t getBrightness() const;
+    void setBrightness(uint8_t val);
+
     // Получить количество пикселей в матрице
     size_t size() const { return LEDS_SIZE; }
 
@@ -107,7 +110,7 @@ private:
         return Range<index_t>(left, right);
     }
 
-private:
+    uint8_t _brightness = LEDS_BRIGHTNRSS;
     CRGB _leds[LEDS_HW_SIZE];
 };
 
