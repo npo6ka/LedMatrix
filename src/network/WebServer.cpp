@@ -28,10 +28,8 @@ bool MatrixWebServer::begin(AppStatus& status) {
     _status = &status;
 
     if (!LittleFS.begin(false)) {
-        if (!LittleFS.begin(true)) {
-            logError("LittleFS mount failed\n");
-            return false;
-        }
+        logError("LittleFS mount failed (run: pio run -e esp32dev -t uploadfs)\n");
+        return false;
     }
 
     _api.registerRoutes(_server, status);

@@ -15,6 +15,8 @@ let status = null;
 let effectsLoaded = false;
 let brightnessTimer = null;
 let modeBusy = false;
+let statusTimer = null;
+let pollIntervalMs = 3000;
 
 async function postMode(path) {
   if (modeBusy) {
@@ -85,9 +87,40 @@ function renderStatus(data) {
 }
 
 async function refreshStatus() {
-  const data = await api('/api/status');
-  renderStatus(data);
+  try {
+    const data = await api('/api/status');
+    renderStatus(data);
+    networkInfoEl.textContent = `${data.ssid} · ${data.ip}`;
+    return true;
+  } catch (error) {
+    networkInfoEl.textContent = 'Нет связи, повтор...';
+    console.error(error);
+    return false;
+  }
 }
+
+function startStatusPolling() {
+  if (statusTimer) {
+    clearInterval(statusTimer);
+  }
+  statusTimer = setInterval(refreshStatus, pollIntervalMs);
+}
+
+function stopStatusPolling() {
+  if (statusTimer) {
+    clearInterval(statusTimer);
+    statusTimer = null;
+  }
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    stopStatusPolling();
+    return;
+  }
+  refreshStatus();
+  startStatusPolling();
+});
 
 btnPower.addEventListener('click', async () => {
   await api('/api/power', {
@@ -146,10 +179,11 @@ async function init() {
   try {
     await loadEffects();
     await refreshStatus();
-    setInterval(refreshStatus, 1500);
+    startStatusPolling();
   } catch (error) {
     networkInfoEl.textContent = 'Ошибка связи с платой';
     console.error(error);
+    setTimeout(init, 3000);
   }
 }
 
