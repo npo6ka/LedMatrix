@@ -8,6 +8,7 @@
 
 bool WiFiAp::begin() {
     WiFi.persistent(false);
+    WiFi.setSleep(WIFI_PS_NONE);
     WiFi.mode(WIFI_AP);
 
     uint8_t mac[6];
@@ -23,7 +24,6 @@ bool WiFiAp::begin() {
         WiFi.softAP(_ssid.c_str(), password, WIFI_AP_CHANNEL, false, WIFI_AP_MAX_CLIENTS);
     }
 
-    // Дать драйверу WiFi завершить поднятие AP перед mDNS/HTTP
     delay(100);
 
     _ip = WiFi.softAPIP().toString();
@@ -31,7 +31,7 @@ bool WiFiAp::begin() {
     if (password[0] != '\0') {
         logInfo("WiFi AP password: %s\n", password);
     }
-    return true;
+    return _ip != "0.0.0.0";
 }
 
 String WiFiAp::getIp() const {

@@ -3,7 +3,9 @@
 #if WIFI_ENABLE && defined(ESP32DEV)
 
 #include "controls/automode.h"
+#include "libs/debug_lib.h"
 #include "libs/led_matrix.h"
+#include "network/DeferredActions.h"
 
 void WebControl::onInit(
     IEffectStorage* storage,
@@ -14,6 +16,7 @@ void WebControl::onInit(
     _autoMod = autoMod;
 
     _wifiAp.begin();
+    DeferredActions::init();
 
     _status.bind(
         storage,
@@ -23,10 +26,13 @@ void WebControl::onInit(
         []() { return LedMatrix.getBrightness(); });
     _status.setNetworkInfo(_wifiAp.getIp(), _wifiAp.getSsid());
 
-    _webServer.begin(_status);
+    if (!_webServer.begin(_status)) {
+        logError("Web server start failed\n");
+    }
 }
 
 void WebControl::onTick() {
+    DeferredActions::process();
     _webServer.onTick();
 }
 

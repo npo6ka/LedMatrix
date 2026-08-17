@@ -86,6 +86,9 @@ void MyApplication::onTick() {
         _relay.onTick();
 #endif
     }
+#if WIFI_ENABLE && defined(ESP32DEV)
+    yield();
+#endif
 }
 
 void MyApplication::setPowerState(bool newState) {

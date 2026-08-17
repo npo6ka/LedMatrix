@@ -2,8 +2,7 @@
 
 #include "core/effect/EffectFactory/EffectFactory.h"
 #include "core/effect/EffectInfo.h"
-#include "events/ChangeModeEventRequest.h"
-#include "events/observer.h"
+#include "network/DeferredActions.h"
 
 #include <ArduinoJson.h>
 
@@ -11,9 +10,13 @@ namespace {
     portMUX_TYPE rateLimitMux = portMUX_INITIALIZER_UNLOCKED;
 
     void sendJson(AsyncWebServerRequest* request, int code, const JsonDocument& doc) {
-        String body;
-        serializeJson(doc, body);
-        request->send(code, "application/json", body);
+        char buffer[512];
+        const size_t len = serializeJson(doc, buffer, sizeof(buffer));
+        if (len == 0 || len >= sizeof(buffer)) {
+            request->send(500, "application/json", "{\"ok\":false,\"error\":\"json overflow\"}");
+            return;
+        }
+        request->send(code, "application/json", buffer);
     }
 
     void sendOk(AsyncWebServerRequest* request) {
@@ -25,6 +28,15 @@ namespace {
         doc["ok"] = false;
         doc["error"] = message;
         sendJson(request, code, doc);
+    }
+
+    bool postAction(const DeferredAction& action, AsyncWebServerRequest* request) {
+        if (!DeferredActions::post(action)) {
+            sendError(request, 503, "busy");
+            return false;
+        }
+        sendOk(request);
+        return true;
     }
 } // namespace
 
@@ -108,8 +120,10 @@ void ApiHandlers::registerRoutes(AsyncWebServer& server, AppStatus& status) {
                 return;
             }
 
-            Observable::notify<ChangeBoolEvent>(EventType::SetPowerState, doc["on"].as<bool>());
-            sendOk(request);
+            DeferredAction action{};
+            action.type = DeferredActionType::PowerSet;
+            action.data.boolValue = doc["on"].as<bool>();
+            postAction(action, request);
         });
 
     server.on("/api/mode/next", HTTP_POST, [this](AsyncWebServerRequest* request) {
@@ -117,9 +131,9 @@ void ApiHandlers::registerRoutes(AsyncWebServer& server, AppStatus& status) {
             sendError(request, 429, "rate limit");
             return;
         }
-        Observable::notify<ChangeModeEvent>(
-            EventType::ChangeMode, true, ChangeModeEventRequest::Type::Next);
-        sendOk(request);
+        DeferredAction action{};
+        action.type = DeferredActionType::ModeNext;
+        postAction(action, request);
     });
 
     server.on("/api/mode/prev", HTTP_POST, [this](AsyncWebServerRequest* request) {
@@ -127,9 +141,9 @@ void ApiHandlers::registerRoutes(AsyncWebServer& server, AppStatus& status) {
             sendError(request, 429, "rate limit");
             return;
         }
-        Observable::notify<ChangeModeEvent>(
-            EventType::ChangeMode, true, ChangeModeEventRequest::Type::Previous);
-        sendOk(request);
+        DeferredAction action{};
+        action.type = DeferredActionType::ModePrev;
+        postAction(action, request);
     });
 
     server.on("/api/mode", HTTP_POST, [](AsyncWebServerRequest* request) {}, nullptr,
@@ -151,9 +165,10 @@ void ApiHandlers::registerRoutes(AsyncWebServer& server, AppStatus& status) {
             }
 
             const uint16_t index = doc["index"].as<uint16_t>();
-            Observable::notify<ChangeModeEvent>(
-                EventType::ChangeMode, true, ChangeModeEventRequest::Type::Set, index);
-            sendOk(request);
+            DeferredAction action{};
+            action.type = DeferredActionType::ModeSet;
+            action.data.indexValue = index;
+            postAction(action, request);
         });
 
     server.on("/api/automode", HTTP_POST, [](AsyncWebServerRequest* request) {}, nullptr,
@@ -174,8 +189,10 @@ void ApiHandlers::registerRoutes(AsyncWebServer& server, AppStatus& status) {
                 return;
             }
 
-            Observable::notify<ChangeBoolEvent>(EventType::SetAutoMod, doc["enabled"].as<bool>());
-            sendOk(request);
+            DeferredAction action{};
+            action.type = DeferredActionType::AutoModSet;
+            action.data.boolValue = doc["enabled"].as<bool>();
+            postAction(action, request);
         });
 
     server.on("/api/brightness", HTTP_POST, [](AsyncWebServerRequest* request) {}, nullptr,
@@ -200,8 +217,10 @@ void ApiHandlers::registerRoutes(AsyncWebServer& server, AppStatus& status) {
             if (value < 0) value = 0;
             if (value > 255) value = 255;
 
-            Observable::notify<ChangeIntEvent>(EventType::SetBrightness, value);
-            sendOk(request);
+            DeferredAction action{};
+            action.type = DeferredActionType::BrightnessSet;
+            action.data.intValue = value;
+            postAction(action, request);
         });
 
     server.on("/api/reset", HTTP_POST, [this](AsyncWebServerRequest* request) {
@@ -209,8 +228,9 @@ void ApiHandlers::registerRoutes(AsyncWebServer& server, AppStatus& status) {
             sendError(request, 429, "rate limit");
             return;
         }
-        Observable::notify<Event>(EventType::ResetModesList);
-        sendOk(request);
+        DeferredAction action{};
+        action.type = DeferredActionType::ResetModesList;
+        postAction(action, request);
     });
 
     registerCaptivePortal(server);
