@@ -32,6 +32,7 @@
 #include "effects/effects_impl/crazy_bees.h"
 #include "effects/effects_impl/spiral.h"
 #include "effects/effects_impl/pulse_rings.h"
+#include "effects/effects_impl/MusicSpectrum.h"
 
 #include "libs/StdFeatures.h"
 
@@ -50,11 +51,12 @@ static constexpr EffectCreator effectCreator() {
 struct EffectCreationInfo {
     const char* effect_name;
     EffectCreator effect_creator;
+    InputCapability required;
 };
 
 #define EFFECT_CASE(type) \
     case static_cast<uint32_t>(EffectId::type): \
-        return EffectCreationInfo{#type, effectCreator<type>()};
+        return EffectCreationInfo{#type, effectCreator<type>(), type::kRequired};
 
 static EffectCreationInfo getEffectInfo(uint32_t effect_id) {
     switch (effect_id) {
@@ -90,9 +92,10 @@ static EffectCreationInfo getEffectInfo(uint32_t effect_id) {
         EFFECT_CASE(CrazyBees);
         EFFECT_CASE(Spiral);
         EFFECT_CASE(PulseRings);
+        EFFECT_CASE(MusicSpectrum);
 
         default:
-            return EffectCreationInfo{"ErrorEffect", effectCreator<ErrorEffect>()};
+            return EffectCreationInfo{"ErrorEffect", effectCreator<ErrorEffect>(), Effect::kRequired};
     }
 }
 
@@ -106,6 +109,10 @@ std::unique_ptr<Effect> EffectFactory::createEffect(uint32_t effect_id) {
 
 const char* EffectFactory::getEffectName(uint32_t effect_id) {
     return getEffectInfo(effect_id).effect_name;
+}
+
+InputCapability EffectFactory::getRequiredCapabilities(uint32_t effect_id) {
+    return getEffectInfo(effect_id).required;
 }
 
 #undef EFFECT_CASE

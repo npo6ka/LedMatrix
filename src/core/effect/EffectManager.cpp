@@ -1,8 +1,9 @@
 #include "EffectManager.h"
 #include "libs/debug_lib.h"
 
-EffectManager::EffectManager(IEffectStorage& storage)
-    : _storage(storage)
+EffectManager::EffectManager(IEffectStorage& storage, InputHub& inputHub)
+    : _storage(storage),
+      _inputHub(inputHub)
 {
     Observable::subscribe(EventType::ChangeMode, this);
 
@@ -11,7 +12,8 @@ EffectManager::EffectManager(IEffectStorage& storage)
 
 void EffectManager::onTick() {
     this->onCheckRequestedEffectChange();
-    this->onTickEffect();
+    _inputHub.tick();
+    this->onTickEffect(_inputHub.snapshot());
 }
 
 void EffectManager::onCheckRequestedEffectChange() {
@@ -35,9 +37,9 @@ void EffectManager::onCheckRequestedEffectChange() {
     }
 }
 
-void EffectManager::onTickEffect() {
+void EffectManager::onTickEffect(const InputSnapshot& snapshot) {
     if (_currentEffect && _fpsManager.needUpdate()) {
-        _currentEffect->on_update();
+        _currentEffect->on_update(snapshot);
         _currentEffect->on_render();
         FastLED.show();
     }
@@ -49,6 +51,7 @@ void EffectManager::updateEffect() {
         _currentEffect->on_clear();
     }
     _currentEffect = EffectFactory::createEffect(effectInfo.id);
+    _inputHub.setActiveCapabilities(EffectFactory::getRequiredCapabilities(effectInfo.id));
     _currentEffect->on_init();
     _fpsManager.setTargetFPS(_currentEffect->get_fps());
 

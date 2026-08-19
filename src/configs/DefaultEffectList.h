@@ -38,5 +38,6 @@ namespace DefaultEffects {
         EffectId::CrazyBees,
         EffectId::Spiral,
         EffectId::PulseRings,
+        EffectId::MusicSpectrum,
     };
 } // namespace DefaultEffects

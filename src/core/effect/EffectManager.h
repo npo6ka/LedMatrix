@@ -7,13 +7,14 @@
 #include "FpsManager.h"
 #include "effects/effect.h"
 #include "events/events.h"
+#include "core/input/InputHub.h"
 
 #include <stdint.h>
 
 class EffectManager : public IObserver
 {
 public:
-    EffectManager(IEffectStorage& storage);
+    EffectManager(IEffectStorage& storage, InputHub& inputHub);
     ~EffectManager() = default;
 
     // Управление эффектами
@@ -32,10 +33,11 @@ public:
 private:
 
     void onCheckRequestedEffectChange();
-    void onTickEffect();
+    void onTickEffect(const InputSnapshot& snapshot);
 
-    IEffectStorage& _storage;                   // Ссылка на хранилище эффектов
-    std::unique_ptr<Effect> _currentEffect;     // Указатель на текущий активный эффект
+    IEffectStorage& _storage;
+    InputHub& _inputHub;
+    std::unique_ptr<Effect> _currentEffect;
     ChangeModeEventRequest _pendingRequest;     // Ожидающий запрос на смену эффекта
     FpsManager _fpsManager;                     // Менеджер FPS
 };

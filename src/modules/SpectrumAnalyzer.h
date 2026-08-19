@@ -1,6 +1,6 @@
 #pragma once
 
-#include "audio_fft.h"
+#include "AudioFft.h"
 
 #include <stddef.h>
 #include <stdint.h>

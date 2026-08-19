@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/input/InputCapability.h"
+#include "core/input/InputSnapshot.h"
 #include "libs/led_matrix.h"
 
 class Effect
@@ -8,6 +10,8 @@ class Effect
     bool _is_end = true;
 
 public:
+    static constexpr InputCapability kRequired = InputCapability::None;
+
     Effect() = default;
     virtual ~Effect() = default;
 
@@ -20,6 +24,11 @@ public:
     *  Обновление логики эффекта.
     *  Часть цикла работы режима.
     * */
+    virtual void on_update(const InputSnapshot &input) {
+        (void)input;
+        on_update();
+    }
+
     virtual void on_update() = 0;
 
     /* on_render может быть переинициализирован в наследукмом классе.

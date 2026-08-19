@@ -5,6 +5,7 @@
 #include "controls/automode.h"
 #include "core/effect/storage/IEffectStorage.h"
 #include "core/effect/EffectManager.h"
+#include "core/input/InputHub.h"
 
 #if BTN_ENABLE
 #   include "controls/button.h"
@@ -16,7 +17,7 @@
 #   include "modules/relay.h"
 #endif
 #if MIC_ENABLE && defined(ESP32DEV)
-#   include "modules/inmp441.h"
+#   include "modules/MicInputProvider.h"
 #endif
 #if WIFI_ENABLE && defined(ESP32DEV)
 #   include "controls/webcontrol.h"
@@ -31,6 +32,7 @@ private:
     AutoChangeMode _autoMod;
     std::unique_ptr<IEffectStorage> _effectStorage;
     std::unique_ptr<EffectManager> _effectManager;
+    InputHub _inputHub;
 #if BTN_ENABLE
     Button _button;
 #endif
@@ -41,7 +43,7 @@ private:
     Relay _relay;
 #endif
 #if MIC_ENABLE && defined(ESP32DEV)
-    Inmp441 _mic;
+    MicInputProvider _micProvider;
 #endif
 #if WIFI_ENABLE && defined(ESP32DEV)
     WebControl _webControl;

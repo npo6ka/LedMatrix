@@ -1,4 +1,4 @@
-#include "spectrum_analyzer.h"
+#include "SpectrumAnalyzer.h"
 
 #include <Arduino.h>
 #include <math.h>

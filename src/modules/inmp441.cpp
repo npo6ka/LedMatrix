@@ -52,7 +52,11 @@ Inmp441::Inmp441() {
 #endif
 }
 
-void Inmp441::onInit() {
+void Inmp441::start() {
+    if (_running) {
+        return;
+    }
+
     i2s_config_t cfg = {};
     cfg.mode = static_cast<i2s_mode_t>(I2S_MODE_MASTER | I2S_MODE_RX);
     cfg.sample_rate = MIC_SAMPLE_RATE;
@@ -89,7 +93,7 @@ void Inmp441::onInit() {
     }
 
     i2s_zero_dma_buffer(kPort);
-    _ok = true;
+    _running = true;
 
 #if MIC_SPECTRUM_ENABLE
     if (_spectrum) {
@@ -98,8 +102,18 @@ void Inmp441::onInit() {
 #endif
 }
 
-void Inmp441::onTick() {
-    if (!_ok) {
+void Inmp441::stop() {
+    if (!_running) {
+        return;
+    }
+
+    i2s_driver_uninstall(kPort);
+    _running = false;
+    _lastRms = 0;
+}
+
+void Inmp441::readAndAnalyze() {
+    if (!_running) {
         return;
     }
 
@@ -121,6 +135,7 @@ void Inmp441::onTick() {
 
     _useLeftChannel = leftRms >= rightRms;
     const int32_t activeDc = _useLeftChannel ? leftDc : rightDc;
+    _lastRms = _useLeftChannel ? leftRms : rightRms;
 
 #if MIC_SPECTRUM_ENABLE
     if (_spectrum) {

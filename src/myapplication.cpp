@@ -23,6 +23,9 @@ MyApplication::MyApplication() :
 #if RELAY_ENABLE
         , _relay(RELAY_PIN, &_isPowerOn)
 #endif
+#if MIC_ENABLE && defined(ESP32DEV)
+        , _micProvider()
+#endif
 {
     Observable::subscribe(EventType::ChangePowerState, this);
     Observable::subscribe(EventType::SetPowerState, this);
@@ -53,15 +56,15 @@ void MyApplication::onInit() {
 #if RELAY_ENABLE
     _relay.onInit();
 #endif
-#if MIC_ENABLE && defined(ESP32DEV)
-    _mic.onInit();
-#endif
 #if SAVE_TO_EEPROM
     _effectStorage = std::make_unique<FileEffectStorage>(std::make_unique<LsfFileHandler>(SAVE_TO_EEPROM_FILE));
 #else
     _effectStorage = std::make_unique<StaticEffectStorage>();
 #endif
-    _effectManager = std::make_unique<EffectManager>(*_effectStorage.get());
+#if MIC_ENABLE && defined(ESP32DEV)
+    _inputHub.registerProvider(&_micProvider);
+#endif
+    _effectManager = std::make_unique<EffectManager>(*_effectStorage.get(), _inputHub);
 #if WIFI_ENABLE && defined(ESP32DEV)
     _webControl.onInit(_effectStorage.get(), _effectManager.get(), &_isPowerOn, &_autoMod);
 #endif
@@ -70,9 +73,6 @@ void MyApplication::onInit() {
 void MyApplication::onTick() {
 #if WIFI_ENABLE && defined(ESP32DEV)
     _webControl.onTick();
-#endif
-#if MIC_ENABLE && defined(ESP32DEV)
-    _mic.onTick();
 #endif
 #if IR_ENABLE
     if (_ir.isIdle())
