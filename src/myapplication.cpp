@@ -53,6 +53,9 @@ void MyApplication::onInit() {
 #if RELAY_ENABLE
     _relay.onInit();
 #endif
+#if MIC_ENABLE && defined(ESP32DEV)
+    _mic.onInit();
+#endif
 #if SAVE_TO_EEPROM
     _effectStorage = std::make_unique<FileEffectStorage>(std::make_unique<LsfFileHandler>(SAVE_TO_EEPROM_FILE));
 #else
@@ -67,6 +70,9 @@ void MyApplication::onInit() {
 void MyApplication::onTick() {
 #if WIFI_ENABLE && defined(ESP32DEV)
     _webControl.onTick();
+#endif
+#if MIC_ENABLE && defined(ESP32DEV)
+    _mic.onTick();
 #endif
 #if IR_ENABLE
     if (_ir.isIdle())

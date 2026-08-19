@@ -15,6 +15,9 @@
 #if RELAY_ENABLE
 #   include "modules/relay.h"
 #endif
+#if MIC_ENABLE && defined(ESP32DEV)
+#   include "modules/inmp441.h"
+#endif
 #if WIFI_ENABLE && defined(ESP32DEV)
 #   include "controls/webcontrol.h"
 #endif
@@ -36,6 +39,9 @@ private:
 #endif
 #if RELAY_ENABLE
     Relay _relay;
+#endif
+#if MIC_ENABLE && defined(ESP32DEV)
+    Inmp441 _mic;
 #endif
 #if WIFI_ENABLE && defined(ESP32DEV)
     WebControl _webControl;

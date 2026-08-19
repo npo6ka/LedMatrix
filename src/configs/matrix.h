@@ -47,6 +47,16 @@
 #define RELAY_ENABLE            false                       // подключить урпавление через ИК приёмник
 #define RELAY_DELAY             100
 
+#ifdef ESP32DEV
+#define MIC_ENABLE              true                        // INMP441 по I2S
+#define MIC_SPECTRUM_ENABLE     true                        // FFT-разбиение на частотные полосы
+#define MIC_FFT_SIZE            (256U)                      // размер окна FFT (степень двойки)
+#define MIC_SPECTRUM_BANDS      (16U)                       // число логарифмических полос
+#define MIC_SAMPLE_RATE         (16000)
+#else
+#define MIC_ENABLE              false
+#endif
+
 // ===================== Настройки WiFi (ESP32) =====================
 
 #ifdef ESP32DEV
@@ -72,6 +82,9 @@
 #define BTN_PIN                 (16)                        // пин кнопки
 #define IR_RECEIVE_PIN          (24)                        // пин к которому подключен ИК приёмник
 #define RELAY_PIN               (25)                        // пин управления реле
+#define I2S_WS                  (25)                        // INMP441 LRCL
+#define I2S_SD                  (32)                        // INMP441 DOUT
+#define I2S_SCK                 (26)                        // INMP441 BCLK
 
 #else // if DESP12F
 
