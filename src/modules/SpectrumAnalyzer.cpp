@@ -139,13 +139,19 @@ void SpectrumAnalyzer::compute() {
     }
 
     for (uint16_t b = 0; b < _bandCount; ++b) {
-        const uint16_t start = _bandStarts[b];
-        const uint16_t end = _bandStarts[b + 1U];
+        uint16_t start = _bandStarts[b];
+        uint16_t end = _bandStarts[b + 1U];
+        if (end <= start) {
+            end = start + 1U;
+        }
+        if (end > half) {
+            end = half;
+        }
         float sum = 0.0f;
         for (uint16_t i = start; i < end && i < half; ++i) {
             sum += _magnitudes[i];
         }
-        const uint16_t count = (end > start) ? static_cast<uint16_t>(end - start) : 1U;
+        const uint16_t count = end - start;
         _bandBands[b] = sum / static_cast<float>(count);
     }
 }
@@ -160,25 +166,37 @@ void SpectrumAnalyzer::buildBands() {
     const float binHz = static_cast<float>(_sampleRate) / static_cast<float>(_fftSize);
     const uint16_t half = static_cast<uint16_t>(_fftSize / 2U);
 
-    _bandStarts[0] = 1U; // пропускаем DC-бин
+    for (uint16_t b = 0; b <= _bandCount; ++b) {
+        const float t = static_cast<float>(b) / static_cast<float>(_bandCount);
+        const float hz = minHz * powf(maxHz / minHz, t);
 
-    for (uint16_t b = 1; b <= _bandCount; ++b) {
-        const float t0 = static_cast<float>(b - 1U) / static_cast<float>(_bandCount);
-        const float t1 = static_cast<float>(b) / static_cast<float>(_bandCount);
-        const float f0 = minHz * powf(maxHz / minHz, t0);
-        const float f1 = minHz * powf(maxHz / minHz, t1);
-
-        uint16_t bin = static_cast<uint16_t>(f1 / binHz);
-        if (bin < 1U) bin = 1U;
-        if (bin > half) bin = half;
+        uint16_t bin = static_cast<uint16_t>(hz / binHz);
+        if (bin < 1U) {
+            bin = 1U;
+        }
+        if (bin > half) {
+            bin = half;
+        }
         _bandStarts[b] = bin;
     }
 
+    // Каждая полоса должна включать хотя бы один бин
     for (uint16_t b = 1; b <= _bandCount; ++b) {
-        if (_bandStarts[b] < _bandStarts[b - 1U]) {
-            _bandStarts[b] = _bandStarts[b - 1U];
+        if (_bandStarts[b] <= _bandStarts[b - 1U]) {
+            _bandStarts[b] = _bandStarts[b - 1U] + 1U;
+        }
+        if (_bandStarts[b] > half) {
+            _bandStarts[b] = half;
         }
     }
+
+    for (int16_t b = static_cast<int16_t>(_bandCount) - 1; b >= 0; --b) {
+        const uint16_t idx = static_cast<uint16_t>(b);
+        if (_bandStarts[idx + 1U] <= _bandStarts[idx]) {
+            _bandStarts[idx] = (_bandStarts[idx + 1U] > 1U) ? _bandStarts[idx + 1U] - 1U : 1U;
+        }
+    }
+
     _bandStarts[_bandCount] = half;
 }
 

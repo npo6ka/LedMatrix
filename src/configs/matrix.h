@@ -72,8 +72,9 @@
 
 // =============== Настройки Сохранения в память ==================
 
-#define SAVE_TO_EEPROM          true                        // сохранять настройки в EEPROM
-#define SAVE_TO_EEPROM_FILE     "mods.txt"                  // имя файла для сохранения настроек, если используется файловая система
+#define SAVE_TO_EEPROM              true                        // сохранять настройки в EEPROM
+#define SAVE_TO_EEPROM_FILE         "mods.txt"                  // имя файла для сохранения настроек, если используется файловая система
+#define RESET_EFFECTS_LIST_ON_BOOT  false                       // true — сброс списка режимов к DefaultEffectList при каждом старте (для отладки потом false)
 
 // ===================== Платформозависимые настройки =====================
 #ifdef ESP32DEV

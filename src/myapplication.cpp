@@ -61,6 +61,9 @@ void MyApplication::onInit() {
 #else
     _effectStorage = std::make_unique<StaticEffectStorage>();
 #endif
+#if RESET_EFFECTS_LIST_ON_BOOT
+    _effectStorage->reset();
+#endif
 #if MIC_ENABLE && defined(ESP32DEV)
     _inputHub.registerProvider(&_micProvider);
 #endif

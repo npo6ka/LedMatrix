@@ -15,7 +15,8 @@ constexpr i2s_port_t kPort = I2S_NUM_0;
 constexpr int kFrames = 128;
 
 int32_t toSample(int32_t raw) {
-    return raw >> 8;
+    // INMP441: 24-bit sample in upper bits of 32-bit I2S slot
+    return raw >> 14;
 }
 
 void fillChannelStats(const int32_t *raw, int count, int stride, int32_t &dc, int32_t &rms) {
