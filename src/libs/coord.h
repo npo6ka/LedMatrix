@@ -28,8 +28,8 @@ inline Trend invertTrend(Trend trend) {
 }
 
 struct Coord {
-    uint8_t x;
-    uint8_t y;
+    index_t x;
+    index_t y;
 
     void move(Trend tr) {
         switch (tr) {

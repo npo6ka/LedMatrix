@@ -13,7 +13,7 @@ class Snake : public Effect
     Trend button, vector;
     bool apple_flag, end_game;
     uint8_t aiType = 3;
-    SnakeAI *ai;
+    SnakeAI *ai = nullptr;
     uint64_t startTime;
 
     uint8_t tick, step = 3;
@@ -106,7 +106,7 @@ class Snake : public Effect
         }
     }
 
-    void setApple(uint8_t x, uint8_t y) {
+    void setApple(index_t x, index_t y) {
         apple = {x, y};
         apple_flag = true;
         LedMatrix.at(apple.x, apple.y) = COLOR_APPLE;
@@ -142,8 +142,13 @@ class Snake : public Effect
         vector = Trend::up;  // начальный вектор движения задаётся вот здесь
         button = Trend::none;
 
-        // длина из настроек, начинаем в середине экрана, бла-бла-бла
-        head = {LEDS_WIDTH / 2 - 1, LEDS_HEIGHT / 2 - 1};
+        // длина из настроек, начинаем в середине экрана
+        const index_t w = LedMatrix.width();
+        const index_t h = LedMatrix.height();
+        head = {
+            w > 1 ? static_cast<index_t>(w / 2 - 1) : index_t{0},
+            h > 1 ? static_cast<index_t>(h / 2 - 1) : index_t{0}
+        };
         butt = head;
         LedMatrix.at(head.x, head.y) = COLOR_SNAKE; // устанавливаем первый пиксель без добавления в очередь
         snake.clear();
@@ -167,13 +172,22 @@ class Snake : public Effect
         }
     }
 
+    static bool canPlay() {
+        return LEDS_SIZE > START_LENGTH;
+    }
+
 public:
     virtual void on_init() override {
         set_fps(40);
         tick = 0;
         button = Trend::none;
-        ai = make_ai();
+        ai = nullptr;
 
+        if (!canPlay()) {
+            return;
+        }
+
+        ai = make_ai();
         newGameSnake();
     }
 
@@ -184,6 +198,10 @@ public:
     }
 
     virtual void on_update() override {
+        if (!canPlay()) {
+            return;
+        }
+
         tick = (tick + 1) % step;
         if (!tick) {
             snakeRoutine();
@@ -191,6 +209,9 @@ public:
     }
 
     virtual bool is_end() const override {
-        return millis() - startTime < 5000; // если с момента старта прошло меньше 5 секунд, то режим не переключится
+        if (!canPlay()) {
+            return true;
+        }
+        return millis() - startTime < 5000; // если с момента старта прошло больше 5 секунд, то режим не переключится
     }
 };

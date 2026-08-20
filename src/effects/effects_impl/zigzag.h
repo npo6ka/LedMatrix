@@ -4,8 +4,8 @@
 
 class ZigZag : public Effect
 {
-    uint8_t x;
-    uint8_t y;
+    index_t x;
+    index_t y;
     bool dir;
     uint8_t hue;
     uint8_t step;
@@ -35,24 +35,28 @@ public:
             hue++;
         }
 
+        const index_t w = LedMatrix.width();
+        const index_t h = LedMatrix.height();
+
+        if (w <= 1) {
+            y = (h == 0) ? 0 : (y + 1) % h;
+            return;
+        }
+
         if (dir) {
-            if (x >= LedMatrix.width()) {
-                y++;
-                dir = !dir;
+            if (x + 1 >= w) {
+                y = (h == 0) ? 0 : (y + 1) % h;
+                dir = false;
             } else {
                 x++;
             }
         } else {
-            if (x - 1 < 0) {
-                y++;
-                dir = !dir;
+            if (x == 0) {
+                y = (h == 0) ? 0 : (y + 1) % h;
+                dir = true;
             } else {
                 x--;
             }
-        }
-
-        if (y >= LedMatrix.height()) {
-            y = 0;
         }
     }
 };

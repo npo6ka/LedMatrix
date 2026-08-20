@@ -50,6 +50,13 @@ public:
     // Затемнить все светодиоды на матрице на указанный шаг
     void fader(uint8_t step);
 
+    // Размытие соседей (как FastLED blur2d), без лимита 255 по ширине/высоте.
+    // Соседи берутся по визуальной сетке at(x, y), а не по порядку проводов.
+    void blur(uint8_t amount);
+
+    // Пиксель по линейному индексу вдоль длинной стороны (для ленты 1×N / N×1)
+    CRGB& atLinear(int pos);
+
     // Нарисовать линию по указанным координатам и соответствующим цветом
     // x1, y1 - координаты 1 точки
     // x2, y2 - координаты 2 точки
@@ -81,6 +88,38 @@ public:
     template <index_t W, index_t H>
     void drawSprite(index_t x, index_t y, const uint32_t (&sprite)[H][W]) {
         drawSprite<W, H>(x, y, &sprite[0][0]);
+    }
+
+    // Сжать спрайт в линию, если матрица шириной или высотой 1, и сдвинуть вдоль ленты
+    template <index_t W, index_t H>
+    void drawSpriteProjected(int origin, const uint32_t* sprite) {
+        if (width() > 1 && height() > 1) {
+            drawSprite<W, H>((index_t)origin, 0, sprite);
+            return;
+        }
+        if (width() <= 1) {
+            for (index_t j = 0; j < H; ++j) {
+                CRGB acc(0, 0, 0);
+                for (index_t i = 0; i < W; ++i) {
+                    CRGB p(pgm_read_dword(sprite + j * W + i));
+                    if (p) acc = p;
+                }
+                if (acc) {
+                    at(0, origin + (int)j) = acc;
+                }
+            }
+        } else {
+            for (index_t i = 0; i < W; ++i) {
+                CRGB acc(0, 0, 0);
+                for (index_t j = 0; j < H; ++j) {
+                    CRGB p(pgm_read_dword(sprite + j * W + i));
+                    if (p) acc = p;
+                }
+                if (acc) {
+                    at(origin + (int)i, 0) = acc;
+                }
+            }
+        }
     }
 
     // range по ширине матрицы для range-based-циклов
