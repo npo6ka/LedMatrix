@@ -1,6 +1,6 @@
 #pragma once
 
-#include "configs/matrix.h"
+#include "configs/constants.h"
 
 #if WIFI_ENABLE && defined(ESP32DEV)
 
