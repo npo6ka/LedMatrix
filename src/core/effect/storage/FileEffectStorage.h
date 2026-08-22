@@ -21,7 +21,12 @@ public:
     FileEffectStorage(std::unique_ptr<IFileHandler>&& fileHandler) : _fileHandler(std::move(fileHandler)), _currentEffectIndex(_fileHandler.get(), 0, 0) {
         _offset = _currentEffectIndex.size();
 
-        size_t savedEffectAmount = (_fileHandler->size() - _currentEffectIndex.size()) / EffectInfo::typeSize();
+        const size_t fileSize = _fileHandler->size();
+        const size_t headerSize = _currentEffectIndex.size();
+        size_t savedEffectAmount = 0;
+        if (fileSize > headerSize) {
+            savedEffectAmount = (fileSize - headerSize) / EffectInfo::typeSize();
+        }
         for (size_t i = 0; i < savedEffectAmount; i++) {
             internalAddEffect(EffectInfo(), true);
             // удалить режим из памяти можно только занулив savedIndex,
