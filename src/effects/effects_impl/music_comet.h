@@ -163,13 +163,17 @@ public:
 
     void on_update(const InputSnapshot &input) override {
         if (_analyzer.update(input.audio)) {
-            // Полосы перебираем снизу вверх, поэтому при одновременном ударе
-            // в нескольких диапазонах кометой выстрелит самый низкий.
+            // При одновременном ударе в нескольких диапазонах кометой
+            // выстреливает самый громкий из них — он и задаёт цвет.
             int8_t candidate = -1;
+            float candidateValue = 0.0f;
             for (uint8_t i = 0; i < kBands; ++i) {
                 const float value = _analyzer.value(i);
                 if (_armed[i] && value >= kFireLevel) {
-                    if (candidate < 0) candidate = static_cast<int8_t>(i);
+                    if (candidate < 0 || value > candidateValue) {
+                        candidate = static_cast<int8_t>(i);
+                        candidateValue = value;
+                    }
                 } else if (value <= kRearmLevel) {
                     _armed[i] = true;
                 }
