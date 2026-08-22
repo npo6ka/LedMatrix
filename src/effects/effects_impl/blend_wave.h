@@ -4,21 +4,14 @@
 
 // Две плавные волны, которые смешиваются и едут вдоль ленты.
 class BlendWave : public Effect {
-    static void fillLinearGradient(int startPos, CRGB startColor, int endPos, CRGB endColor) {
-        if (endPos < startPos) {
-            const int tmpPos = endPos;
-            const CRGB tmpColor = endColor;
-            endPos = startPos;
-            endColor = startColor;
-            startPos = tmpPos;
-            startColor = tmpColor;
-        }
-
+    // Оттенки считаются в int без приведения к кругу: линейная интерполяция
+    // остаётся непрерывной, а перенос через 255 даёт обычный оборот палитры.
+    static void fillHueGradient(int startPos, int startHue, int endPos, int endHue) {
         const int dist = endPos - startPos;
         const int divisor = dist ? dist : 1;
         for (int i = startPos; i <= endPos; ++i) {
-            const uint8_t t = (uint8_t)(((i - startPos) * 255) / divisor);
-            LedMatrix.atLinear(i) = blend(startColor, endColor, t);
+            const int hue = startHue + ((endHue - startHue) * (i - startPos)) / divisor;
+            LedMatrix.atLinear(i) = CHSV((uint8_t)hue, 255, 255);
         }
     }
 
@@ -33,18 +26,13 @@ public:
             return;
         }
 
-        const uint8_t speed = beatsin8(6, 0, 255);
-        const CRGB clr1 = blend(
-            CHSV(beatsin8(3, 0, 255), 255, 255),
-            CHSV(beatsin8(4, 0, 255), 255, 255),
-            speed);
-        const CRGB clr2 = blend(
-            CHSV(beatsin8(4, 0, 255), 255, 255),
-            CHSV(beatsin8(3, 0, 255), 255, 255),
-            speed);
-        const int loc1 = (int)beatsin16(10, 0, n - 1);
+        const int hue = beatsin8(3, 0, 255);
+        // Разбег не больше половины круга — иначе направление обхода
+        // оттенков переворачивается и лента скачком меняет цвет.
+        const int spread = beatsin8(4, 0, 128);
+        const int loc = (int)beatsin16(10, 0, n - 1);
 
-        fillLinearGradient(0, clr2, loc1, clr1);
-        fillLinearGradient(loc1, clr2, n - 1, clr1);
+        fillHueGradient(0, hue, loc, hue + spread);
+        fillHueGradient(loc, hue + spread, n - 1, hue);
     }
 };
