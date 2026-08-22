@@ -56,27 +56,7 @@ pio run -e esp32dev -t uploadfs
 pio run -e esp32dev -t uploadfs
 ```
 
-### REST API
-
-| Метод | Путь | Тело |
-|-------|------|------|
-| GET | `/api/status` | — |
-| GET | `/api/effects` | — |
-| POST | `/api/power` | `{"on": true}` |
-| POST | `/api/mode/next` | — |
-| POST | `/api/mode/prev` | — |
-| POST | `/api/mode` | `{"index": 3}` |
-| POST | `/api/automode` | `{"enabled": true}` |
-| POST | `/api/brightness` | `{"value": 128}` |
-| POST | `/api/reset` | — |
-
-Примеры:
-
-```bash
-curl http://192.168.4.1/api/status
-curl -X POST http://192.168.4.1/api/power -H "Content-Type: application/json" -d "{\"on\":true}"
-curl -X POST http://192.168.4.1/api/mode/next
-```
+Полное описание эндпоинтов, ошибок и заметки для Android — в **[docs/REST_API.md](docs/REST_API.md)**.
 
 Настройки WiFi в `src/configs/matrix.h`: `WIFI_AP_SSID`, `WIFI_AP_PASSWORD`, `WIFI_MDNS_HOST`.
 
