@@ -218,13 +218,14 @@ LedMatrix/
 
 ## Добавление нового режима
 
-1. Создать класс, наследующий `Effect`, в `src/effects/effects_impl/<имя>.h`.
-2. Реализовать минимум `on_update()`; в `on_init()` при необходимости вызвать `set_fps()`.
-3. В **`EffectFactory.h`**: добавить новый вариант в `enum class EffectId` перед `Count` (следующий свободный номер).
-4. В **`EffectFactory.cpp`**: `#include` заголовка эффекта и строка `EFFECT_CASE(ИмяКакВEnum);` (имя класса должно совпадать с именем в enum).
-5. В **`DefaultEffectList.h`**: при необходимости добавить `EffectId::…` в `DefaultEffects::effectIds`, чтобы режим попал в стартовый список.
+Подробная инструкция: **[docs/creating-effects.md](docs/creating-effects.md)**.
 
-Подробная инструкция — в [.cursor/rules/effects.mdc](.cursor/rules/effects.mdc).
+Кратко:
+
+1. Класс-наследник `Effect` в `src/effects/effects_impl/<имя>.h`, минимум `on_update()`.
+2. Новый id **только в конец** `enum class EffectId` в `src/core/effect/EffectFactory/EffectId.h` (существующие числа не менять).
+3. В `EffectFactory.cpp`: `#include` и `EFFECT_CASE(ИмяКакВEnum);` — имя класса = имя в enum.
+4. В `DefaultEffectList.h` — `EffectId::…` **в конец** массива, чтобы режим попал в стартовый список.
 
 ## Зависимости
 

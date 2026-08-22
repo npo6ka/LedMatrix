@@ -39,5 +39,6 @@ namespace DefaultEffects {
         EffectId::Spiral,
         EffectId::PulseRings,
         EffectId::MusicSpectrum,
+        EffectId::StaticColor,
     };
 } // namespace DefaultEffects
