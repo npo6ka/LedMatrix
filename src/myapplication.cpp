@@ -58,6 +58,10 @@ void MyApplication::onInit() {
 #endif
 #if SAVE_TO_EEPROM
     _effectStorage = std::make_unique<FileEffectStorage>(std::make_unique<LsfFileHandler>(SAVE_TO_EEPROM_FILE));
+    _brightnessFile = std::make_unique<LsfFileHandler>(SAVE_BRIGHTNESS_FILE);
+    _savedBrightness = std::make_unique<FileSavableVariable<uint8_t>>(
+        _brightnessFile.get(), 0, static_cast<uint8_t>(LEDS_BRIGHTNRSS));
+    LedMatrix.setBrightness(_savedBrightness->get());
 #else
     _effectStorage = std::make_unique<StaticEffectStorage>();
 #endif
@@ -127,6 +131,11 @@ void MyApplication::handleEvent(const Event *event) {
         if (value < 0) value = 0;
         if (value > 255) value = 255;
         LedMatrix.setBrightness(static_cast<uint8_t>(value));
+#if SAVE_TO_EEPROM
+        if (_savedBrightness) {
+            _savedBrightness->set(static_cast<uint8_t>(value));
+        }
+#endif
     } else if (event->type == EventType::ChangeMode) { // включить питание при попытках сменить режима
         if (!_isPowerOn) {
             setPowerState(true);

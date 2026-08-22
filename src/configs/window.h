@@ -50,6 +50,7 @@
 
 #define SAVE_TO_EEPROM          true                        // сохранять настройки в EEPROM
 #define SAVE_TO_EEPROM_FILE     "mods.txt"                  // имя файла для сохранения настроек, если используется файловая система
+#define SAVE_BRIGHTNESS_FILE    "brightness.bin"            // яркость матрицы (0..255)
 
 // ===================== Платформозависимые настройки =====================
 #ifdef ESP32DEV

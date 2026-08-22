@@ -74,6 +74,7 @@
 
 #define SAVE_TO_EEPROM              true                        // сохранять настройки в EEPROM
 #define SAVE_TO_EEPROM_FILE         "mods.txt"                  // имя файла для сохранения настроек, если используется файловая система
+#define SAVE_BRIGHTNESS_FILE        "brightness.bin"            // яркость матрицы (0..255)
 #define RESET_EFFECTS_LIST_ON_BOOT  false                       // true — сброс списка режимов к DefaultEffectList при каждом старте (для отладки потом false)
 
 // ===================== Платформозависимые настройки =====================

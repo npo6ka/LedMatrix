@@ -23,8 +23,10 @@
 #   include "controls/webcontrol.h"
 #endif
 
-#include <Arduino.h>
-#include <memory>
+#if SAVE_TO_EEPROM
+#   include "core/file/IFileHandler.h"
+#   include "core/Variable/FileSavableVariable.h"
+#endif
 
 class MyApplication : public IObserver {
 private:
@@ -33,6 +35,10 @@ private:
     std::unique_ptr<IEffectStorage> _effectStorage;
     std::unique_ptr<EffectManager> _effectManager;
     InputHub _inputHub;
+#if SAVE_TO_EEPROM
+    std::unique_ptr<IFileHandler> _brightnessFile;
+    std::unique_ptr<FileSavableVariable<uint8_t>> _savedBrightness;
+#endif
 #if BTN_ENABLE
     Button _button;
 #endif
