@@ -44,5 +44,6 @@ namespace DefaultEffects {
         EffectId::BlendWave,
         EffectId::RainbowBeat,
         EffectId::TwoWaves,
+        EffectId::OneWave,
     };
 } // namespace DefaultEffects
