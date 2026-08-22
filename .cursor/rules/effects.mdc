@@ -72,11 +72,11 @@ alwaysApply: false
 
 **Можно:** дописать новый вариант **в конец**, сразу перед `Count`, со следующим свободным числом.
 
-Текущий последний id смотри в файле (сейчас это `Juggle = 41`). Следующий будет `42`:
+Текущий последний id смотри в файле (сейчас это `MusicSlider = 44`). Следующий будет `45`:
 
 ```cpp
-    Juggle = 41,
-    MyEffect = 42,
+    MusicSlider = 44,
+    MyEffect = 45,
     Count
 ```
 
@@ -111,8 +111,8 @@ EFFECT_CASE(MyEffect);
 Чтобы новый режим появился после сброса списка / на чистой плате, добавь строку **в конец**:
 
 ```cpp
-        EffectId::Plasma,
-        EffectId::Juggle,
+        EffectId::MusicComet,
+        EffectId::MusicSlider,
         EffectId::MyEffect,
     };
 ```
@@ -163,8 +163,9 @@ EFFECT_CASE(MyEffect);
 1. В классе объявить `static constexpr InputCapability kRequired = InputCapability::Audio;`
 2. Рисовать в `on_update(const InputSnapshot &input)` (переопределить именно эту перегрузку).
 3. Данные — `input.audio` (`available`, `bands`, `bandCount`, `rms`).
+4. Для новых музыкальных режимов переиспользовать `MusicBandLevels` из `src/effects/effects_impl/music/band_levels.h` — там уже шумовой пол и нормировка пяти нижних полос.
 
-Пример: `src/effects/effects_impl/MusicSpectrum.h`. Без этой константы эффект считается обычным (`InputCapability::None`).
+Примеры: `MusicSpectrum.h`, `music_runner.h`, `music_comet.h`, `music_slider.h`. Без константы `kRequired` эффект считается обычным (`InputCapability::None`).
 
 ## 8. Минимальный пример
 
