@@ -63,11 +63,11 @@ alwaysApply: false
 
 **Можно:** дописать новый вариант **в конец**, сразу перед `Count`, со следующим свободным числом.
 
-Текущий последний id смотри в файле (сейчас это `BlendWave = 35`). Следующий будет `36`:
+Текущий последний id смотри в файле (сейчас это `RainbowBeat = 36`). Следующий будет `37`:
 
 ```cpp
-    BlendWave = 35,
-    MyEffect = 36,
+    RainbowBeat = 36,
+    MyEffect = 37,
     Count
 ```
 
@@ -102,8 +102,8 @@ EFFECT_CASE(MyEffect);
 Чтобы новый режим появился после сброса списка / на чистой плате, добавь строку **в конец**:
 
 ```cpp
-        EffectId::ColorBlink,
         EffectId::BlendWave,
+        EffectId::RainbowBeat,
         EffectId::MyEffect,
     };
 ```
@@ -137,7 +137,7 @@ EFFECT_CASE(MyEffect);
 
 Матрица бывает любой, в том числе прямоугольной. Не закладываться на квадрат и на `16`. Координаты и радиусы считать в рантайме от `LedMatrix.width()` / `height()`.
 
-`LEDS_WIDTH` / `LEDS_HEIGHT` из `configs/matrix.h` — только если размер нужен на этапе компиляции (статический массив). Для переносимости лучше `width()` / `height()`.
+`LEDS_WIDTH` / `LEDS_HEIGHT` из `configs/constants.h` — только если размер нужен на этапе компиляции (статический массив). Для переносимости лучше `width()` / `height()`.
 
 Цвет (FastLED):
 

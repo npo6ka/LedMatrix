@@ -42,5 +42,6 @@ namespace DefaultEffects {
         EffectId::StaticColor,
         EffectId::ColorBlink,
         EffectId::BlendWave,
+        EffectId::RainbowBeat,
     };
 } // namespace DefaultEffects
