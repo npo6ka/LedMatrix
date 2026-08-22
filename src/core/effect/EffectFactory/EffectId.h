@@ -38,5 +38,6 @@ enum class EffectId : uint32_t {
     MusicSpectrum = 32,
     StaticColor = 33,
     ColorBlink = 34,
+    BlendWave = 35,
     Count
 };

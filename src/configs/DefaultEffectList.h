@@ -41,5 +41,6 @@ namespace DefaultEffects {
         EffectId::MusicSpectrum,
         EffectId::StaticColor,
         EffectId::ColorBlink,
+        EffectId::BlendWave,
     };
 } // namespace DefaultEffects
