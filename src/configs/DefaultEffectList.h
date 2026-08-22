@@ -49,5 +49,6 @@ namespace DefaultEffects {
         EffectId::Plasma,
         EffectId::Juggle,
         EffectId::MusicRunner,
+        EffectId::MusicComet,
     };
 } // namespace DefaultEffects

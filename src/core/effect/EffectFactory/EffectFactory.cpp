@@ -43,6 +43,7 @@
 #include "effects/effects_impl/plasma.h"
 #include "effects/effects_impl/juggle.h"
 #include "effects/effects_impl/music_runner.h"
+#include "effects/effects_impl/music_comet.h"
 
 #include "libs/StdFeatures.h"
 
@@ -113,6 +114,7 @@ static EffectCreationInfo getEffectInfo(uint32_t effect_id) {
         EFFECT_CASE(Plasma);
         EFFECT_CASE(Juggle);
         EFFECT_CASE(MusicRunner);
+        EFFECT_CASE(MusicComet);
 
         default:
             return EffectCreationInfo{"ErrorEffect", effectCreator<ErrorEffect>(), Effect::kRequired};
