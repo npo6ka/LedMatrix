@@ -10,13 +10,14 @@ namespace {
     portMUX_TYPE rateLimitMux = portMUX_INITIALIZER_UNLOCKED;
 
     void sendJson(AsyncWebServerRequest* request, int code, const JsonDocument& doc) {
-        char buffer[512];
-        const size_t len = serializeJson(doc, buffer, sizeof(buffer));
-        if (len == 0 || len >= sizeof(buffer)) {
-            request->send(500, "application/json", "{\"ok\":false,\"error\":\"json overflow\"}");
+        String payload;
+        payload.reserve(measureJson(doc) + 1);
+        const size_t len = serializeJson(doc, payload);
+        if (len == 0) {
+            request->send(500, "application/json", "{\"ok\":false,\"error\":\"json serialize failed\"}");
             return;
         }
-        request->send(code, "application/json", buffer);
+        request->send(code, "application/json", payload);
     }
 
     void sendOk(AsyncWebServerRequest* request) {
