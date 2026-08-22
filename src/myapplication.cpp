@@ -15,7 +15,7 @@ MyApplication::MyApplication() :
         _isPowerOn(true),
         _autoMod(AUTOMOD_DEF_STATE, _isPowerOn, AUTOMOD_INTERVAL)
 #if BTN_ENABLE
-        , _button(BTN_PIN, LOW_PULL, NORM_OPEN)
+        , _button(BTN_PIN, HIGH_PULL, NORM_OPEN)
 #endif
 #if IR_ENABLE
         , _ir()
