@@ -40,5 +40,6 @@ namespace DefaultEffects {
         EffectId::PulseRings,
         EffectId::MusicSpectrum,
         EffectId::StaticColor,
+        EffectId::ColorBlink,
     };
 } // namespace DefaultEffects

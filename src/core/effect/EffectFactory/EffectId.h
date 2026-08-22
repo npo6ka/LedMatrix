@@ -37,5 +37,6 @@ enum class EffectId : uint32_t {
     PulseRings = 31,
     MusicSpectrum = 32,
     StaticColor = 33,
+    ColorBlink = 34,
     Count
 };

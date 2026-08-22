@@ -34,6 +34,7 @@
 #include "effects/effects_impl/pulse_rings.h"
 #include "effects/effects_impl/MusicSpectrum.h"
 #include "effects/effects_impl/static_color.h"
+#include "effects/effects_impl/color_blink.h"
 
 #include "libs/StdFeatures.h"
 
@@ -95,6 +96,7 @@ static EffectCreationInfo getEffectInfo(uint32_t effect_id) {
         EFFECT_CASE(PulseRings);
         EFFECT_CASE(MusicSpectrum);
         EFFECT_CASE(StaticColor);
+        EFFECT_CASE(ColorBlink);
 
         default:
             return EffectCreationInfo{"ErrorEffect", effectCreator<ErrorEffect>(), Effect::kRequired};

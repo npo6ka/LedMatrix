@@ -63,10 +63,10 @@ alwaysApply: false
 
 **Можно:** дописать новый вариант **в конец**, сразу перед `Count`, со следующим свободным числом.
 
-Текущий последний id смотри в файле (сейчас это `SerendipitousPal = 34`). Следующий будет `35`:
+Текущий последний id смотри в файле (сейчас это `ColorBlink = 34`). Следующий будет `35`:
 
 ```cpp
-    SerendipitousPal = 34,
+    ColorBlink = 34,
     MyEffect = 35,
     Count
 ```
@@ -103,7 +103,7 @@ EFFECT_CASE(MyEffect);
 
 ```cpp
         EffectId::StaticColor,
-        EffectId::SerendipitousPal,
+        EffectId::ColorBlink,
         EffectId::MyEffect,
     };
 ```
