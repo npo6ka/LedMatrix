@@ -37,6 +37,10 @@ void Mouse::on_init() {
 }
 
 void Mouse::on_update() {
+    if (LedMatrix.width() < W || LedMatrix.height() < H) {
+        return;
+    }
+
     LedMatrix.clear();
     x = (x + 1) % LedMatrix.width();
 

@@ -23,6 +23,9 @@ public:
 
     void move_snow()
     {
+        const index_t w = LedMatrix.width();
+        const index_t h = LedMatrix.height();
+
         // сдвигаем вниз
         for (auto y : LedMatrix.rangeY().reverse()) {
             bool dir = direction;
@@ -30,8 +33,10 @@ public:
             for (auto x : LedMatrix.rangeX()) {
                 auto& pix = LedMatrix.at(x, y);
                 if (pix) {
-                    if (y + 1 < LedMatrix.height()) {
-                        if (dir) {
+                    if (y + 1 < h) {
+                        if (w <= 1) {
+                            LedMatrix.at(x, y + 1) = pix;
+                        } else if (dir) {
                             LedMatrix.at(x + 1, y + 1) = pix;
                         } else {
                             LedMatrix.at(x - 1, y + 1) = pix;
@@ -44,12 +49,16 @@ public:
             }
         }
 
-        for (auto x : LedMatrix.rangeX(0, -2)) {
+        const int right = (w > 2) ? -2 : -1;
+        for (auto x : LedMatrix.rangeX(0, right)) {
             // заполняем случайно верхнюю строку
             // а также не даём двум блокам по вертикали вместе быть
-            if (!LedMatrix.at(x, 1) && (random8(density) == 0)) {
+            index_t check_y = (h > 1) ? 1 : 0;
+            if (!LedMatrix.at(x, check_y) && (random8(density) == 0)) {
                 LedMatrix.at(x, 0) = 0xE0FFFF - 0x101010 * random8(4);
-                x++;
+                if (w > 1) {
+                    x++;
+                }
             } else {
                 LedMatrix.at(x, 0) = 0x000000;
             }

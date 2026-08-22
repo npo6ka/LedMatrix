@@ -126,6 +126,65 @@ void CLedMatrix::fader(uint8_t fadefactor) {
     }
 }
 
+static void blurAlong(CRGB& cur, CRGB& carryover, CRGB* prev, uint8_t keep, uint8_t seep) {
+    CRGB part = cur;
+    part.nscale8(seep);
+    cur.nscale8(keep);
+    cur += carryover;
+    if (prev) {
+        *prev += part;
+    }
+    carryover = part;
+}
+
+void CLedMatrix::blur(uint8_t amount) {
+    if (amount == 0 || size() < 2) {
+        return;
+    }
+
+    const uint8_t keep = 255 - amount;
+    const uint8_t seep = amount >> 1;
+    const index_t w = width();
+    const index_t h = height();
+
+    if (w > 1) {
+        for (index_t y = 0; y < h; ++y) {
+            CRGB carryover = CRGB::Black;
+            CRGB* prev = nullptr;
+            for (index_t x = 0; x < w; ++x) {
+                CRGB& cur = atUnsafe(x, y);
+                blurAlong(cur, carryover, prev, keep, seep);
+                prev = &cur;
+            }
+        }
+    }
+
+    if (h > 1) {
+        for (index_t x = 0; x < w; ++x) {
+            CRGB carryover = CRGB::Black;
+            CRGB* prev = nullptr;
+            for (index_t y = 0; y < h; ++y) {
+                CRGB& cur = atUnsafe(x, y);
+                blurAlong(cur, carryover, prev, keep, seep);
+                prev = &cur;
+            }
+        }
+    }
+}
+
+CRGB& CLedMatrix::atLinear(int pos) {
+    if (pos < 0 || pos >= (int)size()) {
+        return get_dummy_pix();
+    }
+    if (width() <= 1) {
+        return at(0, (index_t)pos);
+    }
+    if (height() <= 1) {
+        return at((index_t)pos, 0);
+    }
+    return at((index_t)(pos % width()), (index_t)(pos / width()));
+}
+
 void CLedMatrix::drawLine(index_t x1, index_t y1, index_t x2, index_t y2, CRGB color) {
     // Рисование линии по Алгоритму Брезенхэма
     index_t deltaX = abs((int16_t)x2 - x1);

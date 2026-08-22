@@ -3,9 +3,6 @@
 // This variant: https://editor.soulmatelights.com/gallery/2778-radialpattern
 #include "effects/effect.h"
 
-#define C_X (LEDS_WIDTH / 2)
-#define C_Y (LEDS_HEIGHT / 2)
-
 class RadialPattern : public Effect
 {
     uint8_t XY_angle[LEDS_WIDTH][LEDS_HEIGHT];
@@ -18,10 +15,17 @@ public:
     RadialPattern() {}
 
     void on_init() {
-        for (int8_t x = -C_X; x < C_X + (LEDS_WIDTH % 2); x++) {
-            for (int8_t y = -C_Y; y < C_Y + (LEDS_HEIGHT % 2); y++) {
-                XY_angle[x + C_X][y + C_Y] = 128 * (atan2(y, x) / PI);
-                XY_radius[x + C_X][y + C_Y] = hypot(x, y) * 255 / LEDS_WIDTH; //thanks Sutaburosu
+        const int w = (int)LedMatrix.width();
+        const int h = (int)LedMatrix.height();
+        const int cx = w / 2;
+        const int cy = h / 2;
+        const int norm = max(w, 1);
+        for (int16_t x = -cx; x < cx + (w % 2); x++) {
+            for (int16_t y = -cy; y < cy + (h % 2); y++) {
+                XY_angle[x + cx][y + cy] = 128 * (atan2(y, x) / PI);
+                int r = (int)(hypot(x, y) * 255 / norm);
+                if (r > 255) r = 255;
+                XY_radius[x + cx][y + cy] = (uint8_t)r; //thanks Sutaburosu
             }
         }
         set_fps(60);
@@ -45,6 +49,6 @@ public:
             }
         }
 
-        blur2d(LedMatrix.leds(), LedMatrix.width(), LedMatrix.height(), 64);
+        LedMatrix.blur(64);
     }
 };

@@ -43,11 +43,18 @@ public:
     Fire() {}
 
     void on_init() {
+        if (LedMatrix.width() > 256 || LedMatrix.height() > 256) {
+            logError("Fire effect supports matrix sides up to 256 LEDs\n");
+            return;
+        }
         generateLine();
         memset(matrixValue, 0, sizeof(matrixValue));
     }
 
     void on_update() {
+        if (LedMatrix.width() > 256 || LedMatrix.height() > 256) {
+            return;
+        }
         if (pcnt >= 100) {
             shiftUp();
             generateLine();

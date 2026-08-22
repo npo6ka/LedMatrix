@@ -3,13 +3,18 @@
 #include "effects/effect.h"
 
 class Bee {
-    uint8_t posX, posY, aimX, aimY, hue;
-    int8_t deltaX, deltaY, signX, signY, error;
+    int16_t posX, posY, aimX, aimY;
+    uint8_t hue;
+    int16_t deltaX, deltaY, signX, signY, error;
+
+    static index_t randDim(index_t lim) {
+        return lim ? (index_t)random16(lim) : 0;
+    }
 
     void aimed() {
         randomSeed(millis());
-        aimX = random8(0, LedMatrix.width());
-        aimY = random8(0, LedMatrix.height());
+        aimX = (int16_t)randDim(LedMatrix.width());
+        aimY = (int16_t)randDim(LedMatrix.height());
         hue = random8();
         deltaX = abs(aimX - posX);
         deltaY = abs(aimY - posY);
@@ -20,8 +25,8 @@ class Bee {
 
 public:
     void on_init() {
-        posX = random8(0, LedMatrix.width());
-        posY = random8(0, LedMatrix.height());
+        posX = (int16_t)randDim(LedMatrix.width());
+        posY = (int16_t)randDim(LedMatrix.height());
         aimed();
     }
 
@@ -29,13 +34,13 @@ public:
     void run() {
         const index_t w = LedMatrix.width();
         const index_t h = LedMatrix.height();
-        if (aimX + 1 < w) LedMatrix.at(aimX + 1, aimY) += CHSV(hue, 255, 255);
-        if (aimY + 1 < h) LedMatrix.at(aimX, aimY + 1) += CHSV(hue, 255, 255);
+        if (aimX + 1 < (int16_t)w) LedMatrix.at(aimX + 1, aimY) += CHSV(hue, 255, 255);
+        if (aimY + 1 < (int16_t)h) LedMatrix.at(aimX, aimY + 1) += CHSV(hue, 255, 255);
         if (aimX > 0) LedMatrix.at(aimX - 1, aimY) += CHSV(hue, 255, 255);
         if (aimY > 0) LedMatrix.at(aimX, aimY - 1) += CHSV(hue, 255, 255);
         if (posX != aimX || posY != aimY) {
             LedMatrix.at(posX, posY) = CHSV(hue, 60, 255);
-            int8_t error2 = error * 2;
+            int16_t error2 = error * 2;
             if (error2 > -deltaY) {
                 error -= deltaY;
                 posX += signX;
@@ -70,6 +75,6 @@ public:
         for (byte i = 0; i < beesCnt; i++) {
             bee[i].run();
         }
-        blur2d(LedMatrix.leds(), LedMatrix.width(), LedMatrix.height(), 12);
+        LedMatrix.blur(12);
     }
 };
