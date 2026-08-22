@@ -1,5 +1,6 @@
 #include "EffectManager.h"
 #include "libs/debug_lib.h"
+#include "libs/led_matrix.h"
 
 EffectManager::EffectManager(IEffectStorage& storage, InputHub& inputHub)
     : _storage(storage),
@@ -41,6 +42,7 @@ void EffectManager::onTickEffect(const InputSnapshot& snapshot) {
     if (_currentEffect && _fpsManager.needUpdate()) {
         _currentEffect->on_update(snapshot);
         _currentEffect->on_render();
+        LedMatrix.mirror();
         FastLED.show();
     }
 }

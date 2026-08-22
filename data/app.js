@@ -4,6 +4,8 @@ const powerStateEl = document.getElementById('power-state');
 const networkInfoEl = document.getElementById('network-info');
 const btnPower = document.getElementById('btn-power');
 const btnAutomode = document.getElementById('btn-automode');
+const btnSymmetric = document.getElementById('btn-symmetric');
+const matrixSizeEl = document.getElementById('matrix-size');
 const btnPrev = document.getElementById('btn-prev');
 const btnNext = document.getElementById('btn-next');
 const btnReset = document.getElementById('btn-reset');
@@ -77,6 +79,10 @@ function renderStatus(data) {
   btnPower.classList.toggle('active', data.power);
   btnAutomode.textContent = data.autoMode ? 'Автомод: вкл' : 'Автомод: выкл';
   btnAutomode.classList.toggle('active', data.autoMode);
+  btnSymmetric.textContent = data.symmetric ? 'Симметрия: вкл' : 'Симметрия: выкл';
+  btnSymmetric.classList.toggle('active', data.symmetric);
+
+  matrixSizeEl.textContent = `${data.width}×${data.height}`;
 
   brightnessSlider.value = String(data.brightness);
   brightnessValue.textContent = String(data.brightness);
@@ -134,6 +140,14 @@ btnAutomode.addEventListener('click', async () => {
   await api('/api/automode', {
     method: 'POST',
     body: JSON.stringify({ enabled: !(status && status.autoMode) }),
+  });
+  await refreshStatus();
+});
+
+btnSymmetric.addEventListener('click', async () => {
+  await api('/api/symmetric', {
+    method: 'POST',
+    body: JSON.stringify({ enabled: !(status && status.symmetric) }),
   });
   await refreshStatus();
 });

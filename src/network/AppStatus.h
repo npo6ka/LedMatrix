@@ -14,6 +14,9 @@ struct AppStatusSnapshot {
     const char* effectName = "";
     float fps = 0.0f;
     uint8_t brightness = 0;
+    bool symmetric = false;
+    uint16_t width = 0;
+    uint16_t height = 0;
     size_t effectsCount = 0;
     String ip;
     String ssid;

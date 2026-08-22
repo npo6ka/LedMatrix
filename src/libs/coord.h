@@ -2,6 +2,7 @@
 
 #include "stdint.h"
 #include "configs/constants.h"
+#include "libs/led_matrix.h"
 
 enum class Trend : uint8_t {
     none = 0,
@@ -57,7 +58,7 @@ struct Coord {
     }
 
     operator bool() const {
-        return x < LEDS_WIDTH && y < LEDS_HEIGHT;
+        return x < LedMatrix.width() && y < LedMatrix.height();
     }
 
     bool operator==(Coord a) const {

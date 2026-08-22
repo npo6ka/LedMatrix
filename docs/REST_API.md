@@ -86,6 +86,7 @@ GET `/api/status` и `/api/effects` **не** попадают под rate limit.
 | POST | `/api/mode` | `{"index": 3}` |
 | POST | `/api/automode` | `{"enabled": true}` |
 | POST | `/api/brightness` | `{"value": 128}` |
+| POST | `/api/symmetric` | `{"enabled": true}` |
 | POST | `/api/reset` | — |
 
 Примеры:
@@ -116,6 +117,9 @@ curl -X POST http://192.168.4.1/api/reset
   "effectName": "Rain",
   "fps": 42.5,
   "brightness": 128,
+  "symmetric": false,
+  "width": 250,
+  "height": 1,
   "effectsCount": 48,
   "ip": "192.168.4.1",
   "ssid": "LedMatrix-A1B2"
@@ -131,6 +135,9 @@ curl -X POST http://192.168.4.1/api/reset
 | `effectName` | string | имя эффекта |
 | `fps` | number | текущий FPS (float) |
 | `brightness` | number | яркость 0–255 |
+| `symmetric` | bool | симметричное отображение |
+| `width` | number | текущая логическая ширина (в симметричном режиме вдвое меньше физической) |
+| `height` | number | текущая логическая высота |
 | `effectsCount` | number | длина списка режимов |
 | `ip` | string | IP SoftAP |
 | `ssid` | string | SSID SoftAP |
@@ -209,6 +216,18 @@ curl -X POST http://192.168.4.1/api/reset
 ```
 
 `value` — целое. Плата обрезает в диапазон **0–255**. На слайдере имеет смысл debounce ≥ 200 мс, чтобы не ловить `429`.
+
+---
+
+## POST `/api/symmetric`
+
+```json
+{"enabled": true}
+```
+
+Включает симметричное отображение: логическая матрица уменьшается вдвое по длинной стороне, а нарисованная половина зеркалится на вторую. Логическая координата 0 оказывается на обоих краях ленты, последняя — в центре.
+
+Текущий эффект перезапускается, значение сохраняется в LittleFS (`symmetric.bin`) и переживает перезагрузку. Новые размеры видны в `width` / `height` из `GET /api/status`.
 
 ---
 

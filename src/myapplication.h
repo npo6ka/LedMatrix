@@ -38,6 +38,8 @@ private:
 #if SAVE_TO_EEPROM
     std::unique_ptr<IFileHandler> _brightnessFile;
     std::unique_ptr<FileSavableVariable<uint8_t>> _savedBrightness;
+    std::unique_ptr<IFileHandler> _symmetricFile;
+    std::unique_ptr<FileSavableVariable<uint8_t>> _savedSymmetric;
 #endif
 #if BTN_ENABLE
     Button _button;
@@ -61,6 +63,7 @@ private:
     MyApplication& operator=(MyApplication&& other) = delete;
 
     void setPowerState(bool state);
+    void setSymmetric(bool enable);
 public:
     MyApplication();
     ~MyApplication();

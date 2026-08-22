@@ -49,6 +49,9 @@ void DeferredActions::process() {
             case DeferredActionType::BrightnessSet:
                 Observable::notify<ChangeIntEvent>(EventType::SetBrightness, action.data.intValue);
                 break;
+            case DeferredActionType::SymmetricSet:
+                Observable::notify<ChangeBoolEvent>(EventType::SetSymmetric, action.data.boolValue);
+                break;
             case DeferredActionType::ResetModesList:
                 Observable::notify<Event>(EventType::ResetModesList);
                 break;

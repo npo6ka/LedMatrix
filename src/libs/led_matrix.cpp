@@ -68,7 +68,56 @@ static index_t get_pix_num(index_t x, index_t y) {
 
 CLedMatrix::CLedMatrix() {}
 
+void CLedMatrix::applyGeometry() {
+    _width = LEDS_WIDTH;
+    _height = LEDS_HEIGHT;
+
+    if (_symmetric) {
+        // нечётная сторона делится с округлением вверх: центральный пиксель
+        // принадлежит логической половине и просто перезаписывается сам собой
+        if (symmetryAxis() == SymmetryAxis::X) {
+            _width = (LEDS_WIDTH + 1) / 2;
+        } else {
+            _height = (LEDS_HEIGHT + 1) / 2;
+        }
+    }
+
+    _size = static_cast<size_t>(_width) * _height;
+}
+
+void CLedMatrix::setSymmetric(bool enable) {
+    if (_symmetric == enable) {
+        return;
+    }
+
+    _symmetric = enable;
+    applyGeometry();
+    // за пределами новой логической области остались пиксели прежней раскладки
+    FastLED.clear();
+}
+
+void CLedMatrix::mirror() {
+    if (!_symmetric) {
+        return;
+    }
+
+    if (symmetryAxis() == SymmetryAxis::X) {
+        for (index_t y = 0; y < _height; ++y) {
+            for (index_t x = 0; x < _width; ++x) {
+                _leds[get_pix_num(LEDS_WIDTH - 1 - x, y)] = _leds[get_pix_num(x, y)];
+            }
+        }
+    } else {
+        for (index_t y = 0; y < _height; ++y) {
+            for (index_t x = 0; x < _width; ++x) {
+                _leds[get_pix_num(x, LEDS_HEIGHT - 1 - y)] = _leds[get_pix_num(x, y)];
+            }
+        }
+    }
+}
+
 void CLedMatrix::setup() {
+    applyGeometry();
     FastLED.addLeds<WS2812B, LEDS_PIN, LEDS_COLOR_ORDER>(_leds, LEDS_HW_SIZE);
     FastLED.setCorrection(TypicalLEDStrip);
     _brightness = LEDS_BRIGHTNRSS;
@@ -92,10 +141,12 @@ void CLedMatrix::setBrightness(uint8_t val) {
 
 CRGB& CLedMatrix::atUnsafe(size_t index) {
 #if LEDS_WIDTH == LEDS_HW_WIDTH && LEDS_HEIGHT == LEDS_HW_HEIGHT
-    return _leds[index];
-#else
-    return atUnsafe(index % LEDS_WIDTH, index / LEDS_WIDTH);
+    // в симметричном режиме логический индекс уже не совпадает с индексом в буфере
+    if (!_symmetric) {
+        return _leds[index];
+    }
 #endif
+    return atUnsafe(static_cast<index_t>(index % _width), static_cast<index_t>(index / _width));
 }
 
 CRGB& CLedMatrix::atUnsafe(index_t x, index_t y) {

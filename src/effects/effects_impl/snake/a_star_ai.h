@@ -23,8 +23,8 @@ class AStarSnakeAI : public SnakeAI {
     }
 
     int getOutCostFactor(Coord coord) {
-        if (coord.x == 0 || coord.x == LEDS_WIDTH - 1 ||
-            coord.y == 0 || coord.y == LEDS_HEIGHT - 1) {
+        if (coord.x == 0 || coord.x == LedMatrix.width() - 1 ||
+            coord.y == 0 || coord.y == LedMatrix.height() - 1) {
             return 5;
         }
         return 0;
@@ -82,8 +82,8 @@ class AStarSnakeAI : public SnakeAI {
     template <class Action>
     void printMas(Action &&action, const char *text) const {
         logInfo("------------------- %s -----------------\n", text);
-        for (index_t i = 0; i < LEDS_WIDTH; ++i) {
-            for (index_t j = 0; j < LEDS_HEIGHT; ++j) {
+        for (index_t i = 0; i < LedMatrix.width(); ++i) {
+            for (index_t j = 0; j < LedMatrix.height(); ++j) {
                 action(nodes[i][j]);
                 out(" ");
             }
@@ -105,9 +105,9 @@ class AStarSnakeAI : public SnakeAI {
 
     Coord findMin() const {
         const Node *min = nullptr;
-        Coord pos = {LEDS_WIDTH, LEDS_HEIGHT};
-        for (index_t i = 0; i < LEDS_WIDTH; ++i) {
-            for (index_t j = 0; j < LEDS_HEIGHT; ++j) {
+        Coord pos = {LedMatrix.width(), LedMatrix.height()};
+        for (index_t i = 0; i < LedMatrix.width(); ++i) {
+            for (index_t j = 0; j < LedMatrix.height(); ++j) {
                 const Node &node = nodes[i][j];
                 if (!node.is_locked && node.is_visited) {
                     if (!min || min->cost > node.cost) {

@@ -1,6 +1,7 @@
 #include "AppStatus.h"
 
 #include "core/effect/EffectFactory/EffectFactory.h"
+#include "libs/led_matrix.h"
 
 AppStatus::AppStatus() {
     Observable::subscribe(EventType::ModChanged, this);
@@ -48,6 +49,9 @@ AppStatusSnapshot AppStatus::snapshot() const {
     status.effectName = EffectFactory::getEffectName(_effectId);
     status.fps = _fps;
     status.brightness = _brightnessFn ? _brightnessFn() : 0;
+    status.symmetric = LedMatrix.isSymmetric();
+    status.width = LedMatrix.width();
+    status.height = LedMatrix.height();
     status.effectsCount = _storage ? _storage->size() : 0;
     status.ip = _ip;
     status.ssid = _ssid;

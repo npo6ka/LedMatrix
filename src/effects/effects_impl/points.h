@@ -39,19 +39,22 @@ class Points : public Effect
         pnt.x += pnt.vec_x;
         pnt.y += pnt.vec_y;
 
+        const int32_t limit_x = ACCURACY * LedMatrix.width();
+        const int32_t limit_y = ACCURACY * LedMatrix.height();
+
         if (pnt.x < 0) {
             pnt.x = 0;
             gen_vector(pnt, true);
-        } else if (pnt.x >= ACCURACY * LEDS_WIDTH) {
-            pnt.x = ACCURACY * LEDS_WIDTH - 1;
+        } else if (pnt.x >= limit_x) {
+            pnt.x = limit_x - 1;
             gen_vector(pnt, true);
         }
 
         if (pnt.y < 0) {
             pnt.y = 0;
             gen_vector(pnt, false);
-        } else if (pnt.y >= ACCURACY * LEDS_HEIGHT) {
-            pnt.y = ACCURACY * LEDS_HEIGHT - 1;
+        } else if (pnt.y >= limit_y) {
+            pnt.y = limit_y - 1;
             gen_vector(pnt, false);
         }
     }
@@ -98,8 +101,8 @@ public:
         bright_radius = 400;
 
         for (i = 0; i < POINTS_AMNT; ++i) {
-            points[i].x = random16(0, LEDS_WIDTH * ACCURACY);
-            points[i].y = random16(0, LEDS_HEIGHT * ACCURACY);
+            points[i].x = random16(0, LedMatrix.width() * ACCURACY);
+            points[i].y = random16(0, LedMatrix.height() * ACCURACY);
 
             points[i].vec_x = random(0, MAX_VEC_SIZE * 2) - MAX_VEC_SIZE;
             points[i].vec_y = random(0, MAX_VEC_SIZE * 2) - MAX_VEC_SIZE;

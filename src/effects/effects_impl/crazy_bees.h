@@ -71,7 +71,7 @@ public:
     }
 
     void on_update() {
-        fadeToBlackBy(LedMatrix.leds(), LedMatrix.size(), 32);
+        LedMatrix.fader(32);
         for (byte i = 0; i < beesCnt; i++) {
             bee[i].run();
         }

@@ -15,6 +15,7 @@ enum class EventType {
     ResetModesList,         // Event — сброс списка режимов на заводской
     SetAutoMod,             // ChangeBoolEvent — явная установка автомода
     SetBrightness,          // ChangeIntEvent — яркость 0..255
+    SetSymmetric,           // ChangeBoolEvent — симметричное отображение
     EventAmount             // Используется, чтобы знать сколько всего ивентов
 };
 

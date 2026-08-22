@@ -12,6 +12,9 @@ uint16_t XY(uint8_t x, uint8_t y);
 
 class CLedMatrix {
 public:
+    // Ось, вдоль которой матрица складывается пополам в симметричном режиме
+    enum class SymmetryAxis : uint8_t { X, Y };
+
     CLedMatrix();
 
     void setup();
@@ -19,14 +22,29 @@ public:
     uint8_t getBrightness() const;
     void setBrightness(uint8_t val);
 
+    // Симметричный режим: логическая матрица вдвое меньше физической, а нарисованная
+    // половина зеркально отражается на вторую перед отправкой кадра на ленту.
+    // Логическая координата 0 оказывается на обоих краях, последняя — в центре.
+    bool isSymmetric() const { return _symmetric; }
+    void setSymmetric(bool enable);
+
+    // Матрица складывается вдоль длинной стороны
+    static constexpr SymmetryAxis symmetryAxis() {
+        return LEDS_WIDTH >= LEDS_HEIGHT ? SymmetryAxis::X : SymmetryAxis::Y;
+    }
+
+    // Отразить нарисованную половину на вторую.
+    // Вызывает движок эффектов перед FastLED.show(), эффектам трогать не нужно.
+    void mirror();
+
     // Получить количество пикселей в матрице
-    size_t size() const { return LEDS_SIZE; }
+    size_t size() const { return _size; }
 
     // Получить ширину матрицы
-    index_t width() const { return LEDS_WIDTH; }
+    index_t width() const { return _width; }
 
     // Получить высоту матрицы
-    index_t height() const { return LEDS_HEIGHT; }
+    index_t height() const { return _height; }
 
     // Получить пиксель по порядковому индексы (UB в случае выхода за границы)
     CRGB& atUnsafe(size_t index);
@@ -149,7 +167,14 @@ private:
         return Range<index_t>(left, right);
     }
 
+    // Пересчитать логические размеры под текущий режим симметрии
+    void applyGeometry();
+
     uint8_t _brightness = LEDS_BRIGHTNRSS;
+    bool _symmetric = LEDS_SYMMETRIC_DEF_STATE;
+    index_t _width = LEDS_WIDTH;
+    index_t _height = LEDS_HEIGHT;
+    size_t _size = LEDS_SIZE;
     CRGB _leds[LEDS_HW_SIZE];
 };
 

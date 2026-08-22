@@ -34,22 +34,25 @@ public:
         snake.color = CHSV(chsv, 255, 255);
         snake.trend = Trend(random8(4) + 1);
 
+        const index_t w = LedMatrix.width();
+        const index_t h = LedMatrix.height();
+
         switch (snake.trend) {
         case Trend::up:
-            snake.pos.x = random16(LEDS_WIDTH);
-            snake.pos.y = LEDS_HEIGHT - 1;
+            snake.pos.x = random16(w);
+            snake.pos.y = h - 1;
             break;
         case Trend::down:
-            snake.pos.x = random16(LEDS_WIDTH);
+            snake.pos.x = random16(w);
             snake.pos.y = 0;
             break;
         case Trend::left:
-            snake.pos.x = LEDS_WIDTH - 1;
-            snake.pos.y = random16(LEDS_HEIGHT);
+            snake.pos.x = w - 1;
+            snake.pos.y = random16(h);
             break;
         case Trend::right:
             snake.pos.x = 0;
-            snake.pos.y = random16(LEDS_HEIGHT);
+            snake.pos.y = random16(h);
             break;
         default: // include Trend::none
             out("Error trend is none in create_snake\n");

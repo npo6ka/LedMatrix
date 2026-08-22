@@ -76,6 +76,9 @@ void ApiHandlers::registerRoutes(AsyncWebServer& server, AppStatus& status) {
         doc["effectName"] = snap.effectName;
         doc["fps"] = snap.fps;
         doc["brightness"] = snap.brightness;
+        doc["symmetric"] = snap.symmetric;
+        doc["width"] = snap.width;
+        doc["height"] = snap.height;
         doc["effectsCount"] = snap.effectsCount;
         doc["ip"] = snap.ip;
         doc["ssid"] = snap.ssid;
@@ -221,6 +224,30 @@ void ApiHandlers::registerRoutes(AsyncWebServer& server, AppStatus& status) {
             DeferredAction action{};
             action.type = DeferredActionType::BrightnessSet;
             action.data.intValue = value;
+            postAction(action, request);
+        });
+
+    server.on("/api/symmetric", HTTP_POST, [](AsyncWebServerRequest* request) {}, nullptr,
+        [this](AsyncWebServerRequest* request, uint8_t* data, size_t len, size_t, size_t) {
+            if (!checkRateLimit()) {
+                sendError(request, 429, "rate limit");
+                return;
+            }
+
+            JsonDocument doc;
+            if (deserializeJson(doc, data, len)) {
+                sendError(request, 400, "invalid json");
+                return;
+            }
+
+            if (!doc["enabled"].is<bool>()) {
+                sendError(request, 400, "missing enabled");
+                return;
+            }
+
+            DeferredAction action{};
+            action.type = DeferredActionType::SymmetricSet;
+            action.data.boolValue = doc["enabled"].as<bool>();
             postAction(action, request);
         });
 

@@ -33,6 +33,7 @@ MyApplication::MyApplication() :
     Observable::subscribe(EventType::ResetModesList, this);
     Observable::subscribe(EventType::SetAutoMod, this);
     Observable::subscribe(EventType::SetBrightness, this);
+    Observable::subscribe(EventType::SetSymmetric, this);
 };
 
 MyApplication::~MyApplication() {
@@ -42,6 +43,7 @@ MyApplication::~MyApplication() {
     Observable::unsubscribe(EventType::ResetModesList, this);
     Observable::unsubscribe(EventType::SetAutoMod, this);
     Observable::unsubscribe(EventType::SetBrightness, this);
+    Observable::unsubscribe(EventType::SetSymmetric, this);
 }
 
 // лучше всё по максимому инициализировать тут
@@ -62,6 +64,11 @@ void MyApplication::onInit() {
     _savedBrightness = std::make_unique<FileSavableVariable<uint8_t>>(
         _brightnessFile.get(), 0, static_cast<uint8_t>(LEDS_BRIGHTNRSS));
     LedMatrix.setBrightness(_savedBrightness->get());
+    _symmetricFile = std::make_unique<LsfFileHandler>(SAVE_SYMMETRIC_FILE);
+    _savedSymmetric = std::make_unique<FileSavableVariable<uint8_t>>(
+        _symmetricFile.get(), 0, static_cast<uint8_t>(LEDS_SYMMETRIC_DEF_STATE ? 1 : 0));
+    // до создания EffectManager, чтобы первый эффект стартовал с итоговым размером матрицы
+    LedMatrix.setSymmetric(_savedSymmetric->get() != 0);
 #else
     _effectStorage = std::make_unique<StaticEffectStorage>();
 #endif
@@ -116,6 +123,21 @@ void MyApplication::setPowerState(bool newState) {
     }
 }
 
+void MyApplication::setSymmetric(bool enable) {
+    if (LedMatrix.isSymmetric() == enable) return;
+
+    LedMatrix.setSymmetric(enable);
+    // текущий эффект рассчитан на прежний размер матрицы, пересоздаём его
+    if (_effectManager) {
+        _effectManager->updateEffect();
+    }
+#if SAVE_TO_EEPROM
+    if (_savedSymmetric) {
+        _savedSymmetric->set(enable ? 1 : 0);
+    }
+#endif
+}
+
 void MyApplication::handleEvent(const Event *event) {
     if (event->type == EventType::ChangePowerState) {
         setPowerState(!_isPowerOn);
@@ -136,6 +158,9 @@ void MyApplication::handleEvent(const Event *event) {
             _savedBrightness->set(static_cast<uint8_t>(value));
         }
 #endif
+    } else if (event->type == EventType::SetSymmetric) {
+        const ChangeBoolEvent *ev = static_cast<const ChangeBoolEvent *>(event);
+        setSymmetric(ev->new_val);
     } else if (event->type == EventType::ChangeMode) { // включить питание при попытках сменить режима
         if (!_isPowerOn) {
             setPowerState(true);

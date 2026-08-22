@@ -34,17 +34,20 @@ private:
         x += vec_x;
         y += vec_y;
 
+        const int32_t limit_x = ACCURACY * LedMatrix.width();
+        const int32_t limit_y = ACCURACY * LedMatrix.height();
+
         if (x < 0) {
-            x += ACCURACY * LEDS_WIDTH - 1;
-        } else if (x >= ACCURACY * LEDS_WIDTH) {
+            x += limit_x - 1;
+        } else if (x >= limit_x) {
             x = 0;
         }
 
         if (y < 0) {
             y = 0;
             rainbow_point_gen_vector(false);
-        } else if (y >= ACCURACY * LEDS_HEIGHT) {
-            y = ACCURACY * LEDS_HEIGHT - 1;
+        } else if (y >= limit_y) {
+            y = limit_y - 1;
             rainbow_point_gen_vector(false);
         }  
     }
@@ -54,14 +57,16 @@ private:
     }
 
     void rainbow_point_render_point() {
+        const int32_t period = LedMatrix.width() * ACCURACY;
+
         for (auto i : LedMatrix.rangeX()) {
             for(auto j : LedMatrix.rangeY()) {
                 int32_t loc_x = i * ACCURACY + ACCURACY / 2;
                 int32_t loc_y = j * ACCURACY + ACCURACY / 2;
 
                 int32_t dis1 = point_distance(x, y, loc_x, loc_y);
-                int32_t dis2 = point_distance(x, y, loc_x - LEDS_WIDTH * ACCURACY, loc_y);
-                int32_t dis3 = point_distance(x, y, loc_x + LEDS_WIDTH * ACCURACY, loc_y);
+                int32_t dis2 = point_distance(x, y, loc_x - period, loc_y);
+                int32_t dis3 = point_distance(x, y, loc_x + period, loc_y);
 
                 dis1 = dis1 < dis2 ? dis1 : dis2;
                 dis1 = dis1 < dis3 ? dis1 : dis3;
@@ -77,8 +82,8 @@ public:
 
     void on_init() {
         tick = 0;
-        x = random16(0, LEDS_WIDTH * ACCURACY);
-        y = random16(0, LEDS_HEIGHT * ACCURACY);
+        x = random16(0, LedMatrix.width() * ACCURACY);
+        y = random16(0, LedMatrix.height() * ACCURACY);
 
         vec_x = random(0, max_vec_size * 2) - max_vec_size;
         vec_y = random(0, max_vec_size * 2) - max_vec_size;
