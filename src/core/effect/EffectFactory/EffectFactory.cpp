@@ -42,7 +42,7 @@
 #include "effects/effects_impl/noise8.h"
 #include "effects/effects_impl/plasma.h"
 #include "effects/effects_impl/juggle.h"
-#include "effects/effects_impl/adaptive_music.h"
+#include "effects/effects_impl/music_runner.h"
 
 #include "libs/StdFeatures.h"
 
@@ -112,7 +112,7 @@ static EffectCreationInfo getEffectInfo(uint32_t effect_id) {
         EFFECT_CASE(Noise8);
         EFFECT_CASE(Plasma);
         EFFECT_CASE(Juggle);
-        EFFECT_CASE(AdaptiveMusic);
+        EFFECT_CASE(MusicRunner);
 
         default:
             return EffectCreationInfo{"ErrorEffect", effectCreator<ErrorEffect>(), Effect::kRequired};

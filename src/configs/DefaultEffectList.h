@@ -48,6 +48,6 @@ namespace DefaultEffects {
         EffectId::Noise8,
         EffectId::Plasma,
         EffectId::Juggle,
-        EffectId::AdaptiveMusic,
+        EffectId::MusicRunner,
     };
 } // namespace DefaultEffects

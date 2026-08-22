@@ -37,6 +37,8 @@ public:
             }
         }
 
+        removeUnknownEffects();
+
         if (_effects.empty()) {
             createDefaultEffectsList();
         }
@@ -180,6 +182,21 @@ private:
 
         if (_currentEffectIndex.get() >= _effects.size()) {
             _currentEffectIndex.set(0);
+        }
+    }
+
+    // После обновления прошивки в сохранённом списке могут остаться id
+    // эффектов, которых больше нет. Без чистки такой режим показывает
+    // ErrorEffect, поэтому выбрасываем его из списка при загрузке.
+    void removeUnknownEffects() {
+        const uint32_t knownEffects = static_cast<uint32_t>(EffectId::Count);
+        // Идём с конца: удаление переписывает только хвост списка.
+        for (size_t i = _effects.size(); i > 0; i--) {
+            const uint32_t id = _effects[i - 1].get().id;
+            if (id >= knownEffects) {
+                logInfo("Removing unknown effect id %u\n", id);
+                removeEffect(static_cast<uint32_t>(i - 1));
+            }
         }
     }
 
