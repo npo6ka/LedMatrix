@@ -43,5 +43,6 @@ enum class EffectId : uint32_t {
     TwoWaves = 37,
     OneWave = 38,
     Noise8 = 39,
+    Plasma = 40,
     Count
 };

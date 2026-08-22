@@ -63,11 +63,11 @@ alwaysApply: false
 
 **Можно:** дописать новый вариант **в конец**, сразу перед `Count`, со следующим свободным числом.
 
-Текущий последний id смотри в файле (сейчас это `Noise8 = 39`). Следующий будет `40`:
+Текущий последний id смотри в файле (сейчас это `Plasma = 40`). Следующий будет `41`:
 
 ```cpp
-    Noise8 = 39,
-    MyEffect = 40,
+    Plasma = 40,
+    MyEffect = 41,
     Count
 ```
 
@@ -104,6 +104,7 @@ EFFECT_CASE(MyEffect);
 ```cpp
         EffectId::OneWave,
         EffectId::Noise8,
+        EffectId::Plasma,
         EffectId::MyEffect,
     };
 ```

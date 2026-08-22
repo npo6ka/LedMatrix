@@ -46,5 +46,6 @@ namespace DefaultEffects {
         EffectId::TwoWaves,
         EffectId::OneWave,
         EffectId::Noise8,
+        EffectId::Plasma,
     };
 } // namespace DefaultEffects
