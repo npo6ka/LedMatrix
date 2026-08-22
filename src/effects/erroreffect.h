@@ -8,7 +8,9 @@ public:
     ErrorEffect() {}
 
     void on_update() {
-        FastLED.showColor(CRGB::Red);
+        for (size_t i = 0; i < LedMatrix.size(); ++i) {
+            LedMatrix.at(i) = CRGB::Red;
+        }
         logError("ERROR state");
     }
 };

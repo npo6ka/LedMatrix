@@ -17,6 +17,8 @@ class Snake : public Effect
     uint64_t startTime;
 
     uint8_t tick, step = 3;
+    uint8_t endAnimBright = 0;
+    uint32_t endAnimNextMs = 0;
 
         // Если нужно, можно вызвать этот метод. Выводит отладочную информацию в терминал
     void debug() {
@@ -75,27 +77,8 @@ class Snake : public Effect
 
             // рисуем голову змеи в новом положении
             LedMatrix.at(head.x, head.y) = COLOR_SNAKE;
-        } else { // end_game == true
-            // ну в общем плавно моргнуть, типо змейке "больно"
-
-            for (uint8_t bright = 0; bright < 16; ++bright) {
-                for (size_t i = 0; i < LedMatrix.size(); ++i) {
-                    LedMatrix.at(i) = CRGB::Red / 15 * bright;
-                }
-
-                FastLED.show();
-                delay(100);
-            }
-
-            logInfo("End game: Score: %d\n", snake.size());
-
-            //delay(100);
-            //FastLED.clear();
-            //FastLED.show();
-            //displayScore(snakeLength - START_LENGTH);
-            //delay(100);
-            ai->clear();
-            newGameSnake();      // миша, всё ху.я, давай по новой
+        } else {
+            startEndGameAnim();
         }
     }
 
@@ -135,6 +118,37 @@ class Snake : public Effect
     }
 
 
+    void startEndGameAnim() {
+        endAnimBright = 0;
+        endAnimNextMs = millis();
+    }
+
+    bool tickEndGameAnim() {
+        if (!end_game) {
+            return false;
+        }
+        if (millis() < endAnimNextMs) {
+            return true;
+        }
+        endAnimNextMs = millis() + 100;
+
+        if (endAnimBright < 16) {
+            const CRGB color = CRGB::Red / 15 * endAnimBright;
+            for (size_t i = 0; i < LedMatrix.size(); ++i) {
+                LedMatrix.at(i) = color;
+            }
+            ++endAnimBright;
+            return true;
+        }
+
+        logInfo("End game: Score: %d\n", snake.size());
+        if (ai) {
+            ai->clear();
+        }
+        newGameSnake();
+        return false;
+    }
+
     // Новая игра. Генерация всего с самого начала
     void newGameSnake() {
         FastLED.clear();
@@ -155,6 +169,7 @@ class Snake : public Effect
 
         apple_flag = false;
         end_game = false;
+        endAnimBright = 0;
 
         startTime = millis();
     }
@@ -199,6 +214,10 @@ public:
 
     virtual void on_update() override {
         if (!canPlay()) {
+            return;
+        }
+
+        if (tickEndGameAnim()) {
             return;
         }
 
