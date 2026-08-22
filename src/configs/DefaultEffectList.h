@@ -47,5 +47,6 @@ namespace DefaultEffects {
         EffectId::OneWave,
         EffectId::Noise8,
         EffectId::Plasma,
+        EffectId::Juggle,
     };
 } // namespace DefaultEffects

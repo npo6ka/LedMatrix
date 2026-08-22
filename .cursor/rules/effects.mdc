@@ -63,11 +63,11 @@ alwaysApply: false
 
 **Можно:** дописать новый вариант **в конец**, сразу перед `Count`, со следующим свободным числом.
 
-Текущий последний id смотри в файле (сейчас это `Plasma = 40`). Следующий будет `41`:
+Текущий последний id смотри в файле (сейчас это `Juggle = 41`). Следующий будет `42`:
 
 ```cpp
-    Plasma = 40,
-    MyEffect = 41,
+    Juggle = 41,
+    MyEffect = 42,
     Count
 ```
 
@@ -102,9 +102,8 @@ EFFECT_CASE(MyEffect);
 Чтобы новый режим появился после сброса списка / на чистой плате, добавь строку **в конец**:
 
 ```cpp
-        EffectId::OneWave,
-        EffectId::Noise8,
         EffectId::Plasma,
+        EffectId::Juggle,
         EffectId::MyEffect,
     };
 ```

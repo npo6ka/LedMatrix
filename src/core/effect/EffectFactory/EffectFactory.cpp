@@ -41,6 +41,7 @@
 #include "effects/effects_impl/one_wave.h"
 #include "effects/effects_impl/noise8.h"
 #include "effects/effects_impl/plasma.h"
+#include "effects/effects_impl/juggle.h"
 
 #include "libs/StdFeatures.h"
 
@@ -109,6 +110,7 @@ static EffectCreationInfo getEffectInfo(uint32_t effect_id) {
         EFFECT_CASE(OneWave);
         EFFECT_CASE(Noise8);
         EFFECT_CASE(Plasma);
+        EFFECT_CASE(Juggle);
 
         default:
             return EffectCreationInfo{"ErrorEffect", effectCreator<ErrorEffect>(), Effect::kRequired};
