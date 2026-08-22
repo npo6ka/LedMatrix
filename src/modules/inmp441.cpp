@@ -19,23 +19,26 @@ int32_t toSample(int32_t raw) {
     return raw >> 14;
 }
 
-void fillChannelStats(const int32_t *raw, int count, int stride, int32_t &dc, int32_t &rms) {
-    dc = 0;
-    rms = 0;
+void fillChannelStats(const int32_t *raw, int count, int stride, int32_t &acRms) {
+    acRms = 0;
     if (count <= 0) {
         return;
     }
 
     int64_t sum = 0;
-    int64_t acc = 0;
     for (int i = 0; i < count; ++i) {
         const int32_t s = toSample(raw[i * stride]);
         sum += s;
-        acc += static_cast<int64_t>(s) * s;
     }
 
-    dc = static_cast<int32_t>(sum / count);
-    rms = static_cast<int32_t>(sqrt(static_cast<double>(acc) / count));
+    const int32_t dc = static_cast<int32_t>(sum / count);
+
+    int64_t centeredAcc = 0;
+    for (int i = 0; i < count; ++i) {
+        const int64_t centered = static_cast<int64_t>(toSample(raw[i * stride])) - dc;
+        centeredAcc += centered * centered;
+    }
+    acRms = static_cast<int32_t>(sqrt(static_cast<double>(centeredAcc) / count));
 }
 
 void extractMono(const int32_t *frames, int pairs, bool useLeft, int32_t *mono) {
@@ -95,6 +98,9 @@ void Inmp441::start() {
 
     i2s_zero_dma_buffer(kPort);
     _running = true;
+    _filterInitialized = false;
+    _hpPrevInput = 0.0f;
+    _hpPrevOutput = 0.0f;
 
 #if MIC_SPECTRUM_ENABLE
     if (_spectrum) {
@@ -111,6 +117,9 @@ void Inmp441::stop() {
     i2s_driver_uninstall(kPort);
     _running = false;
     _lastRms = 0;
+    _filterInitialized = false;
+    _hpPrevInput = 0.0f;
+    _hpPrevOutput = 0.0f;
 }
 
 void Inmp441::readAndAnalyze() {
@@ -127,22 +136,37 @@ void Inmp441::readAndAnalyze() {
         return;
     }
 
-    int32_t leftDc = 0;
-    int32_t leftRms = 0;
-    int32_t rightDc = 0;
-    int32_t rightRms = 0;
-    fillChannelStats(frames, pairs, 2, leftDc, leftRms);
-    fillChannelStats(frames + 1, pairs, 2, rightDc, rightRms);
+    int32_t leftAcRms = 0;
+    int32_t rightAcRms = 0;
+    fillChannelStats(frames, pairs, 2, leftAcRms);
+    fillChannelStats(frames + 1, pairs, 2, rightAcRms);
 
-    _useLeftChannel = leftRms >= rightRms;
-    const int32_t activeDc = _useLeftChannel ? leftDc : rightDc;
-    _lastRms = _useLeftChannel ? leftRms : rightRms;
+    _useLeftChannel = leftAcRms >= rightAcRms;
 
 #if MIC_SPECTRUM_ENABLE
     if (_spectrum) {
         int32_t mono[kFrames];
         extractMono(frames, pairs, _useLeftChannel, mono);
-        if (_spectrum->pushSamples(mono, static_cast<size_t>(pairs), activeDc)) {
+        constexpr float kHighPassAlpha = 0.9865f; // около 35 Гц при 16 кГц
+        int64_t filteredSquares = 0;
+        for (int i = 0; i < pairs; ++i) {
+            const float input = static_cast<float>(mono[i]);
+            if (!_filterInitialized) {
+                _hpPrevInput = input;
+                _hpPrevOutput = 0.0f;
+                _filterInitialized = true;
+            }
+            const float output = kHighPassAlpha * (_hpPrevOutput + input - _hpPrevInput);
+            _hpPrevInput = input;
+            _hpPrevOutput = output;
+            mono[i] = static_cast<int32_t>(output);
+            filteredSquares += static_cast<int64_t>(mono[i]) * mono[i];
+        }
+        _lastRms = pairs > 0
+            ? static_cast<int32_t>(sqrt(static_cast<double>(filteredSquares) / pairs))
+            : 0;
+
+        if (_spectrum->pushSamples(mono, static_cast<size_t>(pairs), 0)) {
             _spectrum->clearReady();
         }
     }

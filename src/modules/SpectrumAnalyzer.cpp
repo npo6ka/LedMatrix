@@ -6,6 +6,10 @@
 
 namespace {
 
+// Спектр считается вдвое чаще, чем эффекты его опрашивают, поэтому между
+// кадрами FFT пик удерживается — иначе короткие удары теряются.
+constexpr float kBandDecay = 0.6f;
+
 bool isPowerOfTwo(uint16_t value) {
     return value > 0U && (value & (value - 1U)) == 0U;
 }
@@ -152,7 +156,9 @@ void SpectrumAnalyzer::compute() {
             sum += _magnitudes[i];
         }
         const uint16_t count = end - start;
-        _bandBands[b] = sum / static_cast<float>(count);
+        const float value = sum / static_cast<float>(count);
+        const float decayed = _bandBands[b] * kBandDecay;
+        _bandBands[b] = value > decayed ? value : decayed;
     }
 }
 

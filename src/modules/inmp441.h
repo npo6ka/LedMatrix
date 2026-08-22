@@ -23,7 +23,10 @@ public:
 private:
     bool _running = false;
     bool _useLeftChannel = true;
+    bool _filterInitialized = false;
     int32_t _lastRms = 0;
+    float _hpPrevInput = 0.0f;
+    float _hpPrevOutput = 0.0f;
 #if MIC_SPECTRUM_ENABLE
     std::unique_ptr<SpectrumAnalyzer> _spectrum;
 #endif
