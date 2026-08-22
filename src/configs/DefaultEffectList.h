@@ -50,5 +50,6 @@ namespace DefaultEffects {
         EffectId::Juggle,
         EffectId::MusicRunner,
         EffectId::MusicComet,
+        EffectId::MusicSlider,
     };
 } // namespace DefaultEffects

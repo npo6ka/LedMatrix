@@ -44,6 +44,7 @@
 #include "effects/effects_impl/juggle.h"
 #include "effects/effects_impl/music_runner.h"
 #include "effects/effects_impl/music_comet.h"
+#include "effects/effects_impl/music_slider.h"
 
 #include "libs/StdFeatures.h"
 
@@ -115,6 +116,7 @@ static EffectCreationInfo getEffectInfo(uint32_t effect_id) {
         EFFECT_CASE(Juggle);
         EFFECT_CASE(MusicRunner);
         EFFECT_CASE(MusicComet);
+        EFFECT_CASE(MusicSlider);
 
         default:
             return EffectCreationInfo{"ErrorEffect", effectCreator<ErrorEffect>(), Effect::kRequired};

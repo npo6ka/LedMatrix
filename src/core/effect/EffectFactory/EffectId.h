@@ -47,5 +47,6 @@ enum class EffectId : uint32_t {
     Juggle = 41,
     MusicRunner = 42,
     MusicComet = 43,
+    MusicSlider = 44,
     Count
 };
