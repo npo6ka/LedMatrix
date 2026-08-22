@@ -40,5 +40,6 @@ enum class EffectId : uint32_t {
     ColorBlink = 34,
     BlendWave = 35,
     RainbowBeat = 36,
+    TwoWaves = 37,
     Count
 };

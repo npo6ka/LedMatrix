@@ -37,6 +37,7 @@
 #include "effects/effects_impl/color_blink.h"
 #include "effects/effects_impl/blend_wave.h"
 #include "effects/effects_impl/rainbow_beat.h"
+#include "effects/effects_impl/two_waves.h"
 
 #include "libs/StdFeatures.h"
 
@@ -101,6 +102,7 @@ static EffectCreationInfo getEffectInfo(uint32_t effect_id) {
         EFFECT_CASE(ColorBlink);
         EFFECT_CASE(BlendWave);
         EFFECT_CASE(RainbowBeat);
+        EFFECT_CASE(TwoWaves);
 
         default:
             return EffectCreationInfo{"ErrorEffect", effectCreator<ErrorEffect>(), Effect::kRequired};

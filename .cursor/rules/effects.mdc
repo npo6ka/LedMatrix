@@ -63,11 +63,11 @@ alwaysApply: false
 
 **Можно:** дописать новый вариант **в конец**, сразу перед `Count`, со следующим свободным числом.
 
-Текущий последний id смотри в файле (сейчас это `RainbowBeat = 36`). Следующий будет `37`:
+Текущий последний id смотри в файле (сейчас это `TwoWaves = 37`). Следующий будет `38`:
 
 ```cpp
-    RainbowBeat = 36,
-    MyEffect = 37,
+    TwoWaves = 37,
+    MyEffect = 38,
     Count
 ```
 
@@ -102,8 +102,8 @@ EFFECT_CASE(MyEffect);
 Чтобы новый режим появился после сброса списка / на чистой плате, добавь строку **в конец**:
 
 ```cpp
-        EffectId::BlendWave,
         EffectId::RainbowBeat,
+        EffectId::TwoWaves,
         EffectId::MyEffect,
     };
 ```
