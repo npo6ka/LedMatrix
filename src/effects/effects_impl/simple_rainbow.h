@@ -27,6 +27,6 @@ public:
             }
         }
 
-        tick += 1;
+        tick += 2;
     }
 };

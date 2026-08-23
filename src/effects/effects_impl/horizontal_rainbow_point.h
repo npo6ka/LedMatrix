@@ -2,12 +2,11 @@
 
 #include "effects/effect.h"
 
-#define ACCURACY 100
-
-#define RAINBOW_TICK_SIZE 4 //кол-во тиков до инкремента тика радуги
-
 class HorizontalRainbowPoint : public Effect
 {
+    static constexpr int32_t ACCURACY = 100;
+    static constexpr int32_t RAINBOW_TICK_SIZE = 4; //кол-во тиков до инкремента тика радуги
+
     int32_t x;
     int32_t y;
     int32_t vec_x;

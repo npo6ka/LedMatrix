@@ -13,7 +13,7 @@ public:
 
     void on_init()
     {
-        fade_step = 3;
+        fade_step = 6;
         rainbow_step = 4;
         tick = 0;
         set_fps(40);
@@ -25,7 +25,7 @@ public:
             auto& led = LedMatrix.at(i);
             led.fadeToBlackBy(fade_step);
 
-            if (random16(300) == 0) {
+            if (random16(100) == 0) {
                 led = CHSV(tick / rainbow_step, 255, 255);
             }
         }

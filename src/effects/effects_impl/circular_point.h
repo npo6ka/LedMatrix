@@ -2,10 +2,10 @@
 
 #include "effects/effect.h"
 
-#define ACCURACY 10
-
 class CircularPoint : public Effect
 {
+    static constexpr int32_t ACCURACY = 10;
+
     struct Point
     {
         int32_t x;
@@ -82,5 +82,3 @@ public:
         tick = tick + 3;
     }
 };
-
-#undef ACCURACY

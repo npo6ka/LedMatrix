@@ -1,11 +1,11 @@
 #pragma once
 
-#define ACCURACY 100
-
 #include "effects/effect.h"
 
 class RainbowPoint : public Effect
 {
+    static constexpr int32_t ACCURACY = 100;
+
     int32_t x;
     int32_t y;
     int32_t vec_x;
@@ -89,5 +89,3 @@ public:
         rainbow_point_render_point();
     }
 };
-
-#undef ACCURACY

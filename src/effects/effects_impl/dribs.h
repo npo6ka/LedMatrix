@@ -5,11 +5,13 @@
 class Dribs : public Effect
 {
     index_t cur_drib[LEDS_WIDTH];
+    uint8_t hue;
     uint8_t lenght;
 public:
     void on_init()
     {
-        lenght = 12;
+        lenght = 25;
+        hue = random8();
         memset(cur_drib, 0, sizeof(cur_drib));
         set_fps(30);
     }
@@ -20,7 +22,7 @@ public:
         const index_t limit = lenght + h;
 
         for (auto j : LedMatrix.rangeX()) {
-            if (cur_drib[j] == 0 && random8(40) == 0) {
+            if (cur_drib[j] == 0 && random8(5) == 0) {
                 cur_drib[j] = 1;
             } else if (cur_drib[j] != 0) {
                 cur_drib[j] += 1;
@@ -34,7 +36,8 @@ public:
         for (auto x : LedMatrix.rangeX()) {
             for (auto y : LedMatrix.rangeY()) {
                 if (cur_drib[x] != 0 && y < cur_drib[x]) {
-                    LedMatrix.at(x, y) = CRGB(0, 0, max(255 - (int)(cur_drib[x] - y - 1) * step, 0));
+                    uint8_t v = max(255 - (int)(cur_drib[x] - y - 1) * step, 0);
+                    LedMatrix.at(x, y) = CHSV(hue, 255, v);
                 } else {
                     LedMatrix.at(x, y) = 0x0;
                 }

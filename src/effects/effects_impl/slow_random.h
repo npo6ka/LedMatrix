@@ -22,7 +22,7 @@ public:
     }
 
     void on_init() {
-        step = 1;
+        step = 3;
         set_fps(120);
 
         for (size_t i = 0; i < LedMatrix.size(); i++) {

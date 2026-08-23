@@ -4,7 +4,8 @@
 
 class SimpleBalls : public Effect
 {
-    static const uint8_t balls_amount = 4;
+    static const uint8_t balls_amount = 100;
+    uint8_t balls;
     int coord[balls_amount][2];
     int8_t vector[balls_amount][2];
     CRGB ballColors[balls_amount];
@@ -17,7 +18,12 @@ public:
     SimpleBalls() {}
 
     void on_init() {
-        for (uint8_t j = 0; j < balls_amount; j++) {
+        size_t count = LedMatrix.size() / 5;
+        if (count < 1) count = 1;
+        if (count > balls_amount) count = balls_amount;
+        balls = (uint8_t)count;
+
+        for (uint8_t j = 0; j < balls; j++) {
             // забиваем случайными данными
             coord[j][0] = LedMatrix.width() / 2 * 10;
             vector[j][0] = random8(4, 15) * (random8(2) ? 1 : -1);
@@ -36,7 +42,7 @@ public:
         }
 
         // движение шариков
-        for (uint8_t j = 0; j < balls_amount; j++) {
+        for (uint8_t j = 0; j < balls; j++) {
             // отскок от нарисованных препятствий
             if (draw_walls) {
                 CRGB &thisColor = LedMatrix.at(coord[j][0] / 10 + 1, coord[j][1] / 10);

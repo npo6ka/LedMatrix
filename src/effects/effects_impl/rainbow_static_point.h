@@ -1,11 +1,11 @@
 #pragma once
 
-#define ACCURACY 10
-
 #include "effects/effect.h"
 
 class RainbowStaticPoint : public Effect
 {
+    static constexpr int32_t ACCURACY = 10;
+
     int tick;
     uint8_t tick_size = 4; //кол-во тиков до инкремента тика радуги
 
@@ -42,5 +42,3 @@ public:
         rainbow_static_point_render_point();
     }
 };
-
-#undef ACCURACY
