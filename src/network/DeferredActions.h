@@ -13,6 +13,7 @@ enum class DeferredActionType : uint8_t {
     AutoModSet,
     BrightnessSet,
     SymmetricSet,
+    FpsSet,
     ResetModesList,
 };
 

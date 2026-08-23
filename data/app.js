@@ -12,10 +12,13 @@ const btnReset = document.getElementById('btn-reset');
 const effectSelect = document.getElementById('effect-select');
 const brightnessSlider = document.getElementById('brightness-slider');
 const brightnessValue = document.getElementById('brightness-value');
+const fpsTargetSlider = document.getElementById('fps-target-slider');
+const fpsTargetValue = document.getElementById('fps-target-value');
 
 let status = null;
 let effectsLoaded = false;
 let brightnessTimer = null;
+let fpsTargetTimer = null;
 let modeBusy = false;
 let statusTimer = null;
 let pollIntervalMs = 3000;
@@ -86,6 +89,11 @@ function renderStatus(data) {
 
   brightnessSlider.value = String(data.brightness);
   brightnessValue.textContent = String(data.brightness);
+
+  fpsTargetSlider.min = String(data.fpsMin);
+  fpsTargetSlider.max = String(data.fpsMax);
+  fpsTargetSlider.value = String(data.fpsTarget);
+  fpsTargetValue.textContent = `${data.fpsTarget} / ${data.fpsMax}`;
 
   if (effectsLoaded) {
     effectSelect.value = String(data.effectIndex);
@@ -175,6 +183,18 @@ brightnessSlider.addEventListener('input', () => {
     await api('/api/brightness', {
       method: 'POST',
       body: JSON.stringify({ value: Number(brightnessSlider.value) }),
+    });
+    await refreshStatus();
+  }, 200);
+});
+
+fpsTargetSlider.addEventListener('input', () => {
+  fpsTargetValue.textContent = `${fpsTargetSlider.value} / ${fpsTargetSlider.max}`;
+  clearTimeout(fpsTargetTimer);
+  fpsTargetTimer = setTimeout(async () => {
+    await api('/api/fps', {
+      method: 'POST',
+      body: JSON.stringify({ value: Number(fpsTargetSlider.value) }),
     });
     await refreshStatus();
   }, 200);

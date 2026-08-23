@@ -48,6 +48,9 @@ AppStatusSnapshot AppStatus::snapshot() const {
     status.effectId = _effectId;
     status.effectName = EffectFactory::getEffectName(_effectId);
     status.fps = _fps;
+    status.fpsTarget = _effectManager ? _effectManager->getEffectFps() : 0;
+    status.fpsMin = EffectManager::kFpsMin;
+    status.fpsMax = EffectManager::fpsMax();
     status.brightness = _brightnessFn ? _brightnessFn() : 0;
     status.symmetric = LedMatrix.isSymmetric();
     status.width = LedMatrix.width();

@@ -75,6 +75,9 @@ void ApiHandlers::registerRoutes(AsyncWebServer& server, AppStatus& status) {
         doc["effectId"] = snap.effectId;
         doc["effectName"] = snap.effectName;
         doc["fps"] = snap.fps;
+        doc["fpsTarget"] = snap.fpsTarget;
+        doc["fpsMin"] = snap.fpsMin;
+        doc["fpsMax"] = snap.fpsMax;
         doc["brightness"] = snap.brightness;
         doc["symmetric"] = snap.symmetric;
         doc["width"] = snap.width;
@@ -223,6 +226,36 @@ void ApiHandlers::registerRoutes(AsyncWebServer& server, AppStatus& status) {
 
             DeferredAction action{};
             action.type = DeferredActionType::BrightnessSet;
+            action.data.intValue = value;
+            postAction(action, request);
+        });
+
+    server.on("/api/fps", HTTP_POST, [](AsyncWebServerRequest* request) {}, nullptr,
+        [this](AsyncWebServerRequest* request, uint8_t* data, size_t len, size_t, size_t) {
+            if (!checkRateLimit()) {
+                sendError(request, 429, "rate limit");
+                return;
+            }
+
+            JsonDocument doc;
+            if (deserializeJson(doc, data, len)) {
+                sendError(request, 400, "invalid json");
+                return;
+            }
+
+            if (!doc["value"].is<int>()) {
+                sendError(request, 400, "missing value");
+                return;
+            }
+
+            int value = doc["value"].as<int>();
+            if (value < EffectManager::kFpsMin) value = EffectManager::kFpsMin;
+            if (value > static_cast<int>(EffectManager::fpsMax())) {
+                value = static_cast<int>(EffectManager::fpsMax());
+            }
+
+            DeferredAction action{};
+            action.type = DeferredActionType::FpsSet;
             action.data.intValue = value;
             postAction(action, request);
         });

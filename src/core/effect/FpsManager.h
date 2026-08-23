@@ -13,7 +13,7 @@ class FpsManager {
         }
 
         void setTargetFPS(uint16_t fps) {
-            _target_fps = fps;
+            _target_fps = fps > 0 ? fps : 1;
         }
 
         bool needUpdate() {

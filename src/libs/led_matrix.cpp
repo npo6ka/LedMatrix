@@ -123,10 +123,7 @@ void CLedMatrix::setup() {
     _brightness = LEDS_BRIGHTNRSS;
     FastLED.setMaxPowerInVoltsAndMilliamps(5, LEDS_MAX_POWER);
     FastLED.setBrightness(_brightness);
-    // WS2812 ~30 мкс/диод; не вызывать show() чаще, чем лента успевает принять кадр
-    const uint32_t minShowUs = static_cast<uint32_t>(LEDS_HW_SIZE) * 30U + 50U;
-    const uint16_t maxFps = static_cast<uint16_t>(1000000U / minShowUs);
-    FastLED.setMaxRefreshRate(maxFps > 0 ? maxFps : 1, false);
+    FastLED.setMaxRefreshRate(hardwareMaxFps(), false);
     FastLED.clear();
 }
 

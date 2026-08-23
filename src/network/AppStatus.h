@@ -13,6 +13,9 @@ struct AppStatusSnapshot {
     uint8_t effectId = 0;
     const char* effectName = "";
     float fps = 0.0f;
+    uint8_t fpsTarget = 0;
+    uint8_t fpsMin = 0;
+    uint8_t fpsMax = 0;
     uint8_t brightness = 0;
     bool symmetric = false;
     uint16_t width = 0;

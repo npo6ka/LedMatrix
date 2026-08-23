@@ -14,6 +14,10 @@
 class EffectManager : public IObserver
 {
 public:
+    static constexpr uint8_t kFpsMin = 1;
+    // Аппаратный потолок: быстрее лента не успевает принять кадр
+    static uint8_t fpsMax();
+
     EffectManager(IEffectStorage& storage, InputHub& inputHub);
     ~EffectManager() = default;
 
@@ -27,6 +31,11 @@ public:
     // Получение текущего FPS
     float getCurrentFPS() const;
 
+    // FPS текущего режима. Значение задаёт сам режим в on_init(), извне его можно
+    // перебить до следующей смены режима.
+    uint8_t getEffectFps() const;
+    void setEffectFps(uint8_t fps);
+
     // Обработка событий (реализация IObserver)
     void handleEvent(const Event* event) override;
 
@@ -34,6 +43,7 @@ private:
 
     void onCheckRequestedEffectChange();
     void onTickEffect(const InputSnapshot& snapshot);
+    void applyTargetFps();
 
     IEffectStorage& _storage;
     InputHub& _inputHub;

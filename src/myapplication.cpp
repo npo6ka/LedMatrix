@@ -34,6 +34,7 @@ MyApplication::MyApplication() :
     Observable::subscribe(EventType::SetAutoMod, this);
     Observable::subscribe(EventType::SetBrightness, this);
     Observable::subscribe(EventType::SetSymmetric, this);
+    Observable::subscribe(EventType::SetFps, this);
 };
 
 MyApplication::~MyApplication() {
@@ -44,6 +45,7 @@ MyApplication::~MyApplication() {
     Observable::unsubscribe(EventType::SetAutoMod, this);
     Observable::unsubscribe(EventType::SetBrightness, this);
     Observable::unsubscribe(EventType::SetSymmetric, this);
+    Observable::unsubscribe(EventType::SetFps, this);
 }
 
 // лучше всё по максимому инициализировать тут
@@ -161,6 +163,16 @@ void MyApplication::handleEvent(const Event *event) {
     } else if (event->type == EventType::SetSymmetric) {
         const ChangeBoolEvent *ev = static_cast<const ChangeBoolEvent *>(event);
         setSymmetric(ev->new_val);
+    } else if (event->type == EventType::SetFps) {
+        const ChangeIntEvent *ev = static_cast<const ChangeIntEvent *>(event);
+        int value = ev->new_val;
+        if (value < EffectManager::kFpsMin) value = EffectManager::kFpsMin;
+        if (value > static_cast<int>(EffectManager::fpsMax())) {
+            value = static_cast<int>(EffectManager::fpsMax());
+        }
+        if (_effectManager) {
+            _effectManager->setEffectFps(static_cast<uint8_t>(value));
+        }
     } else if (event->type == EventType::ChangeMode) { // включить питание при попытках сменить режима
         if (!_isPowerOn) {
             setPowerState(true);

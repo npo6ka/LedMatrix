@@ -16,6 +16,7 @@ enum class EventType {
     SetAutoMod,             // ChangeBoolEvent — явная установка автомода
     SetBrightness,          // ChangeIntEvent — яркость 0..255
     SetSymmetric,           // ChangeBoolEvent — симметричное отображение
+    SetFps,                 // ChangeIntEvent — FPS текущего режима
     EventAmount             // Используется, чтобы знать сколько всего ивентов
 };
 

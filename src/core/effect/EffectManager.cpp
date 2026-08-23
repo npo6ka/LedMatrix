@@ -55,7 +55,7 @@ void EffectManager::updateEffect() {
     _currentEffect = EffectFactory::createEffect(effectInfo.id);
     _inputHub.setActiveCapabilities(EffectFactory::getRequiredCapabilities(effectInfo.id));
     _currentEffect->on_init();
-    _fpsManager.setTargetFPS(_currentEffect->get_fps());
+    applyTargetFps();
 
     Observable::notify<ModChangedEvent>(EventType::ModChanged, effectInfo.id, _storage.getCurrentIndex());
 }
@@ -69,6 +69,49 @@ void EffectManager::setEffect(uint32_t index) {
 
 float EffectManager::getCurrentFPS() const {
     return _fpsManager.getRealFPS();
+}
+
+uint8_t EffectManager::fpsMax() {
+    const uint16_t hardwareFps = CLedMatrix::hardwareMaxFps();
+    // fps режима хранится в uint8_t, выше 255 поднимать некуда
+    return hardwareFps > 255 ? 255 : static_cast<uint8_t>(hardwareFps);
+}
+
+uint8_t EffectManager::getEffectFps() const {
+    return _currentEffect ? _currentEffect->get_fps() : 0;
+}
+
+void EffectManager::setEffectFps(uint8_t fps) {
+    if (!_currentEffect) {
+        return;
+    }
+
+    if (fps < kFpsMin) {
+        fps = kFpsMin;
+    }
+    const uint8_t maxFps = fpsMax();
+    if (fps > maxFps) {
+        fps = maxFps;
+    }
+    _currentEffect->set_fps(fps);
+    applyTargetFps();
+}
+
+void EffectManager::applyTargetFps() {
+    if (!_currentEffect) {
+        return;
+    }
+
+    // Режим мог запросить больше, чем лента успевает отдать
+    uint8_t fps = _currentEffect->get_fps();
+    const uint8_t maxFps = fpsMax();
+    if (fps > maxFps) {
+        fps = maxFps;
+    }
+    if (fps < kFpsMin) {
+        fps = kFpsMin;
+    }
+    _fpsManager.setTargetFPS(fps);
 }
 
 void EffectManager::handleEvent(const Event* event) {

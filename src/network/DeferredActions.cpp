@@ -52,6 +52,9 @@ void DeferredActions::process() {
             case DeferredActionType::SymmetricSet:
                 Observable::notify<ChangeBoolEvent>(EventType::SetSymmetric, action.data.boolValue);
                 break;
+            case DeferredActionType::FpsSet:
+                Observable::notify<ChangeIntEvent>(EventType::SetFps, action.data.intValue);
+                break;
             case DeferredActionType::ResetModesList:
                 Observable::notify<Event>(EventType::ResetModesList);
                 break;

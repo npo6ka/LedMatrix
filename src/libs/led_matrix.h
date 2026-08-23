@@ -19,6 +19,15 @@ public:
 
     void setup();
 
+    // Потолок FPS по протоколу WS2812: ~30 мкс/диод + latch.
+    // Выше лента физически не успевает принять кадр.
+    static uint16_t hardwareMaxFps() {
+        const uint32_t minShowUs =
+            static_cast<uint32_t>(LEDS_HW_SIZE) * 30U + 50U;
+        const uint16_t maxFps = static_cast<uint16_t>(1000000U / minShowUs);
+        return maxFps > 0 ? maxFps : 1;
+    }
+
     uint8_t getBrightness() const;
     void setBrightness(uint8_t val);
 
