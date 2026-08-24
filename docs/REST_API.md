@@ -65,12 +65,12 @@ GET без тела. CORS для нативного Android не требует�
 | 400 | битый JSON или нет обязательного поля |
 | 404 | неизвестный путь `/api/...` |
 | 429 | чаще чем раз в **200 мс** (общий лимит на **все** POST) |
-| 500 | нет storage / переполнение JSON-буфера (512 байт) |
+| 500 | нет storage / ошибка сериализации JSON |
 | 503 | очередь команд занята (`busy`) |
 
 GET `/api/status` и `/api/effects` **не** попадают под rate limit.
 
-Тексты ошибок: `invalid json`, `missing on`, `missing index`, `missing enabled`, `missing value`, `rate limit`, `busy`, `storage unavailable`, `not found`, `json overflow`.
+Тексты ошибок: `invalid json`, `missing on`, `missing index`, `missing enabled`, `missing value`, `rate limit`, `busy`, `storage unavailable`, `not found`, `json serialize failed`.
 
 ---
 
@@ -86,6 +86,7 @@ GET `/api/status` и `/api/effects` **не** попадают под rate limit.
 | POST | `/api/mode` | `{"index": 3}` |
 | POST | `/api/automode` | `{"enabled": true}` |
 | POST | `/api/brightness` | `{"value": 128}` |
+| POST | `/api/fps` | `{"value": 40}` |
 | POST | `/api/symmetric` | `{"enabled": true}` |
 | POST | `/api/reset` | — |
 
@@ -99,6 +100,8 @@ curl -X POST http://192.168.4.1/api/mode/next
 curl -X POST http://192.168.4.1/api/mode -H "Content-Type: application/json" -d "{\"index\":3}"
 curl -X POST http://192.168.4.1/api/automode -H "Content-Type: application/json" -d "{\"enabled\":true}"
 curl -X POST http://192.168.4.1/api/brightness -H "Content-Type: application/json" -d "{\"value\":128}"
+curl -X POST http://192.168.4.1/api/fps -H "Content-Type: application/json" -d "{\"value\":40}"
+curl -X POST http://192.168.4.1/api/symmetric -H "Content-Type: application/json" -d "{\"enabled\":true}"
 curl -X POST http://192.168.4.1/api/reset
 ```
 
@@ -116,6 +119,9 @@ curl -X POST http://192.168.4.1/api/reset
   "effectId": 4,
   "effectName": "Rain",
   "fps": 42.5,
+  "fpsTarget": 40,
+  "fpsMin": 1,
+  "fpsMax": 132,
   "brightness": 128,
   "symmetric": false,
   "width": 250,
@@ -133,7 +139,10 @@ curl -X POST http://192.168.4.1/api/reset
 | `effectIndex` | number | индекс в **текущем списке** — его слать в `POST /api/mode` |
 | `effectId` | number | стабильный id эффекта на плате (`EffectId`) |
 | `effectName` | string | имя эффекта |
-| `fps` | number | текущий FPS (float) |
+| `fps` | number | фактический FPS (float), сколько кадров реально успевает цикл |
+| `fpsTarget` | number | целевой FPS текущего эффекта (целое, то, что задаёт слайдер) |
+| `fpsMin` | number | нижняя граница для `POST /api/fps` (сейчас **1**) |
+| `fpsMax` | number | верхняя граница: потолок протокола WS2812 для этой ленты, не больше **255** |
 | `brightness` | number | яркость 0–255 |
 | `symmetric` | bool | симметричное отображение |
 | `width` | number | текущая логическая ширина (в симметричном режиме вдвое меньше физической) |
@@ -219,6 +228,24 @@ curl -X POST http://192.168.4.1/api/reset
 
 ---
 
+## POST `/api/fps`
+
+Задать целевой FPS **текущего** эффекта.
+
+```json
+{"value": 40}
+```
+
+`value` — целое. Плата обрезает в диапазон `fpsMin`…`fpsMax` из `GET /api/status`.
+
+- `fpsMax` считается по длине ленты: примерно `1000000 / (LEDS_HW_SIZE * 30 + 50)`, но не выше 255. Для 250 диодов это около **132**.
+- Значение живёт, пока выбран этот режим. Смена эффекта (`/api/mode`, next/prev, автомод) снова берёт FPS из `on_init()` режима. В LittleFS **не** сохраняется.
+- Фактическая частота в `fps` может быть ниже `fpsTarget`, если цикл занят Wi‑Fi, микрофоном и т.п.
+
+На слайдере — тот же debounce ≥ 200 мс, что и у яркости.
+
+---
+
 ## POST `/api/symmetric`
 
 ```json
@@ -241,7 +268,7 @@ curl -X POST http://192.168.4.1/api/reset
 
 ## Чего в API нет
 
-Настройка параметров отдельного эффекта, цвет, Wi‑Fi STA, OTA, микрофон, авторизация.
+Настройка параметров эффекта, кроме FPS текущего режима; цвет; Wi‑Fi STA; OTA; микрофон; авторизация.
 
 ---
 
