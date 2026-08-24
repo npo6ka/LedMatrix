@@ -15,6 +15,10 @@ class CircularPoint : public Effect
         uint32_t br; //bright_radius
     };
 
+    static constexpr uint8_t tick_step = 2;    //прирост tick за кадр, задаёт скорость обхода круга
+    static constexpr float move_radius = 1.0f; //доля хода до краёв матрицы: 1.0 — точка достаёт до крайних диодов
+    static constexpr uint8_t fade_step = 20;   //затухание шлейфа за кадр: больше — короче хвост
+
     uint8_t tick;
     Point p1;
     uint32_t v;
@@ -35,16 +39,28 @@ private:
 
     static void render_point(Point pnt)
     {
-      for (auto i : LedMatrix.rangeX()) {
-        for (auto j : LedMatrix.rangeY()) {
+      const int32_t reach = pnt.pr + pnt.br;
+      const CRGB pnt_clr = CHSV(pnt.hue, 255, 255);
+
+      int32_t x_from = (pnt.x - reach) / ACCURACY;
+      int32_t x_to   = (pnt.x + reach) / ACCURACY;
+      int32_t y_from = (pnt.y - reach) / ACCURACY;
+      int32_t y_to   = (pnt.y + reach) / ACCURACY;
+
+      if (x_from < 0) x_from = 0;
+      if (y_from < 0) y_from = 0;
+      if (x_to > (int32_t)LedMatrix.width() - 1) x_to = (int32_t)LedMatrix.width() - 1;
+      if (y_to > (int32_t)LedMatrix.height() - 1) y_to = (int32_t)LedMatrix.height() - 1;
+
+      for (int32_t i = x_from; i <= x_to; ++i) {
+        for (int32_t j = y_from; j <= y_to; ++j) {
           int loc_x = i * ACCURACY + ACCURACY / 2;
           int loc_y = j * ACCURACY + ACCURACY / 2;
 
           uint32_t distance = sqrt((loc_x - pnt.x) * (loc_x - pnt.x) + (loc_y - pnt.y) * (loc_y - pnt.y));
 
           float bright = get_func_brithtness(distance, pnt) * 0.7f;
-          CRGB &clr = LedMatrix.at(i, j);
-          CRGB pnt_clr = CHSV(pnt.hue, 255, 255);
+          CRGB &clr = LedMatrix.at((index_t)i, (index_t)j);
           clr.r = qadd8(clr.r, (float)pnt_clr.r * bright);
           clr.g = qadd8(clr.g, (float)pnt_clr.g * bright);
           clr.b = qadd8(clr.b, (float)pnt_clr.b * bright);
@@ -59,10 +75,27 @@ public:
         tick = 0;
         v = 1;
 
+        const int32_t w = (int32_t)LedMatrix.width();
+        const int32_t h = (int32_t)LedMatrix.height();
+
+        int32_t radius = ((w < h ? w : h) / 4 + 1) * ACCURACY;
+
+        // за кадр точка сдвигается на amp * шаг угла; если сдвиг больше её радиуса,
+        // между кадрами остаются неосвещённые диоды
+        const int32_t amp_x = move_radius * ACCURACY * (w - 1) / 2;
+        const int32_t amp_y = move_radius * ACCURACY * (h - 1) / 2;
+        const int32_t amp = amp_x > amp_y ? amp_x : amp_y;
+        const int32_t frame_shift = amp * 2 * 3.141592f * tick_step / 255;
+
+        if (radius < frame_shift) {
+            radius = frame_shift;
+        }
+
         p1.hue = 0;
-        p1.pr = (min(LedMatrix.height(), LedMatrix.width()) / 4 + 1) * ACCURACY;
-        p1.br = 0;
+        p1.pr = radius;
+        p1.br = radius;
         rainbow_tick_size = 1;
+        set_fps(60);
     }
 
     //tick 0 .. 255 -> 0 .. 2 * pi
@@ -72,13 +105,13 @@ public:
 
     void on_update(void) {
         float angle = get_pi_tick(tick);
-        float move_radius = 0.7f;// 0.7 .. 0.9
-        p1.x = ACCURACY * LedMatrix.width() * (move_radius * cos(angle) + 1) / 2;
-        p1.y = ACCURACY * LedMatrix.height() * (move_radius * sin(angle) + 1) / 2;
+        // ход считается по центрам крайних пикселей, иначе точка упирается в границу раньше края ленты
+        p1.x = ACCURACY / 2 + ACCURACY * ((int32_t)LedMatrix.width() - 1) * (move_radius * cos(angle) + 1) / 2;
+        p1.y = ACCURACY / 2 + ACCURACY * ((int32_t)LedMatrix.height() - 1) * (move_radius * sin(angle) + 1) / 2;
         p1.hue += rainbow_tick_size;
 
-        LedMatrix.fader(5);
+        LedMatrix.fader(fade_step);
         render_point(p1);
-        tick = tick + 3;
+        tick = tick + tick_step;
     }
 };

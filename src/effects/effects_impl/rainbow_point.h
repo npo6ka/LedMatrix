@@ -1,25 +1,27 @@
 #pragma once
 
+#include "Arduino.h"
 #include "effects/effect.h"
 
 class RainbowPoint : public Effect
 {
-    static constexpr int32_t ACCURACY = 100;
+    static constexpr int32_t ACCURACY = 10;
 
     int32_t x;
     int32_t y;
     int32_t vec_x;
     int32_t vec_y;
     int tick;
-    uint8_t max_vec_size = 10;
+    uint8_t max_vec_size = 16;
     uint8_t tick_size = 4; //кол-во тиков до инкремента тика радуги
+    uint16_t hue_period = random8(16, 255); //длина полного цикла радуги в пикселях: больше — плавнее переход оттенка
 
     //arg2: horizontal barrier = true or vertical = false
     void rainbow_point_gen_vector(bool horVer) {
         int16_t dir = horVer ? 1 : -1;
 
-        vec_x = (vec_x > 0 ? -dir : dir) * random(0, max_vec_size);
-        vec_y = (vec_y > 0 ? dir : -dir) * random(0, max_vec_size);
+        vec_x = (vec_x > 0 ? -dir : dir) * random(max_vec_size / 2, max_vec_size);
+        vec_y = (vec_y > 0 ? dir : -dir) * random(max_vec_size / 2, max_vec_size);
 
         if (vec_y == 0 && vec_x == 0) {
             rainbow_point_gen_vector(horVer);
@@ -58,9 +60,9 @@ class RainbowPoint : public Effect
 
                 int distance = sqrt((loc_x - x) * (loc_x - x) + (loc_y - y) * (loc_y - y));
 
-                float chsv = (distance / 8 + tick / tick_size) % 255;
+                int32_t hue = (distance * 256 / ((int32_t)hue_period * ACCURACY) + tick / tick_size) % 256;
 
-                LedMatrix.at(i, j) = CHSV(chsv, 255, 255);
+                LedMatrix.at(i, j) = CHSV((uint8_t)hue, 255, 255);
             }
         }
     }

@@ -16,9 +16,147 @@ class Snake : public Effect
     SnakeAI *ai = nullptr;
     uint64_t startTime;
 
-    uint8_t tick, step = 3;
+    uint8_t tick, step = 1; //ход раз в step кадров: меньше — быстрее змейка
     uint8_t endAnimBright = 0;
     uint32_t endAnimNextMs = 0;
+
+    // Одномерное поле (лента 1xN или Nx1). Тело хранится позициями вдоль ленты,
+    // а не поворотами: в одной строке змейка ходит только вперёд-назад.
+    bool line_mode = false;
+    index_t line_body[MAX_SNAKE_LENGTH];
+    uint16_t line_start = 0, line_len = 0, line_target = 0;
+    int8_t line_dir = 1;
+    index_t line_apple = 0;
+    bool line_apple_flag = false;
+
+    static bool isLineMatrix() {
+        return LedMatrix.width() <= 1 || LedMatrix.height() <= 1;
+    }
+
+    index_t lineSize() const {
+        const size_t size = LedMatrix.size();
+        return size > MAX_SNAKE_LENGTH ? (index_t)MAX_SNAKE_LENGTH : (index_t)size;
+    }
+
+    index_t lineAt(uint16_t i) const {
+        return line_body[(line_start + i) % MAX_SNAKE_LENGTH];
+    }
+
+    index_t lineHead() const {
+        return lineAt(line_len - 1);
+    }
+
+    void linePush(index_t pos) {
+        line_body[(line_start + line_len) % MAX_SNAKE_LENGTH] = pos;
+        if (line_len < MAX_SNAKE_LENGTH) {
+            ++line_len;
+        } else {
+            line_start = (line_start + 1) % MAX_SNAKE_LENGTH;
+        }
+    }
+
+    void linePopTail() {
+        if (line_len) {
+            line_start = (line_start + 1) % MAX_SNAKE_LENGTH;
+            --line_len;
+        }
+    }
+
+    bool lineOccupied(index_t pos) const {
+        for (uint16_t i = 0; i < line_len; ++i) {
+            if (lineAt(i) == pos) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void genAppleLine() {
+        if (line_apple_flag) {
+            return;
+        }
+
+        const index_t len = lineSize();
+        for (index_t pos = 0; pos < len; ++pos) {
+            const index_t candidate = (index_t)((random16(len) + pos) % len);
+            if (!lineOccupied(candidate)) {
+                line_apple = candidate;
+                line_apple_flag = true;
+                return;
+            }
+        }
+    }
+
+    void renderLine() {
+        const index_t len = lineSize();
+        for (index_t i = 0; i < len; ++i) {
+            LedMatrix.atLinear(i) = CRGB(0, 0, 0);
+        }
+        for (uint16_t i = 0; i < line_len; ++i) {
+            LedMatrix.atLinear(lineAt(i)) = COLOR_SNAKE;
+        }
+        if (line_apple_flag) {
+            LedMatrix.atLinear(line_apple) = COLOR_APPLE;
+        }
+    }
+
+    void snakeRoutineLine() {
+        genAppleLine();
+
+        const index_t len = lineSize();
+        const index_t head = lineHead();
+
+        // разворот на месте разрешён: иначе до яблока за спиной не добраться
+        if (line_apple_flag) {
+            if (line_apple > head) {
+                line_dir = 1;
+            } else if (line_apple < head) {
+                line_dir = -1;
+            }
+        }
+
+        int32_t next = (int32_t)head + line_dir;
+        if (next < 0 || next >= (int32_t)len) {
+            line_dir = -line_dir;
+            next = (int32_t)head + line_dir;
+        }
+
+        linePush((index_t)next);
+
+        if (line_apple_flag && (index_t)next == line_apple) {
+            line_apple_flag = false;
+            if (line_target < len) {
+                ++line_target;
+            }
+        }
+
+        while (line_len > line_target) {
+            linePopTail();
+        }
+
+        renderLine();
+
+        if (line_target >= len) {
+            end_game = true;
+            startEndGameAnim();
+        }
+    }
+
+    void newGameLine() {
+        FastLED.clear();
+
+        const index_t len = lineSize();
+        line_start = 0;
+        line_len = 0;
+        line_target = START_LENGTH < len ? START_LENGTH : 1;
+        line_dir = 1;
+        line_apple_flag = false;
+        linePush((index_t)(len / 2));
+
+        end_game = false;
+        endAnimBright = 0;
+        startTime = millis();
+    }
 
         // Если нужно, можно вызвать этот метод. Выводит отладочную информацию в терминал
     void debug() {
@@ -151,6 +289,11 @@ class Snake : public Effect
 
     // Новая игра. Генерация всего с самого начала
     void newGameSnake() {
+        if (line_mode) {
+            newGameLine();
+            return;
+        }
+
         FastLED.clear();
 
         vector = Trend::up;  // начальный вектор движения задаётся вот здесь
@@ -193,16 +336,22 @@ class Snake : public Effect
 
 public:
     virtual void on_init() override {
-        set_fps(40);
+        set_fps(60);
         tick = 0;
         button = Trend::none;
         ai = nullptr;
+        line_mode = isLineMatrix();
+        // на ленте до яблока десятки диодов, поэтому шаг каждый кадр
+        step = line_mode ? 1 : 4;
 
         if (!canPlay()) {
             return;
         }
 
-        ai = make_ai();
+        // на ленте поиск пути не нужен: направление определяется знаком до яблока
+        if (!line_mode) {
+            ai = make_ai();
+        }
         newGameSnake();
     }
 
@@ -223,14 +372,18 @@ public:
 
         tick = (tick + 1) % step;
         if (!tick) {
-            snakeRoutine();
+            if (line_mode) {
+                snakeRoutineLine();
+            } else {
+                snakeRoutine();
+            }
         }
     }
 
     virtual bool is_end() const override {
-        if (!canPlay()) {
+        //if (!canPlay()) {
             return true;
-        }
+        //}
         return millis() - startTime < 5000; // если с момента старта прошло больше 5 секунд, то режим не переключится
     }
 };

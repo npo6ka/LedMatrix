@@ -15,6 +15,7 @@ class DribsAllSide : public Effect
 
     Snake snakes[MAX_SNAKE];
     uint8_t chsv;
+    bool vertical = false; //вертикальные линии: up/down. false — только горизонтальные
 public:
     DribsAllSide() {}
 
@@ -32,7 +33,9 @@ public:
 
     void create_snake(Snake &snake) {
         snake.color = CHSV(chsv, 255, 255);
-        snake.trend = Trend(random8(4) + 1);
+        snake.trend = vertical
+            ? Trend(random8(4) + 1)
+            : (random8(2) ? Trend::left : Trend::right);
 
         const index_t w = LedMatrix.width();
         const index_t h = LedMatrix.height();
